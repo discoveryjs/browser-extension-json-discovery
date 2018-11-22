@@ -1,0 +1,7 @@
+.no-user-select {
+    user-select: none;
+}
+
+.user-select {
+    user-select: text;
+}
