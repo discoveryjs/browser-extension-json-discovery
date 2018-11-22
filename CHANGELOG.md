@@ -1,3 +1,7 @@
+## 1.0.6 (22-11-2018)
+
+* Views list fix
+
 ## 1.0.5 (22-11-2018)
 
 * Updated Discovery

@@ -1225,6 +1225,12 @@ function _default(discovery) {
     }), true);
   }
 
+  function updateAvailableViewList() {
+    availableViewListEl.innerHTML = discovery.view.views.map(function (name) {
+      return "<span class=\"view\">".concat(name, "</span>");
+    }).join(', ');
+  }
+
   function updateViewModeTabs() {
     viewSetupEl.hidden = viewMode !== 'custom';
     tabsEls.forEach(function (el) {
@@ -1328,6 +1334,7 @@ function _default(discovery) {
   var contentEl;
   var viewSetupEl;
   var viewEditorEl;
+  var availableViewListEl;
   var tabsEls;
   var dataViewEl = (0, _dom.createElement)('div', 'data-view', [(0, _dom.createElement)('div', 'view-switcher', [(0, _dom.createElement)('div', 'tabs', tabsEls = [(0, _dom.createElement)('div', {
     class: 'tab',
@@ -1346,9 +1353,7 @@ function _default(discovery) {
     hidden: true
   }, [viewEditorEl = (0, _dom.createElement)('textarea', {
     placeholder: 'View'
-  }), (0, _dom.createElement)('div', 'editor-toolbar', [(0, _dom.createElement)('div', 'editor-toolbar-view-dict', [(0, _dom.createText)('Available views: '), (0, _dom.createElement)('span', 'editor-toolbar-view-list', discovery.view.views.map(function (name) {
-    return "<span class=\"view\">".concat(name, "</span>");
-  }).join(', '))]), (0, _dom.createElement)('label', null, [(0, _dom.createElement)('input', {
+  }), (0, _dom.createElement)('div', 'editor-toolbar', [(0, _dom.createElement)('div', 'editor-toolbar-view-dict', [(0, _dom.createText)('Available views: '), availableViewListEl = (0, _dom.createElement)('span', 'editor-toolbar-view-list')]), (0, _dom.createElement)('label', null, [(0, _dom.createElement)('input', {
     class: 'live-update',
     type: 'checkbox',
     checked: true,
@@ -1363,7 +1368,20 @@ function _default(discovery) {
       applyQuery();
       discovery.renderPage();
     }
-  }, 'Build')])])])]), contentEl = (0, _dom.createElement)('div', 'content')]);
+  }, 'Build')])])])]), contentEl = (0, _dom.createElement)('div', 'content')]); // FIXME: find a better way to update a view list
+
+  updateAvailableViewList();
+  var oldViewDefine = discovery.view.define;
+
+  discovery.view.define = function () {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    oldViewDefine.apply(this, args);
+    updateAvailableViewList();
+  };
+
   var queryEditor = createPageQueryEditor(queryEditorEl);
   var viewEditor = createPageQueryEditor(viewEditorEl);
   discovery.definePage('report', function (el, data, context) {
