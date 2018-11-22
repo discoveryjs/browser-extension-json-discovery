@@ -99,13 +99,13 @@ function (_Widget) {
       return host.modelfree;
     });
 
-    if (_this.modelfree && _this.containerEl) {
+    if (_this.modelfree && _this.dom.container) {
       // Setup the drag&drop listeners
-      _this.containerEl.addEventListener('drop', function (e) {
+      _this.dom.container.addEventListener('drop', function (e) {
         return _this.loadDataFromEvent(e);
       }, true);
 
-      _this.containerEl.addEventListener('dragover', function (e) {
+      _this.dom.container.addEventListener('dragover', function (e) {
         e.stopPropagation();
         e.preventDefault();
       }, true);
@@ -163,10 +163,10 @@ function (_Widget) {
       var _this4 = this;
 
       var loadStartTime = Date.now();
-      this.loadingOverlayEl.classList.remove('error', 'done');
+      this.dom.loadingOverlay.classList.remove('error', 'done');
       return fetch(url).then(function (res) {
         console.log("data loaded in ".concat(Date.now() - loadStartTime, "ms"));
-        _this4.loadingOverlayEl.innerHTML = 'Processing data...';
+        _this4.dom.loadingOverlay.innerHTML = 'Processing data...';
         return res.json();
       }).then(function (res) {
         if (res.error) {
@@ -184,11 +184,11 @@ function (_Widget) {
 
         _this4.setData(data, context);
 
-        _this4.loadingOverlayEl.classList.add('done');
+        _this4.dom.loadingOverlay.classList.add('done');
       }).catch(function (e) {
-        _this4.loadingOverlayEl.classList.add('error');
+        _this4.dom.loadingOverlay.classList.add('error');
 
-        _this4.loadingOverlayEl.innerHTML = '<pre>Data loading error:<br>' + e + '</pre>';
+        _this4.dom.loadingOverlay.innerHTML = '<pre>Data loading error:<br>' + e + '</pre>';
         console.error(e);
       });
     }
@@ -197,10 +197,8 @@ function (_Widget) {
     value: function setContainer(container) {
       _get(_getPrototypeOf(App.prototype), "setContainer", this).call(this, container);
 
-      if (this.containerEl) {
-        this.containerEl.appendChild(this.loadingOverlayEl = (0, _dom.createElement)('div', 'loading-overlay done', 'Loading...'));
-      } else {
-        this.loadingOverlayEl = null;
+      if (this.dom.container) {
+        this.dom.container.appendChild(this.dom.loadingOverlay = (0, _dom.createElement)('div', 'loading-overlay done', 'Loading...'));
       }
     }
   }, {
@@ -260,7 +258,7 @@ function reportLink(options) {
   return params.length ? "#".concat(page, "&").concat(params) : "#".concat(page);
 }
 
-},{"../pages/report.js":17}],3:[function(require,module,exports){
+},{"../pages/report.js":16}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -669,35 +667,10 @@ function createText(text) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.rawFileContentUrl = rawFileContentUrl;
-exports.fetchFileContent = fetchFileContent;
-exports.dropFileContentCache = dropFileContentCache;
+exports.escapeHtml = escapeHtml;
 
-/* eslint-env browser */
-var fileContentCache = new Map();
-
-function rawFileContentUrl(filename) {
-  return 'file-source?path=' + encodeURIComponent(filename) + '&raw';
-}
-
-function fetchFileContent(filename, syntax, refs) {
-  if (!fileContentCache.has(filename)) {
-    fileContentCache.set(filename, fetch('file-source?path=' + encodeURIComponent(filename)).then(function (res) {
-      return res.json();
-    }).then(function (res) {
-      return Object.assign({
-        filename: filename,
-        syntax: syntax,
-        refs: refs
-      }, res);
-    }));
-  }
-
-  return fileContentCache.get(filename);
-}
-
-function dropFileContentCache() {
-  fileContentCache.clear();
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 },{}],9:[function(require,module,exports){
@@ -706,23 +679,9 @@ function dropFileContentCache() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.escapeHtml = escapeHtml;
-
-function escapeHtml(str) {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-},{}],10:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.default = void 0;
 
 var base64 = _interopRequireWildcard(require("./base64.js"));
-
-var fetch = _interopRequireWildcard(require("./fetch-file-content.js"));
 
 var html = _interopRequireWildcard(require("./html.js"));
 
@@ -740,14 +699,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 var _default = _objectSpread({
   base64: base64
-}, fetch, html, {
+}, html, {
   defined: _defined.default,
   safeFilterRx: _safeFilterRx.default
 });
 
 exports.default = _default;
 
-},{"./base64.js":5,"./defined.js":6,"./fetch-file-content.js":8,"./html.js":9,"./safe-filter-rx.js":11}],11:[function(require,module,exports){
+},{"./base64.js":5,"./defined.js":6,"./html.js":8,"./safe-filter-rx.js":10}],10:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -764,7 +723,7 @@ function safeFilterRx(pattern) {
   return new RegExp('((?:' + pattern.replace(/[\(\)\?\+\*\{\}\\]/g, '\\$&') + ')+)', 'i');
 }
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -977,7 +936,7 @@ function () {
 
 exports.default = ViewRenderer;
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1033,7 +992,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./app/index.js":1,"./core/router.js":4,"./core/utils/index.js":10,"./pages/index.js":15,"./views/index-complex.js":31,"./views/index.js":32,"./widget/index.js":51}],14:[function(require,module,exports){
+},{"./app/index.js":1,"./core/router.js":4,"./core/utils/index.js":9,"./pages/index.js":14,"./views/index-complex.js":31,"./views/index.js":32,"./widget/index.js":51}],13:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1057,7 +1016,7 @@ function _default(discovery) {
   });
 }
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1090,7 +1049,7 @@ var _report = _interopRequireDefault(require("./report.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./default.js":14,"./not-found.js":16,"./report.js":17}],16:[function(require,module,exports){
+},{"./default.js":13,"./not-found.js":15,"./report.js":16}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1102,7 +1061,7 @@ function _default(discovery) {
   discovery.definePage('not-found', ['alert-warning:"Page \`" + name + "\` not found"']);
 }
 
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1309,22 +1268,15 @@ function _default(discovery) {
         return s.replace(/\\/g, '\\\\').replace(/\t/g, '\\t').replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/'/g, '\\\'');
       };
 
-      var decode = function decode(s) {
-        return base64.decode(decodeURIComponent(s || ''));
-      };
-
-      var _applyQuery = applyQuery(),
-          title = _applyQuery.title,
-          query = _applyQuery.query,
-          view = _applyQuery.view;
-
+      var _discovery$pageParams = discovery.pageParams,
+          title = _discovery$pageParams.title,
+          query = _discovery$pageParams.query,
+          view = _discovery$pageParams.view;
       var res = {
         title: title,
         query: query,
         view: view
       };
-      res.query = decode(res.query);
-      res.view = decode(res.view);
       window.currentReport = "{\n".concat(Object.keys(res).map(function (k) {
         return res[k] ? "    ".concat(k, ": '").concat(quote(res[k]), "'") : false;
       }).filter(Boolean).join(',\n'), "\n}");
@@ -1507,7 +1459,7 @@ function _default(discovery) {
   });
 }
 
-},{"../core/utils/base64.js":5,"../core/utils/dom.js":7,"../core/utils/html.js":9,"/gen/codemirror.js":52}],18:[function(require,module,exports){
+},{"../core/utils/base64.js":5,"../core/utils/dom.js":7,"../core/utils/html.js":8,"/gen/codemirror.js":52}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1528,7 +1480,7 @@ function _default(discovery) {
   discovery.view.define('alert-warning', render);
 }
 
-},{}],19:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1583,7 +1535,7 @@ function _default(discovery) {
   });
 }
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1599,7 +1551,7 @@ function _default(discovery) {
   });
 }
 
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1662,7 +1614,7 @@ function _default(discovery) {
   });
 }
 
-},{"/gen/highcharts.js":53}],22:[function(require,module,exports){
+},{"/gen/highcharts.js":53}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1724,7 +1676,46 @@ function _default(discovery) {
   });
 }
 
-},{"../core/utils/defined.js":6}],23:[function(require,module,exports){
+},{"../core/utils/defined.js":6}],22:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _default;
+
+/* eslint-env browser */
+function _default(discovery) {
+  function render(el, config, data, context) {
+    var _config$column = config.column,
+        column = _config$column === void 0 ? 'text' : _config$column,
+        emptyText = config.emptyText,
+        configLimit = config.limit;
+    var limit = isNaN(configLimit) ? 25 : parseInt(configLimit, 10);
+
+    if (emptyText !== false && emptyText !== '') {
+      el.setAttribute('emptyText', emptyText || 'Empty');
+    }
+
+    if (!Array.isArray(data) && data) {
+      data = [data];
+    }
+
+    if (Array.isArray(data)) {
+      discovery.view.renderList(el, {
+        view: 'column',
+        content: column
+      }, data, context, 0, limit);
+    }
+  }
+
+  discovery.view.define('columns', render);
+  discovery.view.define('column', function (el, config, data, context) {
+    discovery.view.render(el, config.content, data, context);
+  });
+}
+
+},{}],23:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1929,6 +1920,9 @@ function _default(discovery) {
   discovery.view.define('h3', render, {
     tag: 'h3'
   });
+  discovery.view.define('h4', render, {
+    tag: 'h4'
+  });
 }
 
 },{}],28:[function(require,module,exports){
@@ -1957,10 +1951,15 @@ exports.default = _default;
 
 /* eslint-env browser */
 function _default(discovery) {
+  var buffer = document.createElement('div');
   discovery.view.define('html', function (el, config, data) {
-    el.innerHTML = data;
+    buffer.innerHTML = data;
+
+    while (buffer.firstChild) {
+      el.appendChild(buffer.firstChild);
+    }
   }, {
-    tag: 'span'
+    tag: null
   });
 }
 
@@ -2023,7 +2022,7 @@ var _source = _interopRequireDefault(require("./source.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./chart.js":21,"./source.js":39}],32:[function(require,module,exports){
+},{"./chart.js":20,"./source.js":39}],32:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2051,6 +2050,12 @@ Object.defineProperty(exports, "checkbox", {
   enumerable: true,
   get: function get() {
     return _checkbox.default;
+  }
+});
+Object.defineProperty(exports, "columns", {
+  enumerable: true,
+  get: function get() {
+    return _columns.default;
   }
 });
 Object.defineProperty(exports, "contentFilter", {
@@ -2212,6 +2217,8 @@ var _block = _interopRequireDefault(require("./block.js"));
 
 var _checkbox = _interopRequireDefault(require("./checkbox.js"));
 
+var _columns = _interopRequireDefault(require("./columns.js"));
+
 var _contentFilter = _interopRequireDefault(require("./content-filter.js"));
 
 var _context = _interopRequireDefault(require("./context.js"));
@@ -2264,7 +2271,7 @@ var _tocSection = _interopRequireDefault(require("./toc-section.js"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-},{"./alerts.js":18,"./badges.js":19,"./block.js":20,"./checkbox.js":22,"./content-filter.js":23,"./context.js":24,"./expand.js":25,"./fallback.js":26,"./headers.js":27,"./hstack.js":28,"./html.js":29,"./image-preview.js":30,"./indicator.js":33,"./input.js":34,"./link.js":35,"./list-item.js":36,"./lists.js":37,"./section.js":38,"./struct.js":40,"./switch.js":41,"./tab.js":42,"./table-cell.js":43,"./table-row.js":44,"./table.js":45,"./tabs.js":46,"./text-match.js":47,"./text.js":48,"./toc-item.js":49,"./toc-section.js":50}],33:[function(require,module,exports){
+},{"./alerts.js":17,"./badges.js":18,"./block.js":19,"./checkbox.js":21,"./columns.js":22,"./content-filter.js":23,"./context.js":24,"./expand.js":25,"./fallback.js":26,"./headers.js":27,"./hstack.js":28,"./html.js":29,"./image-preview.js":30,"./indicator.js":33,"./input.js":34,"./link.js":35,"./list-item.js":36,"./lists.js":37,"./section.js":38,"./struct.js":40,"./switch.js":41,"./tab.js":42,"./table-cell.js":43,"./table-row.js":44,"./table.js":45,"./tabs.js":46,"./text-match.js":47,"./text.js":48,"./toc-item.js":49,"./toc-section.js":50}],33:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2324,7 +2331,7 @@ function _default(discovery) {
     var name = config.name,
         value = config.value,
         _config$type = config.type,
-        type = _config$type === void 0 ? 'regexp' : _config$type,
+        type = _config$type === void 0 ? 'string' : _config$type,
         placeholder = config.placeholder,
         onInit = config.onInit,
         onChange = config.onChange;
@@ -2351,7 +2358,7 @@ function _default(discovery) {
   });
 }
 
-},{"../core/utils/defined.js":6,"../core/utils/safe-filter-rx.js":11}],35:[function(require,module,exports){
+},{"../core/utils/defined.js":6,"../core/utils/safe-filter-rx.js":10}],35:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2806,7 +2813,7 @@ function _default(discovery) {
   };
 }
 
-},{"../core/utils/html.js":9}],41:[function(require,module,exports){
+},{"../core/utils/html.js":8}],41:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2818,18 +2825,24 @@ exports.default = _default;
 function _default(discovery) {
   discovery.view.define('switch', function (el, config, data, context) {
     var content = config.content;
-    var renderContent = 'alert-warning:"No case choosen"';
+    var renderConfig = 'alert-warning:"No case choosen"';
 
     if (Array.isArray(content)) {
       for (var i = 0; i < content.length; i++) {
-        if (content[i] && discovery.queryBool(content[i].case || true, data, context)) {
-          renderContent = content[i].content;
+        var branch = content[i];
+
+        if (branch && discovery.queryBool(branch.case || true, data, context)) {
+          renderConfig = 'data' in branch ? {
+            view: 'context',
+            data: branch.data,
+            content: branch.content
+          } : branch.content;
           break;
         }
       }
     }
 
-    discovery.view.render(el, renderContent, data, context);
+    discovery.view.render(el, renderConfig, data, context);
   }, {
     tag: false
   });
@@ -3245,18 +3258,16 @@ exports.default = _default;
 
 /* eslint-env browser */
 function _default(discovery) {
-  discovery.view.define('toc-item', function (el, config, data, context) {
-    discovery.view.render(el, [{
-      view: 'link',
-      data: '{ href, text: caption, match }',
-      content: 'text-match'
-    }, {
-      view: 'pill-badge',
-      className: 'item-error-label',
-      visible: 'errors',
-      data: '{ text: errors.size() }'
-    }], data, context);
-  });
+  discovery.view.define('toc-item', [{
+    view: 'link',
+    data: '{ href, text: caption, match }',
+    content: 'text-match'
+  }, {
+    view: 'pill-badge',
+    className: 'item-error-label',
+    visible: 'errors',
+    data: '{ text: errors.size() }'
+  }]);
 }
 
 },{}],50:[function(require,module,exports){
@@ -3304,8 +3315,6 @@ var pages = _interopRequireWildcard(require("../pages/index.js"));
 
 var _dom = require("../core/utils/dom.js");
 
-var fetchFileApi = _interopRequireWildcard(require("../core/utils/fetch-file-content.js"));
-
 var _jora = _interopRequireDefault(require("/gen/jora.js"));
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {}; if (desc.get || desc.set) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj.default = obj; return newObj; } }
@@ -3326,6 +3335,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 // FIXME: generated file to make it local
 var hasOwnProperty = Object.prototype.hasOwnProperty;
+var lastSetDataPromise = new WeakMap();
+var renderPageScheduler = new WeakMap();
 
 function _apply(fn, host) {
   if (typeof fn === 'function') {
@@ -3363,7 +3374,6 @@ function () {
   function Widget(container, options) {
     _classCallCheck(this, Widget);
 
-    Object.assign(this, fetchFileApi);
     this.options = options || {};
     this.dev = Boolean(this.options.dev);
     this.view = new _view.default(this);
@@ -3378,10 +3388,7 @@ function () {
     this.pageRef = null;
     this.pageParams = {};
     this.scheduledRenderPage = null;
-    this.containerEl = null;
-    this.pageContentEl = null;
-    this.sidebarEl = null;
-    this.badgesEl = null;
+    this.dom = {};
     this.queryExtensions = {
       query: this.query,
       pick: function pick(current, key) {
@@ -3428,11 +3435,14 @@ function () {
       var _this2 = this;
 
       var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-      var preparePromise = Promise.resolve(this.prepare(data, function (value) {
+      var setDataPromise = Promise.resolve(this.prepare(data, function (value) {
         return data = value;
       })).then(function () {
-        if (_this2.preparePromise !== preparePromise) {
-          return;
+        var currentPromise = lastSetDataPromise.get(_this2); // prevent race conditions
+
+        if (currentPromise !== setDataPromise) {
+          // chain by current promise
+          return currentPromise;
         }
 
         _this2.data = data;
@@ -3442,8 +3452,8 @@ function () {
 
         _this2.renderPage();
       });
-      this.preparePromise = preparePromise;
-      return preparePromise;
+      lastSetDataPromise.set(this, setDataPromise);
+      return setDataPromise;
     } //
     // Data query
     //
@@ -3484,19 +3494,20 @@ function () {
     value: function setContainer(container) {
       var _this3 = this;
 
-      this.containerEl = container;
+      var containerEl = container || null;
 
-      if (this.containerEl) {
-        this.containerEl.classList.add('discovery');
-        this.containerEl.appendChild(this.sidebarEl = (0, _dom.createElement)('nav', 'discovery-sidebar'));
-        this.containerEl.appendChild((0, _dom.createElement)('main', 'discovery-content', [this.badgesEl = (0, _dom.createElement)('div', 'discovery-content-badges'), this.pageContentEl = (0, _dom.createElement)('article')]));
+      if (containerEl) {
+        this.dom.container = containerEl;
+        containerEl.classList.add('discovery');
+        containerEl.appendChild(this.dom.sidebar = (0, _dom.createElement)('nav', 'discovery-sidebar'));
+        containerEl.appendChild((0, _dom.createElement)('main', 'discovery-content', [this.dom.badges = (0, _dom.createElement)('div', 'discovery-content-badges'), this.dom.pageContent = (0, _dom.createElement)('article')]));
         this.badges.forEach(function (badge) {
-          return _this3.badgesEl.appendChild(badge.el);
+          return _this3.dom.badges.appendChild(badge.el);
         });
       } else {
-        this.sidebarEl = null;
-        this.badgesEl = null;
-        this.pageContentEl = null;
+        for (var key in this.dom) {
+          this.dom[key] = null;
+        }
       }
     }
   }, {
@@ -3518,8 +3529,8 @@ function () {
         badge.el.innerHTML = caption;
       }
 
-      if (this.badgesEl) {
-        this.badgesEl.appendChild(badge.el);
+      if (this.dom.badges) {
+        this.dom.badges.appendChild(badge.el);
       }
 
       this.badges.push(badge);
@@ -3535,7 +3546,7 @@ function () {
     value: function renderSidebar() {
       if (this.view.isDefined('sidebar')) {
         var t = Date.now();
-        this.view.render(this.sidebarEl, 'sidebar', this.data, this.getSidebarContext()).then(function () {
+        this.view.render(this.dom.sidebar, 'sidebar', this.data, this.getSidebarContext()).then(function () {
           return console.log('[Discovery] renderSidebar', Date.now() - t);
         });
       }
@@ -3585,10 +3596,10 @@ function () {
     value: function scheduleRenderPage() {
       var _this4 = this;
 
-      if (!this.scheduledRenderPage) {
-        this.scheduledRenderPage = setTimeout(function () {
+      if (!renderPageScheduler.has(this)) {
+        renderPageScheduler.set(this, setTimeout(function () {
           return _this4.renderPage();
-        }, 0);
+        }, 0));
       }
     }
   }, {
@@ -3596,19 +3607,21 @@ function () {
     value: function renderPage() {
       var _this5 = this;
 
-      if (this.scheduledRenderPage) {
-        this.scheduledRenderPage = clearTimeout(this.scheduledRenderPage);
+      // cancel renderPage schedule
+      if (renderPageScheduler.has(this)) {
+        clearTimeout(renderPageScheduler.get(this));
+        renderPageScheduler.delete(this);
       }
 
-      this.pageContentEl = this.page.render(this.pageContentEl, this.pageId, this.data, this.getPageContext());
+      this.dom.pageContent = this.page.render(this.dom.pageContent, this.pageId, this.data, this.getPageContext());
       this.badges.forEach(function (badge) {
         return badge.el.hidden = !badge.visible(_this5);
       });
 
       if (this.pageParams.dzen) {
-        this.containerEl.dataset.dzen = true;
+        this.dom.container.dataset.dzen = true;
       } else {
-        delete this.containerEl.dataset.dzen;
+        delete this.dom.container.dataset.dzen;
       }
     }
   }]);
@@ -3618,7 +3631,7 @@ function () {
 
 exports.default = Widget;
 
-},{"../core/page.js":3,"../core/utils/dom.js":7,"../core/utils/fetch-file-content.js":8,"../core/view.js":12,"../pages/index.js":15,"../views/index.js":32,"/gen/jora.js":56}],52:[function(require,module,exports){
+},{"../core/page.js":3,"../core/utils/dom.js":7,"../core/view.js":11,"../pages/index.js":14,"../views/index.js":32,"/gen/jora.js":56}],52:[function(require,module,exports){
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -33491,5 +33504,5 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = Prism;
 
-},{}]},{},[13])(13)
+},{}]},{},[12])(12)
 });

@@ -1,4 +1,4 @@
-import { Widget, router } from '../discovery/lib.umd.js';
+import { Widget, router, complexViews } from '../discovery/lib.umd.js';
 
 require('../discovery/lib.css');
 require('../discovery/common.css');
@@ -13,6 +13,7 @@ function initDiscovery(settings) {
     const discovery = new Widget(document.body);
 
     discovery.apply(router);
+    discovery.apply(complexViews);
 
     discovery.definePage('default', [
         {
@@ -85,6 +86,8 @@ function initDiscovery(settings) {
 }
 
 window.addEventListener('message', function(event) {
+    window.location.hash = event.data.hash;
+
     if (event.data && event.data.json) {
         const { data } = event;
 
@@ -98,11 +101,7 @@ window.addEventListener('message', function(event) {
                 createdAt: new Date().toISOString() // TODO fix in discovery
             }
         );
-
-        discovery.renderPage('default');
     }
-
-    window.location.hash = event.data.hash;
 }, false);
 
 window.addEventListener('hashchange', () => {

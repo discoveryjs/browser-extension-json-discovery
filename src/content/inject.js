@@ -58,12 +58,16 @@ if (json) {
         });
     });
 
-    window.addEventListener('message', event => {
-        if (event.data && event.data.hash) {
-            window.location.hash = event.data.hash;
-        } else {
+    const setHash = debounce(hash => {
+        if (hash) {
+            window.location.hash = hash;
+        } else if (window.location.hash) {
             history.pushState('', document.title, window.location.pathname + window.location.search);
         }
+    }, 300);
+
+    const onMessage = event => {
+        setHash(event.data.hash);
 
         if (event.data && event.data.openSettings) {
             if (chrome.runtime.openOptionsPage) {
@@ -72,11 +76,43 @@ if (json) {
                 window.open(chrome.runtime.getURL('pages/settings.html'));
             }
         }
-    });
+    };
 
-    window.addEventListener('hashchange', () => {
+    window.addEventListener('message', onMessage);
+
+    const onHashChange = () => {
         iframe.contentWindow.postMessage({
             hash: window.location.hash
         }, '*');
+    };
+
+    window.addEventListener('hashchange', onHashChange);
+
+    window.addEventListener('beforeunload', () => {
+        window.removeEventListener('message', onMessage);
+        window.removeEventListener('hashchange', onHashChange);
     });
+}
+
+/**
+ * Debounce
+ * @param {Function} func
+ * @param {number} wait
+ * @returns {Function}
+ */
+function debounce(func, wait) {
+    let timer = null;
+
+    return function(...args) {
+        const onComplete = () => {
+            func.apply(this, args);
+            timer = null;
+        };
+
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+        timer = setTimeout(onComplete, wait);
+    };
 }
