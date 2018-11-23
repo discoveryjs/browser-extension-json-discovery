@@ -59,8 +59,11 @@ function initDiscovery(settings) {
         'Copy raw',
         function() {
             const { raw } = discovery.context;
+            const div = document.createElement('div');
+            div.innerHTML = raw;
+            const rawText = div.textContent;
             const el = document.createElement('textarea');
-            el.value = raw;
+            el.value = rawText;
             document.body.appendChild(el);
             el.select();
             document.execCommand('copy');
@@ -82,11 +85,33 @@ function initDiscovery(settings) {
         }
     );
 
+    // TODO fix this
+    let replace = null;
+    const originalSetPageParams = discovery.setPageParams.bind(discovery);
+
+    discovery.setPageParams = (...args) => {
+        originalSetPageParams(...args);
+        replace = args[1];
+    };
+
+    const originalRenderPage = discovery.renderPage.bind(discovery);
+
+    discovery.renderPage = (...args) => {
+        originalRenderPage(...args);
+
+        parent.postMessage({
+            hash: window.location.hash,
+            replace
+        }, '*');
+    };
+
     return discovery;
 }
 
 window.addEventListener('message', function(event) {
-    window.location.hash = event.data.hash;
+    if (window.location.hash !== event.data.hash) {
+        window.location.hash = event.data.hash;
+    }
 
     if (event.data && event.data.json) {
         const { data } = event;
@@ -104,8 +129,8 @@ window.addEventListener('message', function(event) {
     }
 }, false);
 
-window.addEventListener('hashchange', () => {
-    parent.postMessage({
-        hash: window.location.hash
-    }, '*');
-});
+// window.addEventListener('hashchange', () => {
+//     parent.postMessage({
+//         hash: window.location.hash
+//     }, '*');
+// });

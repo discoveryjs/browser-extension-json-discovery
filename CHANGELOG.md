@@ -1,6 +1,8 @@
 ## 1.0.7 (23-11-2018)
 
 * Updated discovery and jora
+* Fixed issues with raw content copying
+* Another navigation issues fix
 
 ## 1.0.6 (22-11-2018)
 
