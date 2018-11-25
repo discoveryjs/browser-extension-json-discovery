@@ -1,6 +1,6 @@
 module.exports = {
     name: 'JsonDiscovery',
-    version: '1.0.7',
+    version: '1.1.0',
     description: 'Extension for discovery json APIs and data',
     author: 'exdis',
     manifest_version: 2, // eslint-disable-line camelcase

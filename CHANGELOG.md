@@ -1,3 +1,7 @@
+## 1.1.0 (25-11-2018)
+
+* Replaced bundled discovery with its npm version
+
 ## 1.0.7 (23-11-2018)
 
 * Updated discovery and jora

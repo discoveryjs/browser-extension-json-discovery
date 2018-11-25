@@ -1,7 +1,7 @@
-import { Widget, router, complexViews } from '../discovery/lib.umd.js';
+import { Widget, router, complexViews } from '@discoveryjs/discovery/dist/lib.umd.js';
 
-require('../discovery/lib.css');
-require('../discovery/common.css');
+require('@discoveryjs/discovery/dist/lib.css');
+require('@discoveryjs/discovery/client/common.css');
 require('./index.css');
 
 /**
