@@ -1,3 +1,7 @@
+## 1.1.1 (30-11-2018)
+
+* Refactored build process
+
 ## 1.1.0 (25-11-2018)
 
 * Replaced bundled discovery with its npm version

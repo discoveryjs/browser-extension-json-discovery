@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const baseWebpack = require('./webpack.base');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -12,7 +11,6 @@ module.exports = merge(baseWebpack, {
         minimizer: [new TerserPlugin()]
     },
     plugins: [
-        new CleanWebpackPlugin(['build/*.*']),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': '"production"'

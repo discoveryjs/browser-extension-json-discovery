@@ -1,7 +1,6 @@
 const path = require('path');
 const { htmlPage } = require('./tools');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const WebpackExtensionManifestPlugin = require('webpack-extension-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const pkg = require('../package.json');
 const manifest = require('../src/manifest.js');
@@ -90,13 +89,19 @@ module.exports = {
     plugins: [
         htmlPage('content', 'content', ['content']),
         htmlPage('DiscoveryJSON Settings', 'settings', ['settings'], './core/settings.ejs'),
-        new CopyWebpackPlugin([{ from: path.join(__dirname, '..', 'static') }]),
-        new WebpackExtensionManifestPlugin({
-            config: {
-                base: manifest,
-                extend: { verion: pkg.verion }
+        new CopyWebpackPlugin([
+            {
+                from: path.join(__dirname, '..', 'static')
+            },
+            {
+                from: path.join(__dirname, '..', 'src', 'manifest.js'),
+                to: path.join(__dirname, '..', 'build', 'manifest.json'),
+                transform() {
+                    manifest.version = pkg.version;
+                    return JSON.stringify(manifest, null, 2);
+                }
             }
-        }),
+        ]),
         new MiniCssExtractPlugin({
             filename: 'css/[name].css',
             chunkFilename: 'css/[id].css'
