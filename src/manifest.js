@@ -1,7 +1,7 @@
 module.exports = {
     name: 'JsonDiscovery',
     short_name: 'Json Tool', // eslint-disable-line camelcase
-    description: 'Extension for discovery json APIs and data',
+    description: 'Browser extension for viewing JSON documents and making reports on the fly.',
     author: 'exdis',
     manifest_version: 2, // eslint-disable-line camelcase
     icons: { 16: 'icons/16.png', 128: 'icons/128.png' },
