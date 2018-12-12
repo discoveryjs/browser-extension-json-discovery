@@ -1,3 +1,7 @@
+## 1.2.0 (12-12-2018)
+
+* Updated `discovery` (various buxfixes and some `jora` syntax improvements)
+
 ## 1.1.1 (30-11-2018)
 
 * Refactored build process
