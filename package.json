@@ -1,6 +1,6 @@
 {
   "name": "jsondiscovery",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "DiscoveryJson",
   "author": "exsdis@gmail.com",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "build": "rimraf build && webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors --info-verbosity verbose && node core/zip.js"
   },
   "devDependencies": {
-    "@discoveryjs/discovery": "^1.0.0-beta.4",
+    "@discoveryjs/discovery": "^1.0.0-beta.5",
     "archiver": "^2.1.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.1",

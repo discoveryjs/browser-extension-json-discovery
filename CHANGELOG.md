@@ -1,3 +1,7 @@
+## 1.3.0 (26-12-2018)
+
+* Updated `discovery` (new stunning `jora` suggestions on report page)
+
 ## 1.2.0 (12-12-2018)
 
 * Updated `discovery` (various buxfixes and some `jora` syntax improvements)
