@@ -5,12 +5,27 @@ require('@discoveryjs/discovery/client/common.css');
 require('./index.css');
 
 /**
+ * Formats presets
+ * @param {Object} presets
+ * @returns {Object}
+ */
+function getPresets(presets) {
+    return Object.keys(presets).reduce((res, item) => {
+        res[item] = () => presets[item];
+
+        return res;
+    }, {});
+}
+
+/**
  * Discovery initialization
  * @param {Object} settings
  * @returns {Discovery}
  */
 function initDiscovery(settings) {
-    const discovery = new Widget(document.body);
+    const discovery = new Widget(document.body, {
+        viewPresets: getPresets(settings.viewPresets) || {}
+    });
 
     discovery.apply(router);
     discovery.apply(complexViews);

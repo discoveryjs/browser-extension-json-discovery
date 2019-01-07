@@ -8,6 +8,14 @@
             .row {
                 margin-bottom: 10px;
             }
+
+            input.error, textarea.error {
+                border: 1px solid red;
+            }
+
+            #status.error {
+                color: red;
+            }
         </style>
     </head>
     <body>
@@ -15,7 +23,14 @@
             <h1>Settings</h1>
             <form id="settings-form">
                 <div class="row">
-                    <input type="number" min="0" id="expand" required> Expand level
+                    <input type="number" min="0" id="expand"> Expand level
+                </div>
+                <div class="row">
+                    <h2>Presets:<button id="add-host">Add host</button></h2>
+                </div>
+                <div class="row">
+                    <ul id="presets">
+                    </ul>
                 </div>
                 <div class="row">
                     <input type="submit" id="save" value="Save">
