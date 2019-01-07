@@ -117,6 +117,13 @@ function getViewPresets() {
             host.classList.remove('error');
         }
 
+        try {
+            new RegExp(host.value);
+        } catch (_) {
+            errors.add('Host must be a valid RegExp!');
+            host.classList.add('error');
+        }
+
         presetHost.host = host.value;
 
         const presetItems = el.querySelectorAll('.preset-item');
