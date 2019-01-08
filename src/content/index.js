@@ -10,8 +10,8 @@ require('./index.css');
  * @returns {Object}
  */
 function getPresets(presets) {
-    return Object.keys(presets).reduce((res, item) => {
-        res[item] = () => presets[item];
+    return presets.reduce((res, item) => {
+        res[item.name] = () => item.content;
 
         return res;
     }, {});

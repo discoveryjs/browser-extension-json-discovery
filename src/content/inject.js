@@ -49,21 +49,19 @@ if (json) {
 
     iframe.addEventListener('load', () => {
         getSettings(settings => {
-            settings.viewPresets = settings.viewPresets.reduce((res, item) => {
+            let viewPresets = [];
+
+            for (const item of settings.viewPresets) {
                 const { host, presets } = item;
 
                 const hostRe = new RegExp(host);
 
                 if (hostRe.test(document.location.toString())) {
-                    res = Object.assign({}, res, presets.reduce((curr, preset) => {
-                        curr[preset.name] = preset.content;
-
-                        return curr;
-                    }, {}));
+                    viewPresets = viewPresets.concat(presets);
                 }
+            }
 
-                return res;
-            }, {});
+            settings.viewPresets = viewPresets;
 
             iframe.contentWindow.postMessage({
                 json,
