@@ -1,0 +1,89 @@
+body {
+    font-family: Tahoma,Verdana,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+*:focus {
+    outline: none;
+}
+
+h2 button {
+    margin-left: 10px;
+}
+
+.row {
+    margin-bottom: 10px;
+}
+
+#status.error {
+    color: red;
+}
+
+button, input[type=submit] {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 4px 24px;
+    border-radius: 4px;
+    border: none;
+    background: #0af;
+    color: #fff;
+    font: inherit;
+    cursor: pointer;
+}
+
+input[type=text], input[type=number] {
+    display: inline-block;
+    vertical-align: middle;
+    width: 300px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    height: 28px;
+    margin-right: 10px;
+    padding: 0 6px 0 6px;
+}
+
+input[type=text]:focus, input[type=number]:focus {
+    border-color: #0af;
+    box-shadow: 0 0 1px 3px rgba(0,170,255,.2),inset 0 1px 1px hsla(0,0%,55.7%,.2) !important;
+}
+
+input.error, textarea.error, #presets .CodeMirror.error {
+    border: 1px solid red;
+}
+
+ul ul {
+    margin-top: 10px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+#presets .CodeMirror {
+    width: 446px;
+    height: auto;
+    padding: 4px 8px;
+    margin-top: 10px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 12px;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 1px rgba(142, 142, 142, .2);
+}
+
+#presets .CodeMirror-scroll {
+    min-height: 6.5em;
+    cursor: text;
+}
+
+#presets .CodeMirror-focused {
+    border-color: #0af;
+    box-shadow: 0 0 1px 3px rgba(0, 170, 255, .2), inset 0 1px 1px rgba(142, 142, 142, .2) !important;
+}
+
+#presets .CodeMirror-cursor {
+    border-left: 1px solid black;
+    background: none;
+    width: 0;
+}

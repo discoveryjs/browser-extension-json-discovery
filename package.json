@@ -1,18 +1,17 @@
 {
   "name": "jsondiscovery",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "DiscoveryJson",
   "author": "exsdis@gmail.com",
   "license": "MIT",
   "private": false,
-  "dependencies": {},
   "scripts": {
     "lint": "eslint --ext .js src core",
     "dev": "webpack --config ./core/webpack.dev.js --hide-modules",
     "build": "rimraf build && webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors --info-verbosity verbose && node core/zip.js"
   },
   "devDependencies": {
-    "@discoveryjs/discovery": "^1.0.0-beta.5",
+    "@discoveryjs/discovery": "^1.0.0-beta.6",
     "archiver": "^2.1.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.1",
@@ -23,6 +22,7 @@
     "buble": "^0.16.0",
     "buble-loader": "^0.4.1",
     "clean-webpack-plugin": "^0.1.19",
+    "codemirror": "^5.42.2",
     "copy-webpack-plugin": "^4.5.4",
     "cross-env": "^5.1.0",
     "css-loader": "^1.0.1",

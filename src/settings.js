@@ -1,3 +1,9 @@
+const CodeMirror = require('codemirror');
+
+require('codemirror/lib/codemirror.css');
+require('codemirror/theme/neo.css');
+require('./settings.css');
+
 const settingsForm = document.getElementById('settings-form');
 const expand = document.getElementById('expand');
 const addHost = document.getElementById('add-host');
@@ -29,9 +35,11 @@ function createPresetNode(preset, parentNode) {
     presetNode.classList.add('preset-item');
 
     presetInput.value = name;
+    presetInput.type = 'text';
+    presetInput.placeholder = 'Preset Name';
     presetInput.classList.add('preset-name');
     presetTextarea.textContent = content;
-    presetTextarea.classList.add('preset-content');
+
     removePreset.innerHTML = 'Remove preset';
 
     removePreset.addEventListener('click', () => {
@@ -39,8 +47,27 @@ function createPresetNode(preset, parentNode) {
     });
 
     presetNode.appendChild(presetInput);
-    presetNode.appendChild(presetTextarea);
     presetNode.appendChild(removePreset);
+    presetNode.appendChild(presetTextarea);
+
+    const editor = CodeMirror.fromTextArea(presetTextarea, {
+        mode: { name: 'javascript', json: true },
+        theme: 'neo'
+    });
+
+    editor.getWrapperElement().classList.add('preset-content');
+
+    presetTextarea.dataset.editor = editor;
+
+    editor.on('change', codemirror => {
+        presetTextarea.textContent = codemirror.getValue();
+    });
+
+    const { editors = [] } = parentNode;
+
+    editors.push(editor);
+
+    parentNode.editors = editors;
 
     parentNode.appendChild(presetNode);
 }
@@ -60,6 +87,7 @@ function createHostPresetNode(hostPreset) {
 
     hostInput.type = 'text';
     hostInput.value = host;
+    hostInput.placeholder = 'Preset Host (RegExp)';
     hostInput.classList.add('preset-host');
     removeHost.innerHTML = 'Remove host';
 
@@ -74,12 +102,20 @@ function createHostPresetNode(hostPreset) {
     presetNode.appendChild(presetsList);
     presetsNode.appendChild(presetNode);
 
+    if (presetsList.editors) {
+        presetsList.editors.forEach(editor => editor.refresh());
+    }
+
     const addPreset = document.createElement('button');
 
     addPreset.innerHTML = 'Add Preset';
 
     addPreset.addEventListener('click', () => {
         createPresetNode({ name: '', content: '""' }, presetsList);
+
+        if (presetsList.editors) {
+            presetsList.editors.forEach(editor => editor.refresh());
+        }
     });
 
     presetNode.appendChild(addPreset);
@@ -139,8 +175,9 @@ function getViewPresets() {
             }
 
             const presetContent = item.querySelector('.preset-content');
+            const value = presetContent.CodeMirror && presetContent.CodeMirror.getValue();
 
-            if (!presetContent.value) {
+            if (!value) {
                 errors.add('Content is required!');
                 presetContent.classList.add('error');
             } else {
@@ -148,7 +185,7 @@ function getViewPresets() {
             }
 
             try {
-                JSON.parse(presetContent.value);
+                JSON.parse(value);
             } catch (_) {
                 errors.add('Content must be a valid JSON!');
                 presetContent.classList.add('error');
@@ -156,7 +193,7 @@ function getViewPresets() {
 
             presetHost.presets.push({
                 name: presetName.value,
-                content: presetContent.value
+                content: value
             });
         });
 

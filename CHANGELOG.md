@@ -1,3 +1,8 @@
+## 1.4.0 (20-01-2019)
+
+* Updated `discovery` to `1.0.0-beta.6`
+* New feature "View Presets". Now you can preset custom view for any host you need.
+
 ## 1.3.0 (26-12-2018)
 
 * Updated `discovery` (new stunning `jora` suggestions on report page)
