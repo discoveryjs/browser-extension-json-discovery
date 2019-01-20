@@ -4,18 +4,20 @@
         <meta charset="utf-8">
         <title><%= htmlWebpackPlugin.options.title %></title>
         <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
-        <style>
-            .row {
-                margin-bottom: 10px;
-            }
-        </style>
     </head>
     <body>
         <div id="root">
             <h1>Settings</h1>
             <form id="settings-form">
                 <div class="row">
-                    <input type="number" min="0" id="expand" required> Expand level
+                    <input type="number" min="0" id="expand"> Expand level
+                </div>
+                <div class="row">
+                    <h2>Presets:<button id="add-host">Add host</button></h2>
+                </div>
+                <div class="row">
+                    <ul id="presets">
+                    </ul>
                 </div>
                 <div class="row">
                     <input type="submit" id="save" value="Save">

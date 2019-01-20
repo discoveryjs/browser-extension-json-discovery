@@ -10,7 +10,9 @@ require('./index.css');
  * @returns {Discovery}
  */
 function initDiscovery(settings) {
-    const discovery = new Widget(document.body);
+    const discovery = new Widget(document.body, {
+        viewPresets: settings.viewPresets || []
+    });
 
     discovery.apply(router);
     discovery.apply(complexViews);

@@ -4,7 +4,8 @@
  */
 function getSettings(cb) {
     chrome.storage.sync.get({
-        expandLevel: 3
+        expandLevel: 3,
+        viewPresets: []
     }, settings => {
         cb(settings);
     });
@@ -48,6 +49,20 @@ if (json) {
 
     iframe.addEventListener('load', () => {
         getSettings(settings => {
+            let viewPresets = [];
+
+            for (const item of settings.viewPresets) {
+                const { host, presets } = item;
+
+                const hostRe = new RegExp(host);
+
+                if (hostRe.test(document.location.toString())) {
+                    viewPresets = viewPresets.concat(presets);
+                }
+            }
+
+            settings.viewPresets = viewPresets;
+
             iframe.contentWindow.postMessage({
                 json,
                 raw,
