@@ -15,7 +15,7 @@ function initDiscovery(settings) {
     discovery.apply(router);
     discovery.apply(complexViews);
 
-    discovery.definePage('default', [
+    discovery.page.define('default', [
         {
             view: 'struct',
             expanded: parseInt(settings.expandLevel, 10) || 0
@@ -32,7 +32,7 @@ function initDiscovery(settings) {
         el.appendChild(div);
     });
 
-    discovery.definePage('raw', [{
+    discovery.page.define('raw', [{
         view: 'raw'
     }]);
 
