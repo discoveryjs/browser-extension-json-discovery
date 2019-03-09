@@ -13,9 +13,13 @@ function getSettings(cb) {
 let json;
 let raw;
 
-try {
-    json = JSON.parse(document.body.innerText);
-} catch (_) {}
+const { innerText } = document.body;
+
+if (!innerText.startsWith('<')) {
+    try {
+        json = JSON.parse(innerText);
+    } catch (_) {}
+}
 
 if (json) {
     const iframe = document.createElement('iframe');
@@ -27,21 +31,9 @@ if (json) {
     iframe.frameBorder = 0;
 
     raw = document.body.innerHTML;
-    document.body.innerHTML = '';
-
-    document.body.style.margin = 0;
-    document.body.style.padding = 0;
-    document.body.style.height = '100%';
-    document.body.style.overflow = 'hidden';
-    document.body.style.userSelect = 'none';
 
     const wrapper = document.createElement('div');
-
-    wrapper.style.position = 'absolute';
-    wrapper.style.top = 0;
-    wrapper.style.bottom = 0;
-    wrapper.style.left = 0;
-    wrapper.style.right = 0;
+    wrapper.isSet = false;
 
     document.body.appendChild(wrapper);
     wrapper.appendChild(iframe);
@@ -74,6 +66,23 @@ if (json) {
     };
 
     const onMessage = event => {
+        if (event.data && event.data.scriptLoaded && !wrapper.isSet) {
+            wrapper.style.position = 'absolute';
+            wrapper.style.top = 0;
+            wrapper.style.bottom = 0;
+            wrapper.style.left = 0;
+            wrapper.style.right = 0;
+            wrapper.style['background-color'] = '#fff';
+
+            document.body.style.margin = 0;
+            document.body.style.padding = 0;
+            document.body.style.height = '100%';
+            document.body.style.overflow = 'hidden';
+            document.body.style.userSelect = 'none';
+
+            wrapper.isSet = true;
+        }
+
         setHash(event.data.hash, event.data.replace);
 
         if (event.data && event.data.openSettings) {

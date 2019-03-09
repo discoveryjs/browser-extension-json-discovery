@@ -1,3 +1,9 @@
+## 1.4.0 (09-03-2019)
+
+* Settings page is now using `discovery` under hood
+* Some pages with CSP-header may brake extension functionality ([Crome bug](https://bugs.chromium.org/p/chromium/issues/detail?id=816121)). For such cases added fallback
+* Extension now check if content is HTML before trying to parse JSON
+
 ## 1.3.1 (13-02-2019)
 
 * Updated `discovery` and `jora`
