@@ -5,3 +5,27 @@
 .user-select {
     user-select: text;
 }
+
+.view-fieldset {
+    width: 400px;
+    display: flex;
+    margin: 8px 0;
+}
+
+.view-fieldset > * + * {
+    margin-left: 6px;
+}
+
+.view-fieldset .view-input {
+    flex: 1;
+}
+
+.view-label {
+    line-height: 34px;
+}
+
+.view-flash-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}

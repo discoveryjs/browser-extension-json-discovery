@@ -105,6 +105,8 @@ function initDiscovery(settings) {
         }, '*');
     };
 
+    parent.postMessage({ scriptLoaded: true }, '*');
+
     return discovery;
 }
 
@@ -128,9 +130,3 @@ window.addEventListener('message', function(event) {
         );
     }
 }, false);
-
-// window.addEventListener('hashchange', () => {
-//     parent.postMessage({
-//         hash: window.location.hash
-//     }, '*');
-// });
