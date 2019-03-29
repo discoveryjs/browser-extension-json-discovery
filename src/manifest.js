@@ -12,7 +12,7 @@ module.exports = {
     options_ui: { // eslint-disable-line camelcase
         page: 'pages/settings.html',
         chrome_style: false, // eslint-disable-line camelcase
-        open_in_tab: false // eslint-disable-line camelcase
+        open_in_tab: true // eslint-disable-line camelcase
     },
     content_scripts: [{ // eslint-disable-line camelcase
         js: ['js/inject.js'],

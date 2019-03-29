@@ -1,3 +1,7 @@
+## 1.4.1 (29-03-2019)
+
+* Settings page now opens in tab instead of pop-up window
+
 ## 1.4.0 (09-03-2019)
 
 * Settings page is now using `discovery` under hood
