@@ -1,3 +1,8 @@
+## 1.4.2 (25-05-2019)
+
+* Extension now available for Firefox
+* Refactored build for multiple targets (Chrome, Firefox)
+
 ## 1.4.1 (29-03-2019)
 
 * Settings page now opens in tab instead of pop-up window
