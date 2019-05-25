@@ -5,42 +5,45 @@ const Zip = require('jszip');
 const zip = new Zip();
 const { version } = require('../package.json');
 
-const outputFile = path.resolve(__dirname, '..', 'build', `jsondiscovery-${version}.zip`);
+const TARGETS = {
+    chrome: 'build-chrome',
+    firefox: 'build-firefox'
+};
 
-const BUILD_DIR = 'build';
+const outputFile = (target, buildDir) =>
+    path.resolve(__dirname, '..', buildDir, `jsondiscovery-${target}-${version}.zip`);
 
-/**
- * Adds file to archive
- * @param {string} relPath
- */
-function addFile(relPath) {
-    zip.file(relPath.replace(`${BUILD_DIR}/`, ''), fs.readFileSync(relPath));
-}
+const makeAddFile = relDir => relPath => zip.file(relPath.replace(`${relDir}/`, ''), fs.readFileSync(relPath));
 
 /**
  * Adds folder to archive
  * @param {string} relPath
+ * @param {Function} addFile
  */
-function addFolder(relPath) {
+function addFolder(relPath, addFile) {
     fs.readdirSync(relPath).forEach(function(filename) {
         const fullpath = path.join(relPath, filename);
         if (fs.statSync(fullpath).isDirectory()) {
-            addFolder(fullpath);
+            addFolder(fullpath, addFile);
         } else {
             addFile(fullpath);
         }
     });
 }
 
-addFolder(BUILD_DIR);
+for (const [target, buildDir] of Object.entries(TARGETS)) {
+    const addFile = makeAddFile(buildDir);
 
-zip
-    .generateNodeStream({
-        type: 'nodebuffer',
-        streamFiles: true,
-        compression: 'DEFLATE'
-    })
-    .pipe(fs.createWriteStream(outputFile))
-    .on('finish', function() {
-        console.log('Write result in ' + outputFile); // eslint-disable-line
-    });
+    addFolder(buildDir, addFile);
+
+    zip
+        .generateNodeStream({
+            type: 'nodebuffer',
+            streamFiles: true,
+            compression: 'DEFLATE'
+        })
+        .pipe(fs.createWriteStream(outputFile(target, buildDir)))
+        .on('finish', function() {
+            console.log('Write result in ' + outputFile(target, buildDir)); // eslint-disable-line
+        });
+}

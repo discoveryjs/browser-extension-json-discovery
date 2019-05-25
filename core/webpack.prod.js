@@ -4,7 +4,9 @@ const baseWebpack = require('./webpack.base');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = merge(baseWebpack, {
+// TODO multiple configurations broken https://github.com/webpack/webpack-cli/issues/887
+
+const config = {
     mode: 'production',
     devtool: false,
     optimization: {
@@ -22,4 +24,8 @@ module.exports = merge(baseWebpack, {
         }),
         new webpack.HashedModuleIdsPlugin()
     ]
-});
+};
+
+module.exports = function({ target }) {
+    return merge(baseWebpack[target], config);
+};

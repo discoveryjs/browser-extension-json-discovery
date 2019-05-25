@@ -4,7 +4,7 @@ const baseWebpack = require('./webpack.base');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 
-module.exports = merge(baseWebpack, {
+module.exports = baseWebpack.map(config => merge(config, {
     mode: 'development',
     devtool: 'source-map',
     watch: true,
@@ -20,4 +20,4 @@ module.exports = merge(baseWebpack, {
             }
         })
     ]
-});
+}));

@@ -3,10 +3,11 @@ const { htmlPage } = require('./tools');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const pkg = require('../package.json');
-const manifest = require('../src/manifest.js');
+const manifestBase = require('../src/manifest.js');
+const manifestFirefox = require('../src/manifest-firefox.js');
 
 const resolve = dir => path.join(__dirname, '..', 'src', dir);
-module.exports = {
+const config = ({ manifest, outputPath }) => ({
     target: 'web',
     node: {
         global: false
@@ -17,7 +18,7 @@ module.exports = {
         settings: resolve('./settings')
     },
     output: {
-        path: path.join(__dirname, '..', 'build'),
+        path: path.join(__dirname, '..', outputPath),
         publicPath: '/',
         filename: 'js/[name].js',
         chunkFilename: 'js/[id].[name].js?[hash]',
@@ -95,7 +96,7 @@ module.exports = {
             },
             {
                 from: path.join(__dirname, '..', 'src', 'manifest.js'),
-                to: path.join(__dirname, '..', 'build', 'manifest.json'),
+                to: path.join(__dirname, '..', outputPath, 'manifest.json'),
                 transform() {
                     manifest.version = pkg.version;
                     return JSON.stringify(manifest, null, 2);
@@ -108,4 +109,18 @@ module.exports = {
         })
     ],
     performance: { hints: false }
-};
+});
+
+const chromeConfig = config({
+    manifest: manifestBase,
+    outputPath: 'build-chrome'
+});
+const firefoxConfig = config({
+    manifest: manifestFirefox,
+    outputPath: 'build-firefox'
+});
+
+module.exports = [
+    chromeConfig,
+    firefoxConfig
+];
