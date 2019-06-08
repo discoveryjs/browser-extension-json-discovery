@@ -30,6 +30,14 @@ Download it from:
 * Find the folder containing extension ZIP archive and select it
 * That's it!
 
+##### Firefox default JSON viewer
+
+By default Firefox uses its own JSON viewer. To disable it you should:
+
+* Navigate to "about:config"
+* In search field type 'devtools.jsonview.enabled'
+* Toggle this setting to false
+
 ### Development
 
 For local development clone repository, run `npm install` inside repo directory and start local development server with `npm run dev` command.
