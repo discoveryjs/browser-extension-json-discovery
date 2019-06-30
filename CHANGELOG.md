@@ -1,3 +1,7 @@
+## 1.4.3 (30-06-2019)
+
+* Updated `discovery`
+
 ## 1.4.2 (25-05-2019)
 
 * Extension now available for Firefox
