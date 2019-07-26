@@ -99,13 +99,13 @@ export default discovery => {
 
         discovery.setData(
             discovery.data,
-            Object.assign(discovery.context, { message })
+            Object.assign(discovery.context, data, { message })
         );
 
         setTimeout(() => {
             discovery.setData(
                 discovery.data,
-                Object.assign(discovery.context, { message: null })
+                Object.assign(discovery.context, data, { message: null })
             );
         }, 750);
     }

@@ -133,10 +133,21 @@ function getSettings(cb) {
 
         document.body.innerHTML = '';
 
+        document.body.style.margin = 0;
+        document.body.style.padding = 0;
+
+        const shadow = document.body.attachShadow({ mode: 'closed' });
+
+        const styles = document.createElement('link');
+        styles.rel = 'stylesheet';
+        styles.href = chrome.extension.getURL('css/inject.css');
+
+        shadow.appendChild(styles);
+
         const wrapper = document.createElement('div');
         wrapper.classList.add('discovery');
 
-        document.body.appendChild(wrapper);
+        shadow.appendChild(wrapper);
 
         wrapper.style['background-color'] = '#fff';
 
