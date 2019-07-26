@@ -1,5 +1,8 @@
 import { Widget, router, complexViews } from '@discoveryjs/discovery/dist/lib.umd.js';
 import settingsPage from '../settings';
+import '@discoveryjs/discovery/dist/lib.css';
+import '@discoveryjs/discovery/client/common.css';
+import './index.css';
 
 /**
  * Discovery initialization
@@ -114,10 +117,6 @@ function getSettings(cb) {
 }
 
 (function() {
-    require('@discoveryjs/discovery/dist/lib.css');
-    require('@discoveryjs/discovery/client/common.css');
-    require('./index.css');
-
     let json;
     let raw;
 

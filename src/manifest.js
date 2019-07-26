@@ -9,9 +9,12 @@ module.exports = {
         '<all_urls>',
         'storage'
     ],
+    content_security_policy: 'script-src \'self\' \'unsafe-eval\'; object-src \'self\'', // eslint-disable-line camelcase
     content_scripts: [{ // eslint-disable-line camelcase
         js: ['js/inject.js'],
+        css: ['css/inject.css'],
         run_at: 'document_end', // eslint-disable-line camelcase
         matches: ['<all_urls>']
-    }]
+    }],
+    web_accessible_resources: ['css/content.css'] // eslint-disable-line camelcase
 };

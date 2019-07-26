@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const pkg = require('../package.json');
 const manifestBase = require('../src/manifest.js');
 const manifestFirefox = require('../src/manifest-firefox.js');
@@ -37,7 +38,7 @@ const config = ({ manifest, outputPath }) => ({
                 test: /\.css$/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: MiniCssExtractPlugin.loader
                     },
                     {
                         loader: 'css-loader',
@@ -96,7 +97,11 @@ const config = ({ manifest, outputPath }) => ({
                     return JSON.stringify(manifest, null, 2);
                 }
             }
-        ])
+        ]),
+        new MiniCssExtractPlugin({
+            filename: 'css/[name].css',
+            chunkFilename: 'css/[id].css'
+        })
     ],
     performance: { hints: false }
 });
