@@ -1,7 +1,5 @@
 const path = require('path');
-const { htmlPage } = require('./tools');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const pkg = require('../package.json');
 const manifestBase = require('../src/manifest.js');
 const manifestFirefox = require('../src/manifest-firefox.js');
@@ -13,9 +11,7 @@ const config = ({ manifest, outputPath }) => ({
         global: false
     },
     entry: {
-        content: resolve('./content'),
-        inject: resolve('./content/inject'),
-        settings: resolve('./settings')
+        inject: resolve('./content/inject')
     },
     output: {
         path: path.join(__dirname, '..', outputPath),
@@ -41,7 +37,7 @@ const config = ({ manifest, outputPath }) => ({
                 test: /\.css$/,
                 use: [
                     {
-                        loader: MiniCssExtractPlugin.loader
+                        loader: 'style-loader'
                     },
                     {
                         loader: 'css-loader',
@@ -88,8 +84,6 @@ const config = ({ manifest, outputPath }) => ({
         ]
     },
     plugins: [
-        htmlPage('content', 'content', ['content']),
-        htmlPage('DiscoveryJSON Settings', 'settings', ['settings'], './core/settings.ejs'),
         new CopyWebpackPlugin([
             {
                 from: path.join(__dirname, '..', 'static')
@@ -102,11 +96,7 @@ const config = ({ manifest, outputPath }) => ({
                     return JSON.stringify(manifest, null, 2);
                 }
             }
-        ]),
-        new MiniCssExtractPlugin({
-            filename: 'css/[name].css',
-            chunkFilename: 'css/[id].css'
-        })
+        ])
     ],
     performance: { hints: false }
 });

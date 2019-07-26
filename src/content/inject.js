@@ -1,3 +1,106 @@
+import { Widget, router, complexViews } from '@discoveryjs/discovery/dist/lib.umd.js';
+import settingsPage from '../settings';
+
+/**
+ * Discovery initialization
+ * @param {Object} options
+ * @returns {Discovery}
+ */
+function initDiscovery(options) {
+    const { settings } = options;
+    const discovery = new Widget(options.wrapper);
+
+    discovery.apply(router);
+    discovery.apply(complexViews);
+
+    settingsPage(discovery);
+
+    discovery.page.define('default', [
+        {
+            view: 'struct',
+            expanded: parseInt(settings.expandLevel, 10) || 0
+        }
+    ]);
+
+    discovery.view.define('raw', el => {
+        const { raw } = discovery.context;
+        const div = document.createElement('div');
+
+        div.classList.add('user-select');
+        div.innerHTML = raw;
+
+        el.appendChild(div);
+    });
+
+    discovery.page.define('raw', [{
+        view: 'raw'
+    }]);
+
+    discovery.addBadge(
+        'Index',
+        () => {
+            discovery.setPage('default');
+            history.replaceState(null, null, ' ');
+        },
+        (host) => host.pageId !== 'default'
+    );
+    discovery.addBadge(
+        'Make report',
+        () => discovery.setPage('report'),
+        (host) => host.pageId !== 'report'
+    );
+    discovery.addBadge(
+        'Settings',
+        () => discovery.setPage('settings')
+    );
+    discovery.addBadge(
+        'Raw',
+        () => discovery.setPage('raw'),
+        (host) => host.pageId !== 'raw'
+    );
+    discovery.addBadge(
+        'Copy raw',
+        function() {
+            const { raw } = discovery.context;
+            const div = document.createElement('div');
+            div.innerHTML = raw;
+            const rawText = div.textContent;
+            const el = document.createElement('textarea');
+            el.value = rawText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            this.textContent = 'Copied!';
+            setTimeout(() => {
+                this.textContent = 'Copy raw';
+            }, 700);
+        },
+        (host) => {
+            if (host.pageId === 'raw') {
+                document.body.classList.add('no-user-select');
+            } else {
+                document.body.classList.remove('no-user-select');
+            }
+
+            return host.pageId === 'raw';
+        }
+    );
+
+    discovery.setData(
+        options.data,
+        {
+            name: options.title,
+            raw: options.raw,
+            settings,
+            createdAt: new Date().toISOString() // TODO fix in discovery
+        }
+    );
+
+    return discovery;
+}
+
 /**
  * Restores settings from storage
  * @param {Function} cb
@@ -10,104 +113,41 @@ function getSettings(cb) {
     });
 }
 
-let json;
-let raw;
+(function() {
+    require('@discoveryjs/discovery/dist/lib.css');
+    require('@discoveryjs/discovery/client/common.css');
+    require('./index.css');
 
-const { innerText } = document.body;
+    let json;
+    let raw;
 
-if (!innerText.startsWith('<')) {
-    try {
-        json = JSON.parse(innerText);
-    } catch (_) {}
-}
+    const { innerText } = document.body;
 
-if (json) {
-    const iframe = document.createElement('iframe');
-    const content = chrome.extension.getURL('pages/content.html');
+    if (!innerText.startsWith('<')) {
+        try {
+            json = JSON.parse(innerText);
+        } catch (_) {}
+    }
 
-    iframe.src = content;
-    iframe.width = '100%';
-    iframe.height = '100%';
-    iframe.frameBorder = 0;
+    if (json) {
+        raw = document.body.innerHTML;
 
-    raw = document.body.innerHTML;
+        document.body.innerHTML = '';
 
-    const wrapper = document.createElement('div');
-    wrapper.isSet = false;
+        const wrapper = document.createElement('div');
+        wrapper.classList.add('discovery');
 
-    document.body.appendChild(wrapper);
-    wrapper.appendChild(iframe);
+        document.body.appendChild(wrapper);
 
-    iframe.addEventListener('load', () => {
+        wrapper.style['background-color'] = '#fff';
+
         getSettings(settings => {
-            iframe.contentWindow.postMessage({
-                json,
+            initDiscovery({
+                wrapper,
                 raw,
-                hash: window.location.hash,
-                title: document.location.href.replace(document.location.hash, ''),
+                data: json,
                 settings
-            }, '*');
+            });
         });
-    });
-
-    let iframeHash = null;
-
-    const setHash = (hash, replace) => {
-        if (hash && window.location.hash !== hash) {
-            if (replace) {
-                history.replaceState('', document.title, window.location.pathname + window.location.search + hash);
-            } else {
-                window.location.hash = hash;
-            }
-        } else if (!hash && window.location.hash) {
-            history.pushState('', document.title, window.location.pathname + window.location.search);
-        }
-        iframeHash = hash;
-    };
-
-    const onMessage = event => {
-        if (event.data && event.data.scriptLoaded && !wrapper.isSet) {
-            wrapper.style.position = 'absolute';
-            wrapper.style.top = 0;
-            wrapper.style.bottom = 0;
-            wrapper.style.left = 0;
-            wrapper.style.right = 0;
-            wrapper.style['background-color'] = '#fff';
-
-            document.body.style.margin = 0;
-            document.body.style.padding = 0;
-            document.body.style.height = '100%';
-            document.body.style.overflow = 'hidden';
-            document.body.style.userSelect = 'none';
-
-            wrapper.isSet = true;
-        }
-
-        setHash(event.data.hash, event.data.replace);
-
-        if (event.data && event.data.openSettings) {
-            if (chrome.runtime.openOptionsPage) {
-                chrome.runtime.openOptionsPage();
-            } else {
-                window.open(chrome.runtime.getURL('pages/settings.html'));
-            }
-        }
-    };
-
-    window.addEventListener('message', onMessage);
-
-    const onHashChange = () => {
-        if (iframeHash !== null && iframeHash !== window.location.hash) {
-            iframe.contentWindow.postMessage({
-                hash: window.location.hash
-            }, '*');
-        }
-    };
-
-    window.addEventListener('hashchange', onHashChange);
-
-    window.addEventListener('beforeunload', () => {
-        window.removeEventListener('message', onMessage);
-        window.removeEventListener('hashchange', onHashChange);
-    });
-}
+    }
+})();
