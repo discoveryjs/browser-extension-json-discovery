@@ -8,6 +8,11 @@ Extension based on [Discovery.js](https://github.com/discoveryjs/discovery) whic
 
 ![JsonDiscovery](https://hsto.org/webt/ea/f1/rw/eaf1rwvh6zugx3rotnwttvvepjq.png)
 
+Download it from:
+* [Chrome Web Store](https://chrome.google.com/webstore/detail/discoveryjson/pamhglogfolfbmlpnenhpeholpnlcclo)
+* [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/jsondiscovery/)
+* [Releases](https://github.com/discoveryjs/browser-extension-json-discovery/releases) section.
+
 ## Most exciting features:
 - Show JSON as an interactive tree with highlighting
 - Easy an object or an array copy to clipboard
@@ -16,15 +21,10 @@ Extension based on [Discovery.js](https://github.com/discoveryjs/discovery) whic
 - Customisation of JSON data presentation (using tables, lists and so on)
 - Customisation (report) sharing by a link
 - Works on any page with a valid JSON – URL/content type doesn't matter
-- Works on local files, if it's enabled on extension's settings page (navigate to chrome://extensions, find JsonDiscovery, click "Details" button, then toggle "Allow access to file URLs" switch)
+- Works on local files (see below)
 - Works offline (doesn't perform any network request)
 
-Read more on [Medium](https://blog.usejournal.com/changing-a-way-were-viewing-json-in-a-browser-51eda9103fa2) or on [Habr (RU)](https://habr.com/ru/post/461185/)
-
-Download it from:
-* [Chrome Web Store](https://chrome.google.com/webstore/detail/discoveryjson/pamhglogfolfbmlpnenhpeholpnlcclo)
-* [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/jsondiscovery/)
-* [Releases](https://github.com/discoveryjs/browser-extension-json-discovery/releases) section.
+Read more on [Medium](https://blog.usejournal.com/changing-a-way-were-viewing-json-in-a-browser-51eda9103fa2) or on [Habr (in Russian)](https://habr.com/ru/post/461185/)
 
 ### How to install from zip
 
@@ -35,6 +35,13 @@ Download it from:
 * Click "Load unpacked"
 * Find the folder where you extracted ZIP file
 * That's it!
+
+##### Working with local files
+
+* Navigate to chrome://extensions
+* Find JsonDiscovery
+* Click "Details" button
+* Toggle "Allow access to file URLs" switch
 
 #### Firefox:
 
