@@ -120,11 +120,12 @@ function getSettings(cb) {
     let json;
     let raw;
 
-    const { innerText } = document.body;
+    let { textContent } = document.body;
+    textContent = textContent.trim();
 
-    if (!innerText.startsWith('<')) {
+    if (textContent.startsWith('{') || textContent.startsWith('[')) {
         try {
-            json = JSON.parse(innerText);
+            json = JSON.parse(textContent);
         } catch (_) {}
     }
 
