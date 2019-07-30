@@ -1,12 +1,25 @@
 # JsonDiscovery
 
-## Browser extension for discovery json APIs and data
+## Browser extension that changes the way you\'re viewing JSON
 
 > Now available for Firefox!
 
 Extension based on [Discovery.js](https://github.com/discoveryjs/discovery) which allows you to discover JSON-documents and APIs and make beautiful reports on the fly!
 
-![JsonDiscovery](https://lh3.googleusercontent.com/yZtKr90fS9aOF30d5PyZ-lMrwOIqe0mq13Og6q-BzAU1LgTowkO52WuI5tsgbXx-LUs3XOjKLw=w640-h400-e365)
+![JsonDiscovery](https://hsto.org/webt/ea/f1/rw/eaf1rwvh6zugx3rotnwttvvepjq.png)
+
+## Most exciting features:
+- Show JSON as an interactive tree with highlighting
+- Easy an object or an array copy to clipboard
+- Data structure signature (like in TypeScript)
+- Data transformation with a query using Jora, suggestions on a query typing
+- Customisation of JSON data presentation (using tables, lists and so on)
+- Customisation (report) sharing by a link
+- Works on any page with a valid JSON – URL/content type doesn't matter
+- Works on local files, if it's enabled on extension's settings page (navigate to chrome://extensions, find JsonDiscovery, click "Details" button, then toggle "Allow access to file URLs" switch)
+- Works offline (doesn't perform any network request)
+
+Read more on [Medium](https://blog.usejournal.com/changing-a-way-were-viewing-json-in-a-browser-51eda9103fa2) or on [Habr (RU)](https://habr.com/ru/post/461185/)
 
 Download it from:
 * [Chrome Web Store](https://chrome.google.com/webstore/detail/discoveryjson/pamhglogfolfbmlpnenhpeholpnlcclo)
