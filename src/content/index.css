@@ -1,8 +1,13 @@
-body {
+/* TODO move to discovery */
+.discovery-view-popup {
     font-family: Tahoma,Verdana,Arial,sans-serif;
     font-size: 14px;
     line-height: 1.6;
 }
+.discovery .CodeMirror-scroll {
+    height: auto;
+}
+/* TODO move to discovery */
 
 .no-user-select {
     user-select: none;
