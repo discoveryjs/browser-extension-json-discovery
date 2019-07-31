@@ -1,10 +1,6 @@
 # JsonDiscovery
 
-## Browser extension that changes the way you\'re viewing JSON
-
-> Now available for Firefox!
-
-Extension based on [Discovery.js](https://github.com/discoveryjs/discovery) which allows you to discover JSON-documents and APIs and make beautiful reports on the fly!
+Browser extension that changes the way you\'re viewing JSON
 
 ![JsonDiscovery](https://hsto.org/webt/ea/f1/rw/eaf1rwvh6zugx3rotnwttvvepjq.png)
 
@@ -12,6 +8,8 @@ Download it from:
 * [Chrome Web Store](https://chrome.google.com/webstore/detail/discoveryjson/pamhglogfolfbmlpnenhpeholpnlcclo)
 * [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/jsondiscovery/)
 * [Releases](https://github.com/discoveryjs/browser-extension-json-discovery/releases) section.
+
+Extension based on [Discovery.js](https://github.com/discoveryjs/discovery) which allows you to discover JSON-documents and APIs and make beautiful reports on the fly!
 
 ## Most exciting features:
 - Show JSON as an interactive tree with highlighting
