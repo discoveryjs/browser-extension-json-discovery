@@ -1,3 +1,9 @@
+## 1.5.0 (30-07-2019)
+
+* Fixed various CSP issues
+* Fixed extension malfunction on sites with JSON-like content
+* Updated `discovery` to `1.0.0-beta.16` version
+
 ## 1.4.3 (30-06-2019)
 
 * Updated `discovery`
