@@ -2,7 +2,7 @@
 
 Browser extension that changes the way you\'re viewing JSON
 
-![JsonDiscovery](https://hsto.org/webt/ea/f1/rw/eaf1rwvh6zugx3rotnwttvvepjq.png)
+![JsonDiscovery](https://i.imgur.com/aMinbNB.png)
 
 Download it from:
 * [Chrome Web Store](https://chrome.google.com/webstore/detail/discoveryjson/pamhglogfolfbmlpnenhpeholpnlcclo)
