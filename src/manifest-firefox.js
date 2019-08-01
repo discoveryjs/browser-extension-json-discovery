@@ -1,6 +1,6 @@
 const manifest = require('./manifest');
 
-module.exports = Object.assign({}, manifest, {
+const ffManifest = Object.assign({}, manifest, {
     applications: {
         gecko: {
             id: 'jsondiscovery@exdis.me',
@@ -8,3 +8,7 @@ module.exports = Object.assign({}, manifest, {
         }
     }
 });
+
+delete ffManifest.offline_enabled;
+
+module.exports = ffManifest;

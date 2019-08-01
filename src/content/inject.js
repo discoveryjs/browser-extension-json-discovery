@@ -1,7 +1,6 @@
 import { Widget, router, complexViews } from '@discoveryjs/discovery/dist/lib.umd.js';
 import settingsPage from '../settings';
 import '@discoveryjs/discovery/dist/lib.css';
-import '@discoveryjs/discovery/client/common.css';
 import './index.css';
 
 /**
@@ -133,6 +132,12 @@ function getSettings(cb) {
         raw = document.body.innerHTML;
 
         document.body.innerHTML = '';
+
+        document.body.style.margin = 0;
+        document.body.style.padding = 0;
+        document.body.style.height = '100%';
+        document.body.style.border = 'none';
+        document.body.style.webkitTextSizeAdjust = '100%';
 
         const wrapper = document.createElement('div');
         wrapper.classList.add('discovery');
