@@ -1,3 +1,7 @@
+## 1.5.1 (01-08-2019)
+
+* Fixed issue with broken styles on several sites
+
 ## 1.5.0 (30-07-2019)
 
 * Fixed various CSP issues
