@@ -45,6 +45,9 @@ const config = ({ manifest, outputPath }) => ({
                         options: {
                             import: true
                         }
+                    },
+                    {
+                        loader: require.resolve('./cssTransformLoader.js')
                     }
                 ]
             },
@@ -99,8 +102,7 @@ const config = ({ manifest, outputPath }) => ({
             }
         ]),
         new MiniCssExtractPlugin({
-            filename: 'css/[name].css',
-            chunkFilename: 'css/[id].css'
+            filename: 'css/[name].css'
         })
     ],
     performance: { hints: false }
