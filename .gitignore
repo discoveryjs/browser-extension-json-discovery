@@ -1,3 +1,5 @@
 node_modules
 npm-debug.log
 build*
+safari/JsonDiscovery/JsonDiscovery Extension/js
+safari/JsonDiscovery/JsonDiscovery Extension/css
