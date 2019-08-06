@@ -2,6 +2,7 @@ import { Widget, router, complexViews } from '@discoveryjs/discovery/dist/lib.um
 import settingsPage from '../settings';
 import '@discoveryjs/discovery/dist/lib.css';
 import './index.css';
+import { WRAPPER_NODE } from '../../core/constants';
 
 /**
  * Discovery initialization
@@ -10,7 +11,7 @@ import './index.css';
  */
 function initDiscovery(options) {
     const { settings } = options;
-    const discovery = new Widget(options.wrapper);
+    const discovery = new Widget(options.discoveryNode);
 
     discovery.apply(router);
     discovery.apply(complexViews);
@@ -138,17 +139,18 @@ function getSettings(cb) {
         document.body.style.height = '100%';
         document.body.style.border = 'none';
         document.body.style.webkitTextSizeAdjust = '100%';
+        document.body.style['background-color'] = '#fff';
+        document.body.classList.add(WRAPPER_NODE);
 
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('discovery');
+        const discoveryNode = document.createElement('div');
+        discoveryNode.style.height = '100%';
+        document.body.appendChild(discoveryNode);
 
-        document.body.appendChild(wrapper);
-
-        wrapper.style['background-color'] = '#fff';
+        document.body.appendChild(discoveryNode);
 
         getSettings(settings => {
             initDiscovery({
-                wrapper,
+                discoveryNode,
                 raw,
                 data: json,
                 settings

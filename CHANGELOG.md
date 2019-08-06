@@ -1,3 +1,7 @@
+## 1.5.2 (06-08-2019)
+
+* Fixed style pollution
+
 ## 1.5.1 (01-08-2019)
 
 * Fixed issue with broken styles on several sites
