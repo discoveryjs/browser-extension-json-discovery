@@ -139,16 +139,14 @@ function getSettings(cb) {
         document.body.style.height = '100%';
         document.body.style.border = 'none';
         document.body.style.webkitTextSizeAdjust = '100%';
-
-        const wrapper = document.createElement('div');
-        wrapper.classList.add(WRAPPER_NODE);
+        document.body.style['background-color'] = '#fff';
+        document.body.classList.add(WRAPPER_NODE);
 
         const discoveryNode = document.createElement('div');
-        wrapper.appendChild(discoveryNode);
+        discoveryNode.style.height = '100%';
+        document.body.appendChild(discoveryNode);
 
-        document.body.appendChild(wrapper);
-
-        wrapper.style['background-color'] = '#fff';
+        document.body.appendChild(discoveryNode);
 
         getSettings(settings => {
             initDiscovery({
