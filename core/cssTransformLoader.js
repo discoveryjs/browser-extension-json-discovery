@@ -7,14 +7,14 @@ const walkTree = ast => {
         enter: function(node) {
             // Namespace all discovery styles
             node.prelude.children.forEach(child => {
-                child.children.prepend(child.children.createItem({
+                child.children.prependData({
                     type: 'WhiteSpace',
                     value: ' '
-                }));
-                child.children.prepend(child.children.createItem({
+                });
+                child.children.prependData({
                     type: 'ClassSelector',
                     name: WRAPPER_NODE
-                }));
+                });
             });
         }
     });
