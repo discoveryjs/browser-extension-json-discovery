@@ -1,5 +1,6 @@
 import { Widget, router, complexViews } from '@discoveryjs/discovery/dist/lib.umd.js';
 import settingsPage from '../settings';
+import { WRAPPER_NODE } from '../../core/constants';
 import '@discoveryjs/discovery/dist/lib.css';
 import './index.css';
 
@@ -30,17 +31,16 @@ export function init(getSettings) {
         document.body.style.height = '100%';
         document.body.style.border = 'none';
         document.body.style.webkitTextSizeAdjust = '100%';
+        document.body.style['background-color'] = '#fff';
+        document.body.classList.add(WRAPPER_NODE);
 
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('discovery');
-
-        document.body.appendChild(wrapper);
-
-        wrapper.style['background-color'] = '#fff';
+        const discoveryNode = document.createElement('div');
+        discoveryNode.style.height = '100%';
+        document.body.appendChild(discoveryNode);
 
         getSettings(settings => {
             initDiscovery({
-                wrapper,
+                discoveryNode,
                 raw,
                 data: json,
                 settings
@@ -56,7 +56,7 @@ export function init(getSettings) {
  */
 export function initDiscovery(options) {
     const { settings } = options;
-    const discovery = new Widget(options.wrapper);
+    const discovery = new Widget(options.discoveryNode);
 
     discovery.apply(router);
     discovery.apply(complexViews);
