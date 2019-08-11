@@ -10,21 +10,30 @@ import SafariServices
 
 class SafariExtensionHandler: SFSafariExtensionHandler {
     
+    private enum Messages: String {
+        case settings
+        case getSettings
+        case setSettings
+    }
+    
     override func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
-        // This method will be called when a content script provided by your extension calls safari.extension.dispatchMessage("message").
-        page.getPropertiesWithCompletionHandler { properties in
-            NSLog("The extension received a message (\(messageName)) from a script injected into (\(String(describing: properties?.url))) with userInfo (\(userInfo ?? [:]))")
+        
+        NSLog("fooooooo")
+        
+        switch messageName {
+        case Messages.getSettings.rawValue:
+            page.dispatchMessageToScript(withName: Messages.settings.rawValue, userInfo: [
+                SettingsManager.Keys.expandLevel: SettingsManager.shared.expandLevel
+            ])
+        case Messages.setSettings.rawValue:
+            NSLog(userInfo?["expandLevel"] as! String)
+            if let expandLevel = userInfo?["expandLevel"] as! NSString? {
+                SettingsManager.shared.expandLevel = Int64(expandLevel.intValue)
+            }
+            
+        default:
+            break
         }
-    }
-    
-    override func toolbarItemClicked(in window: SFSafariWindow) {
-        // This method will be called when your toolbar item is clicked.
-        NSLog("The extension's toolbar item was clicked")
-    }
-    
-    override func validateToolbarItem(in window: SFSafariWindow, validationHandler: @escaping ((Bool, String) -> Void)) {
-        // This is called when Safari's state changed in some way that would require the extension's toolbar item to be validated again.
-        validationHandler(true, "")
     }
     
     override func popoverViewController() -> SFSafariExtensionViewController {

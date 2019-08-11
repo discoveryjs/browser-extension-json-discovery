@@ -160,13 +160,3 @@ export function getSettings(cb) {
         cb(settings);
     });
 }
-
-/**
- * Restores settings from storage
- * @param {Function} cb
- */
-export function getSettingsSafari(cb) {
-    cb({
-        expandLevel: 3
-    });
-}

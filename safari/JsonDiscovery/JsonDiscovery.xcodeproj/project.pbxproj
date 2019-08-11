@@ -19,6 +19,7 @@
 		03B7C6F422F6D20300A92F9A /* SafariExtensionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 03B7C6F222F6D20300A92F9A /* SafariExtensionViewController.xib */; };
 		03D1799122F6D9E900B3092F /* js in Resources */ = {isa = PBXBuildFile; fileRef = 03D1798F22F6D9E900B3092F /* js */; };
 		03D1799222F6D9E900B3092F /* css in Resources */ = {isa = PBXBuildFile; fileRef = 03D1799022F6D9E900B3092F /* css */; };
+		03EEB0D522FEB02D002DEC59 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03EEB0D422FEB02D002DEC59 /* SettingsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,7 @@
 		03B7C6FA22F6D20300A92F9A /* JsonDiscovery_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JsonDiscovery_Extension.entitlements; sourceTree = "<group>"; };
 		03D1798F22F6D9E900B3092F /* js */ = {isa = PBXFileReference; lastKnownFileType = folder; path = js; sourceTree = "<group>"; };
 		03D1799022F6D9E900B3092F /* css */ = {isa = PBXFileReference; lastKnownFileType = folder; path = css; sourceTree = "<group>"; };
+		03EEB0D422FEB02D002DEC59 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 			isa = PBXGroup;
 			children = (
 				03B7C6EE22F6D20300A92F9A /* SafariExtensionHandler.swift */,
+				03EEB0D422FEB02D002DEC59 /* SettingsManager.swift */,
 				03B7C6F022F6D20300A92F9A /* SafariExtensionViewController.swift */,
 				03B7C6F222F6D20300A92F9A /* SafariExtensionViewController.xib */,
 				03B7C6F522F6D20300A92F9A /* Info.plist */,
@@ -250,6 +253,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03EEB0D522FEB02D002DEC59 /* SettingsManager.swift in Sources */,
 				03B7C6F122F6D20300A92F9A /* SafariExtensionViewController.swift in Sources */,
 				03B7C6EF22F6D20300A92F9A /* SafariExtensionHandler.swift in Sources */,
 			);
