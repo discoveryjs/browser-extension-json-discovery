@@ -11,7 +11,7 @@ import Foundation
 class SettingsManager {
     static let shared = SettingsManager()
     
-    let sharedSettings = NSUbiquitousKeyValueStore.default
+    let sharedSettings = UserDefaults(suiteName: "$(TeamIdentifierPrefix)")!
     
     struct Keys {
         static let expandLevel = "expandLevel"
@@ -19,9 +19,7 @@ class SettingsManager {
     
     var expandLevel: Int64 {
         get {
-            let value = sharedSettings.longLong(forKey: Keys.expandLevel)
-
-            return value > 0 ? value : Int64(3)
+            return sharedSettings.value(forKey: Keys.expandLevel) as? Int64 ?? 3
         }
         set(value) {
             sharedSettings.set(value, forKey: Keys.expandLevel)

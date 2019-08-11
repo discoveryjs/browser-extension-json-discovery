@@ -191,6 +191,14 @@
 				TargetAttributes = {
 					03B7C6D222F6D20200A92F9A = {
 						CreatedOnToolsVersion = 10.3;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.Mac = {
+								enabled = 1;
+							};
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 					03B7C6E522F6D20300A92F9A = {
 						CreatedOnToolsVersion = 10.3;
