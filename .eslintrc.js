@@ -7,6 +7,9 @@ module.exports = {
         worker: true,
         webextensions: true
     },
+    globals: {
+        safari: true
+    },
     rules: {
         // Possible errors
         quotes: [2, 'single', { allowTemplateLiterals: true }],
