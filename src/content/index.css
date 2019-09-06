@@ -40,3 +40,21 @@
     top: 20px;
     right: 20px;
 }
+
+/* Safari quirk mode fix */
+.view-expand > .header > .trigger {
+    position: relative;
+}
+.view-expand > .header > .trigger::before {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    transform: rotate(-90deg) translate(-50%, -50%);
+}
+.view-expand.expanded > .header > .trigger::before {
+    transform: rotate(0deg) translate(-50%, -50%);
+}
+/* Safari quirk mode fix */

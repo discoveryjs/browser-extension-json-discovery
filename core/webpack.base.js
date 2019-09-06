@@ -6,13 +6,13 @@ const manifestBase = require('../src/manifest.js');
 const manifestFirefox = require('../src/manifest-firefox.js');
 
 const resolve = dir => path.join(__dirname, '..', 'src', dir);
-const config = ({ manifest, outputPath }) => ({
+const config = ({ entry = resolve('./content/inject'), manifest, outputPath, staticCopy = true }) => ({
     target: 'web',
     node: {
         global: false
     },
     entry: {
-        inject: resolve('./content/inject')
+        inject: entry
     },
     output: {
         path: path.join(__dirname, '..', outputPath),
@@ -89,17 +89,17 @@ const config = ({ manifest, outputPath }) => ({
     },
     plugins: [
         new CopyWebpackPlugin([
-            {
+            ...staticCopy ? [{
                 from: path.join(__dirname, '..', 'static')
-            },
-            {
+            }] : [],
+            ...manifest ? [{
                 from: path.join(__dirname, '..', 'src', 'manifest.js'),
                 to: path.join(__dirname, '..', outputPath, 'manifest.json'),
                 transform() {
                     manifest.version = pkg.version;
                     return JSON.stringify(manifest, null, 2);
                 }
-            }
+            }] : []
         ]),
         new MiniCssExtractPlugin({
             filename: 'css/[name].css'
@@ -116,8 +116,14 @@ const firefoxConfig = config({
     manifest: manifestFirefox,
     outputPath: 'build-firefox'
 });
+const safariConfig = config({
+    entry: resolve('./content/inject-safari'),
+    outputPath: 'safari/JsonDiscovery/JsonDiscovery Extension',
+    staticCopy: false
+});
 
 module.exports = [
     chromeConfig,
-    firefoxConfig
+    firefoxConfig,
+    safariConfig
 ];

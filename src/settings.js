@@ -77,7 +77,11 @@ export default discovery => {
         const { valid, errors } = validate(settings);
 
         if (valid) {
-            chrome.storage.sync.set(settings);
+            if (typeof chrome !== 'undefined') {
+                chrome.storage.sync.set(settings);
+            } else if (typeof safari !== 'undefined') {
+                safari.extension.dispatchMessage('setSettings', settings);
+            }
 
             flashMessage({ settings }, 'Options saved.', 'success');
         } else {
