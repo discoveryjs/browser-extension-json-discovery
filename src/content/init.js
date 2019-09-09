@@ -8,7 +8,7 @@ import './index.css';
  * Initializes extension
  * @param {Function} getSettings
  */
-export function init(getSettings) {
+export async function init(getSettings) {
     let json;
     let raw;
 
@@ -17,7 +17,15 @@ export function init(getSettings) {
 
     if (textContent.startsWith('{') || textContent.startsWith('[')) {
         try {
-            json = JSON.parse(textContent);
+            if (!window.location.protocol.startsWith('file')) {
+                let fetchTest = await (await fetch(window.location.href)).text();
+                fetchTest = fetchTest.trim();
+                if (fetchTest.startsWith('{') || fetchTest.startsWith('[')) {
+                    json = JSON.parse(textContent);
+                }
+            } else {
+                json = JSON.parse(textContent);
+            }
         } catch (_) {}
     }
 

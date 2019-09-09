@@ -1,3 +1,7 @@
+## 1.5.3 (01-09-2019)
+
+* Fixed false extension triggering on some sites
+
 ## 1.5.2 (06-08-2019)
 
 * Fixed style pollution
