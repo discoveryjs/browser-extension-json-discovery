@@ -1,3 +1,7 @@
+## 1.5.4 (11-09-2019)
+
+* Do not use second request, match JSON on markup instead
+
 ## 1.5.3 (01-09-2019)
 
 * Fixed false extension triggering on some sites
