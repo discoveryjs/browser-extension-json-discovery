@@ -12,20 +12,17 @@ export async function init(getSettings) {
     let json;
     let raw;
 
+    const { firstElementChild } = document.body;
     let { textContent } = document.body;
+
     textContent = textContent.trim();
 
-    if (textContent.startsWith('{') || textContent.startsWith('[')) {
+    if (
+        (firstElementChild && firstElementChild.tagName === 'PRE') &&
+        (textContent.startsWith('{') || textContent.startsWith('['))
+    ) {
         try {
-            if (!window.location.protocol.startsWith('file')) {
-                let fetchTest = await (await fetch(window.location.href)).text();
-                fetchTest = fetchTest.trim();
-                if (fetchTest.startsWith('{') || fetchTest.startsWith('[')) {
-                    json = JSON.parse(textContent);
-                }
-            } else {
-                json = JSON.parse(textContent);
-            }
+            json = JSON.parse(textContent);
         } catch (_) {}
     }
 
