@@ -10,48 +10,51 @@ import './index.css';
  */
 export async function init(getSettings) {
     let json;
-    let raw;
 
-    const { firstElementChild } = document.body;
-    let { textContent } = document.body;
-
-    textContent = textContent.trim();
-
-    if (
-        (firstElementChild && firstElementChild.tagName === 'PRE') &&
-        (textContent.startsWith('{') || textContent.startsWith('['))
-    ) {
-        try {
-            json = JSON.parse(textContent);
-        } catch (_) {}
+    const firstElementChild = document.body.firstElementChild;
+    if (!firstElementChild || firstElementChild.tagName !== 'PRE') {
+        return;
     }
 
-    if (json) {
-        raw = document.body.innerHTML;
+    let textContent = firstElementChild.textContent.trim();
+    if (!textContent.startsWith('{') && !textContent.startsWith('[')) {
+        return;
+    }
 
-        document.body.innerHTML = '';
+    try {
+        json = JSON.parse(textContent);
+    } catch (e) {
+        console.error(e.message);
+    }
 
-        document.body.style.margin = 0;
-        document.body.style.padding = 0;
-        document.body.style.height = '100%';
-        document.body.style.border = 'none';
-        document.body.style.webkitTextSizeAdjust = '100%';
-        document.body.style['background-color'] = '#fff';
-        document.body.classList.add(WRAPPER_NODE);
+    if (!json) {
+        return;
+    }
 
-        const discoveryNode = document.createElement('div');
-        discoveryNode.style.height = '100%';
-        document.body.appendChild(discoveryNode);
+    let raw = document.body.innerHTML;
 
-        getSettings(settings => {
-            initDiscovery({
-                discoveryNode,
-                raw,
-                data: json,
-                settings
-            });
+    document.body.innerHTML = '';
+
+    document.body.style.margin = 0;
+    document.body.style.padding = 0;
+    document.body.style.height = '100%';
+    document.body.style.border = 'none';
+    document.body.style.webkitTextSizeAdjust = '100%';
+    document.body.style['background-color'] = '#fff';
+    document.body.classList.add(WRAPPER_NODE);
+
+    const discoveryNode = document.createElement('div');
+    discoveryNode.style.height = '100%';
+    document.body.appendChild(discoveryNode);
+
+    getSettings(settings => {
+        initDiscovery({
+            discoveryNode,
+            raw,
+            data: json,
+            settings
         });
-    }
+    });
 }
 
 /**
