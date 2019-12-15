@@ -7,6 +7,8 @@ Browser extension that changes the way you\'re viewing JSON
 Download it from:
 * [Chrome Web Store](https://chrome.google.com/webstore/detail/discoveryjson/pamhglogfolfbmlpnenhpeholpnlcclo)
 * [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/jsondiscovery/)
+
+  **Note:** [`about:config` change required to use](#firefox-default-json-viewer)
 * [Releases](https://github.com/discoveryjs/browser-extension-json-discovery/releases) section.
 
 Extension based on [Discovery.js](https://github.com/discoveryjs/discovery) which allows you to discover JSON-documents and APIs and make beautiful reports on the fly!
