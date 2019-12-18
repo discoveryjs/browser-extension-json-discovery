@@ -7,12 +7,14 @@ import { WRAPPER_NODE } from '../../core/constants';
 export async function init(getSettings) {
     let json;
 
-    const firstElementChild = document.body.firstElementChild;
+    const { firstElementChild } = document.body;
+
     if (!firstElementChild || firstElementChild.tagName !== 'PRE') {
         return;
     }
 
-    let textContent = firstElementChild.textContent.trim();
+    const textContent = firstElementChild.textContent.trim();
+
     if (!textContent.startsWith('{') && !textContent.startsWith('[')) {
         return;
     }
@@ -20,14 +22,14 @@ export async function init(getSettings) {
     try {
         json = JSON.parse(textContent);
     } catch (e) {
-        console.error(e.message);
+        console.error(e.message); // eslint-disable-line no-console
     }
 
     if (!json) {
         return;
     }
 
-    let raw = document.body.innerHTML;
+    const raw = document.body.innerHTML;
 
     document.body.innerHTML = '';
 
