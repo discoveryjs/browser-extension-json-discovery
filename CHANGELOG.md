@@ -1,3 +1,8 @@
+## 1.6.0 (18-12-2019)
+
+* Updated `discovery` to `1.0.0-beta.27` [with new `jora` features](https://github.com/discoveryjs/jora/releases/tag/v1.0.0-alpha.11)
+* Fixed json parsing in cases when user has browser extensions which inject some content into pages with json
+
 ## 1.5.5 (12-12-2019)
 
 * Moved back missed build script
