@@ -36,6 +36,7 @@ const config = ({ entry = resolve('./content/inject'), manifest, outputPath, sta
         rules: [
             {
                 test: /\.css$/,
+                exclude: /discovery\.css$/,
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader
@@ -48,6 +49,20 @@ const config = ({ entry = resolve('./content/inject'), manifest, outputPath, sta
                     },
                     {
                         loader: require.resolve('./cssTransformLoader.js')
+                    }
+                ]
+            },
+            {
+                test: /discovery\.css$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            import: true
+                        }
                     }
                 ]
             },

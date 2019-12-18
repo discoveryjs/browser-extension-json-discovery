@@ -56,9 +56,10 @@ export async function init(getSettings) {
  * @returns {Discovery}
  */
 export function initDiscovery(options) {
-    const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/lib.umd.js');
+    const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/discovery.umd.js');
     const settingsPage = require('../settings').default;
-    require('@discoveryjs/discovery/dist/lib.css');
+
+    require('@discoveryjs/discovery/dist/discovery.css');
     require('./index.css');
 
     const { settings } = options;
