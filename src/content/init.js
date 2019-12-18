@@ -1,8 +1,4 @@
-import { Widget, router, complexViews } from '@discoveryjs/discovery/dist/lib.umd.js';
-import settingsPage from '../settings';
 import { WRAPPER_NODE } from '../../core/constants';
-import '@discoveryjs/discovery/dist/lib.css';
-import './index.css';
 
 /**
  * Initializes extension
@@ -63,6 +59,11 @@ export async function init(getSettings) {
  * @returns {Discovery}
  */
 export function initDiscovery(options) {
+    const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/lib.umd.js');
+    const settingsPage = require('../settings').default;
+    require('@discoveryjs/discovery/dist/lib.css');
+    require('./index.css');
+
     const { settings } = options;
     const discovery = new Widget(options.discoveryNode);
 

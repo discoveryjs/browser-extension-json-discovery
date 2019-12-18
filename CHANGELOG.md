@@ -1,3 +1,11 @@
+## 1.5.5 (12-12-2019)
+
+* Moved back missed build script
+* Fixed plugin initialization issues
+* Updated `discovery` to `1.0.0-beta.23`
+* Fixed pie charts rendering in FireFox
+* Updated npm build deps
+
 ## 1.5.4 (11-09-2019)
 
 * Do not use second request, match JSON on markup instead
