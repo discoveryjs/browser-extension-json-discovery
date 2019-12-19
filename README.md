@@ -2,6 +2,9 @@
 
 Browser extension that changes the way you\'re viewing JSON
 
+[![Chrome Web Store](https://badgen.net/chrome-web-store/v/pamhglogfolfbmlpnenhpeholpnlcclo)](https://chrome.google.com/webstore/detail/jsondiscovery/pamhglogfolfbmlpnenhpeholpnlcclo)
+[![Mozilla Addons](https://badgen.net/amo/v/jsondiscovery)](https://addons.mozilla.org/en-US/firefox/addon/jsondiscovery/)
+
 ![JsonDiscovery](https://i.imgur.com/aMinbNB.png)
 
 Download it from:
