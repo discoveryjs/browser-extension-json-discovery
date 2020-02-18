@@ -1,3 +1,7 @@
+## 1.6.1 (18-02-2020)
+
+* Updated `discovery` to `1.0.0-beta.28` and `jora` to `1.0.0-alpha.13`
+
 ## 1.6.0 (18-12-2019)
 
 * Updated `discovery` to `1.0.0-beta.27` [with new `jora` features](https://github.com/discoveryjs/jora/releases/tag/v1.0.0-alpha.11)
