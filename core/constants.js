@@ -1,3 +1,3 @@
 module.exports = {
-    WRAPPER_NODE: 'json-discovery-browser-extension'
+    CSS_ISOLATE_MARKER: 'style-boundary-8H37xEyN'
 };

@@ -1,5 +1,3 @@
-import { WRAPPER_NODE } from '../../core/constants';
-
 /**
  * Initializes extension
  * @param {Function} getSettings
@@ -39,7 +37,6 @@ export async function init(getSettings) {
     document.body.style.border = 'none';
     document.body.style.webkitTextSizeAdjust = '100%';
     document.body.style['background-color'] = '#fff';
-    document.body.classList.add(WRAPPER_NODE);
 
     const discoveryNode = document.createElement('div');
     discoveryNode.style.height = '100%';
@@ -64,11 +61,13 @@ export function initDiscovery(options) {
     const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/discovery.umd.js');
     const settingsPage = require('../settings').default;
 
-    require('@discoveryjs/discovery/dist/discovery.css');
+    require('@discoveryjs/discovery/dist/discovery.raw.css');
     require('./index.css');
 
     const { settings } = options;
-    const discovery = new Widget(options.discoveryNode);
+    const discovery = new Widget(options.discoveryNode, null, {
+        isolateStyleMarker: CSS_ISOLATE_MARKER // eslint-disable-line no-undef
+    });
 
     discovery.apply(router);
     discovery.apply(complexViews);

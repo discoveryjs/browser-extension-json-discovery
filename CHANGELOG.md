@@ -1,3 +1,9 @@
+## 1.6.2 (18-02-2020)
+
+* Updated `discovery` to `1.0.0-beta.30`
+* CSS style isolation via `discovery-cli`
+* Fixed issue with suggestion popup on `report` page
+
 ## 1.6.1 (18-02-2020)
 
 * Updated `discovery` to `1.0.0-beta.28` and `jora` to `1.0.0-alpha.13`

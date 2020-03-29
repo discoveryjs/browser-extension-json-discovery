@@ -1,9 +1,11 @@
+const webpack = require('webpack');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const pkg = require('../package.json');
 const manifestBase = require('../src/manifest.js');
 const manifestFirefox = require('../src/manifest-firefox.js');
+const { CSS_ISOLATE_MARKER } = require('./constants');
 
 const resolve = dir => path.join(__dirname, '..', 'src', dir);
 const config = ({ entry = resolve('./content/inject'), manifest, outputPath, staticCopy = true }) => ({
@@ -36,7 +38,6 @@ const config = ({ entry = resolve('./content/inject'), manifest, outputPath, sta
         rules: [
             {
                 test: /\.css$/,
-                exclude: /discovery\.css$/,
                 use: [
                     {
                         loader: MiniCssExtractPlugin.loader
@@ -48,21 +49,7 @@ const config = ({ entry = resolve('./content/inject'), manifest, outputPath, sta
                         }
                     },
                     {
-                        loader: require.resolve('./cssTransformLoader.js')
-                    }
-                ]
-            },
-            {
-                test: /discovery\.css$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader
-                    },
-                    {
-                        loader: 'css-loader',
-                        options: {
-                            import: true
-                        }
+                        loader: require.resolve('./isolateCss.js')
                     }
                 ]
             },
@@ -103,6 +90,9 @@ const config = ({ entry = resolve('./content/inject'), manifest, outputPath, sta
         ]
     },
     plugins: [
+        new webpack.DefinePlugin({
+            CSS_ISOLATE_MARKER: JSON.stringify(CSS_ISOLATE_MARKER)
+        }),
         new CopyWebpackPlugin([
             ...staticCopy ? [{
                 from: path.join(__dirname, '..', 'static')
