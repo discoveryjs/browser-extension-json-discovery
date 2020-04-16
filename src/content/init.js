@@ -60,13 +60,11 @@ export async function init(getSettings) {
 export function initDiscovery(options) {
     const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/discovery.umd.js');
     const settingsPage = require('../settings').default;
-
-    require('@discoveryjs/discovery/dist/discovery.raw.css');
-    require('./index.css');
+    const isolateStyleMarker = require('./index.css');
 
     const { settings } = options;
     const discovery = new Widget(options.discoveryNode, null, {
-        isolateStyleMarker: CSS_ISOLATE_MARKER // eslint-disable-line no-undef
+        isolateStyleMarker
     });
 
     discovery.apply(router);
