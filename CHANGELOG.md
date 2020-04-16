@@ -1,3 +1,7 @@
+## Next
+
+* CSS style isolation marker by CSS content hash
+
 ## 1.6.2 (18-02-2020)
 
 * Updated `discovery` to `1.0.0-beta.30`
