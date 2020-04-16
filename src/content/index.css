@@ -1,3 +1,5 @@
+@import '../../node_modules/@discoveryjs/discovery/dist/discovery.raw.css';
+
 .no-user-select {
     user-select: none;
 }
