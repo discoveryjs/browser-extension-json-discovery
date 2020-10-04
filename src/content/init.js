@@ -93,31 +93,27 @@ export function initDiscovery(options) {
         view: 'raw'
     }]);
 
-    discovery.addBadge(
-        'Index',
-        () => {
+    discovery.nav.append({
+        content: 'text:"Index"',
+        onClick: () => {
             discovery.setPage('default');
             history.replaceState(null, null, ' ');
         },
-        (host) => host.pageId !== 'default'
-    );
-    discovery.addBadge(
-        'Make report',
-        () => discovery.setPage('report'),
-        (host) => host.pageId !== 'report'
-    );
-    discovery.addBadge(
-        'Settings',
-        () => discovery.setPage('settings')
-    );
-    discovery.addBadge(
-        'Raw',
-        () => discovery.setPage('raw'),
-        (host) => host.pageId !== 'raw'
-    );
-    discovery.addBadge(
-        'Copy raw',
-        function() {
+        when: () => discovery.pageId !== 'default'
+    });
+    discovery.nav.append({
+        content: 'text:"Make report"',
+        onClick: () => discovery.setPage('report'),
+        when: () => discovery.pageId !== 'report'
+    });
+    discovery.nav.append({
+        content: 'text:"Raw"',
+        onClick: () => discovery.setPage('raw'),
+        when: () => discovery.pageId !== 'raw'
+    });
+    discovery.nav.append({
+        content: 'text:"Copy raw"',
+        onClick: function() {
             const { raw } = discovery.context;
             const div = document.createElement('div');
             div.innerHTML = raw;
@@ -134,16 +130,20 @@ export function initDiscovery(options) {
                 this.textContent = 'Copy raw';
             }, 700);
         },
-        (host) => {
-            if (host.pageId === 'raw') {
+        when: () => {
+            if (discovery.pageId === 'raw') {
                 document.body.classList.add('no-user-select');
             } else {
                 document.body.classList.remove('no-user-select');
             }
 
-            return host.pageId === 'raw';
+            return discovery.pageId === 'raw';
         }
-    );
+    });
+    discovery.nav.menu.append({
+        content: 'text:"Settings"',
+        onClick: () => discovery.setPage('settings')
+    });
 
     discovery.setData(
         options.data,

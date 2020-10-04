@@ -1,3 +1,8 @@
+## 1.6.5 (04-10-2020)
+
+* Updated `discovery` to `1.0.0-beta.39`
+* Updated `discovery-cli` to `1.13.0`
+
 ## 1.6.4 (17-05-2020)
 
 * Updated `discovery` to `1.0.0-beta.36`
