@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@discoveryjs/cli": "^1.13.0",
-    "@discoveryjs/discovery": "1.0.0-beta.39",
+    "@discoveryjs/discovery": "1.0.0-beta.40",
     "archiver": "^2.1.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.1",
