@@ -1,3 +1,7 @@
+## 1.6.6 (06-10-2020)
+
+* Removed settings button from the burger menu
+
 ## 1.6.5 (04-10-2020)
 
 * Updated `discovery` to `1.0.0-beta.40`
