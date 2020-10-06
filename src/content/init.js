@@ -140,7 +140,7 @@ export function initDiscovery(options) {
             return discovery.pageId === 'raw';
         }
     });
-    discovery.nav.menu.append({
+    discovery.nav.append({
         content: 'text:"Settings"',
         onClick: () => discovery.setPage('settings')
     });
