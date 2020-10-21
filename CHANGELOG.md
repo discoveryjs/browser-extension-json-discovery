@@ -1,3 +1,9 @@
+## 1.7.0 (21-10-2020)
+
+* Updated `discovery` to `1.0.0-beta.44`
+* Updated `discovery-cli` to `1.14.0`
+* Dark mode support
+
 ## 1.6.6 (06-10-2020)
 
 * Removed settings button from the burger menu

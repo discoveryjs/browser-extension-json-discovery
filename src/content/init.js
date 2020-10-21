@@ -63,8 +63,10 @@ export function initDiscovery(options) {
     const isolateStyleMarker = require('./index.css');
 
     const { settings } = options;
+    const { darkmode = 'auto' } = settings;
     const discovery = new Widget(options.discoveryNode, null, {
-        isolateStyleMarker
+        isolateStyleMarker,
+        darkmode
     });
 
     discovery.apply(router);
@@ -164,7 +166,8 @@ export function initDiscovery(options) {
  */
 export function getSettings(cb) {
     chrome.storage.sync.get({
-        expandLevel: 3
+        expandLevel: 3,
+        darkmode: 'auto'
     }, settings => {
         cb(settings);
     });
