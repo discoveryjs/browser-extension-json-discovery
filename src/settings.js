@@ -33,7 +33,44 @@ export default discovery => {
         });
     });
 
+    let detachToggleDarkMode = () => {};
+
     const modifiers = [
+        {
+            view: 'block',
+            className: 'dark-mode-switcher',
+            name: 'darkmode',
+            label: 'Color schema',
+            postRender: (el, opts, data, context) => {
+                let selfValue;
+
+                detachToggleDarkMode();
+                detachToggleDarkMode = discovery.darkmode.on((value, mode) => {
+                    const newValue = mode === 'auto' ? 'auto' : value;
+
+                    if (newValue === selfValue) {
+                        return;
+                    }
+
+                    el.innerHTML = '';
+                    selfValue = newValue;
+                    discovery.view.render(el, {
+                        view: 'toggle-group',
+                        onChange: value => {
+                            selfValue = value;
+                            discovery.darkmode.set(value);
+                            saveSettings(Object.assign(context, { darkmode: value }));
+                        },
+                        value: newValue,
+                        data: [
+                            { value: false, text: 'Light' },
+                            { value: true, text: 'Dark' },
+                            { value: 'auto', text: 'Auto' }
+                        ]
+                    }, null, { widget: discovery });
+                }, true);
+            }
+        },
         {
             view: 'input',
             htmlType: 'number',
@@ -120,7 +157,7 @@ export default discovery => {
      * @returns {Object}
      */
     function validate(settings) {
-        const { expandLevel } = settings;
+        const { expandLevel, darkmode } = settings;
 
         let valid = true;
         const errors = [];
@@ -128,6 +165,11 @@ export default discovery => {
         if (!expandLevel || !Number.isInteger(Number(expandLevel))) {
             valid = false;
             errors.push('Expand level must be an integer number!');
+        }
+
+        if (typeof darkmode === 'undefined' || !(typeof darkmode === 'boolean' || darkmode === 'auto')) {
+            valid = false;
+            errors.push('Darkmode must be a true, false or auto');
         }
 
         return { valid, errors };

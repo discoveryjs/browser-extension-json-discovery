@@ -1,6 +1,6 @@
 {
   "name": "jsondiscovery",
-  "version": "1.6.6",
+  "version": "1.7.0",
   "description": "DiscoveryJson",
   "author": "exsdis@gmail.com",
   "license": "MIT",
@@ -11,8 +11,8 @@
     "build": "rimraf build* && ./core/build.sh && node core/zip.js"
   },
   "devDependencies": {
-    "@discoveryjs/cli": "^1.13.0",
-    "@discoveryjs/discovery": "1.0.0-beta.40",
+    "@discoveryjs/cli": "^1.14.0",
+    "@discoveryjs/discovery": "1.0.0-beta.44",
     "archiver": "^2.1.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.1",
