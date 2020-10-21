@@ -1,3 +1,8 @@
+## 1.7.1 (21-10-2020)
+
+* Updated `discovery` to `1.0.0-beta.45`
+* Fixed CSP-related crash on some pages
+
 ## 1.7.0 (21-10-2020)
 
 * Updated `discovery` to `1.0.0-beta.44`
