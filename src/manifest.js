@@ -12,7 +12,7 @@ module.exports = {
     content_scripts: [{ // eslint-disable-line camelcase
         js: ['js/inject.js'],
         css: ['css/inject.css'],
-        run_at: 'document_end', // eslint-disable-line camelcase
+        run_at: 'document_start', // eslint-disable-line camelcase
         matches: ['<all_urls>']
     }],
     offline_enabled: true // eslint-disable-line camelcase

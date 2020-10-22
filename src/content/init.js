@@ -2,54 +2,68 @@
  * Initializes extension
  * @param {Function} getSettings
  */
-export async function init(getSettings) {
-    let json;
+export function init(getSettings) {
+    let loaded = document.readyState === 'completed';
+    let pre = null;
+    let initialPreDisplay = '';
 
-    const { firstElementChild } = document.body;
+    requestAnimationFrame(function x() {
+        if (document.body && document.body.firstElementChild && document.body.firstElementChild.tagName === 'PRE') {
+            pre = document.body.firstElementChild;
+            initialPreDisplay = pre.style.display;
+            pre.style.display = 'none';
+        }
 
-    if (!firstElementChild || firstElementChild.tagName !== 'PRE') {
-        return;
-    }
+        if (!loaded) {
+            requestAnimationFrame(x);
+        }
 
-    const textContent = firstElementChild.textContent.trim();
+        if (pre !== null && loaded) {
+            let json;
 
-    if (!textContent.startsWith('{') && !textContent.startsWith('[')) {
-        return;
-    }
+            const textContent = pre.textContent.trim();
 
-    try {
-        json = JSON.parse(textContent);
-    } catch (e) {
-        console.error(e.message); // eslint-disable-line no-console
-    }
+            if (!textContent.startsWith('{') && !textContent.startsWith('[')) {
+                return;
+            }
 
-    if (!json) {
-        return;
-    }
+            try {
+                json = JSON.parse(textContent);
+            } catch (e) {
+                console.error(e.message); // eslint-disable-line no-console
+            }
 
-    const raw = document.body.innerHTML;
+            if (!json) {
+                pre.style.display = initialPreDisplay;
+                return;
+            }
 
-    document.body.innerHTML = '';
+            const raw = document.body.innerHTML;
 
-    document.body.style.margin = 0;
-    document.body.style.padding = 0;
-    document.body.style.height = '100%';
-    document.body.style.border = 'none';
-    document.body.style.webkitTextSizeAdjust = '100%';
-    document.body.style['background-color'] = '#fff';
+            document.body.innerHTML = '';
 
-    const discoveryNode = document.createElement('div');
-    discoveryNode.style.height = '100%';
-    document.body.appendChild(discoveryNode);
+            document.body.style.margin = 0;
+            document.body.style.padding = 0;
+            document.body.style.height = '100%';
+            document.body.style.border = 'none';
+            document.body.style.webkitTextSizeAdjust = '100%';
+            document.body.style['background-color'] = '#fff';
 
-    getSettings(settings => {
-        initDiscovery({
-            discoveryNode,
-            raw,
-            data: json,
-            settings
-        });
+            const discoveryNode = document.createElement('div');
+            discoveryNode.style.height = '100%';
+            document.body.appendChild(discoveryNode);
+
+            getSettings(settings => {
+                initDiscovery({
+                    discoveryNode,
+                    raw,
+                    data: json,
+                    settings
+                });
+            });
+        }
     });
+    window.addEventListener('DOMContentLoaded', () => loaded = true, false);
 }
 
 /**
