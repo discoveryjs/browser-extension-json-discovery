@@ -1,3 +1,53 @@
+## next (1.8.0)
+
+* Increased performance when working with huge JSON-documents
+
+## 1.7.1 (21-10-2020)
+
+* Updated `discovery` to `1.0.0-beta.45`
+* Fixed CSP-related crash on some pages
+
+## 1.7.0 (21-10-2020)
+
+* Updated `discovery` to `1.0.0-beta.44`
+* Updated `discovery-cli` to `1.14.0`
+* Dark mode support
+
+## 1.6.6 (06-10-2020)
+
+* Removed settings button from the burger menu
+
+## 1.6.5 (04-10-2020)
+
+* Updated `discovery` to `1.0.0-beta.40`
+* Updated `discovery-cli` to `1.13.0`
+
+## 1.6.4 (17-05-2020)
+
+* Updated `discovery` to `1.0.0-beta.36`
+* Updated `discovery-cli` to `1.9.1`
+
+## 1.6.3 (25-04-2020)
+
+* CSS style isolation marker by CSS content hash
+* Updated `discovery` to `1.0.0-beta.31`
+* Updated `discovery-cli` to `1.8.1`
+
+## 1.6.2 (18-02-2020)
+
+* Updated `discovery` to `1.0.0-beta.30`
+* CSS style isolation via `discovery-cli`
+* Fixed issue with suggestion popup on `report` page
+
+## 1.6.1 (18-02-2020)
+
+* Updated `discovery` to `1.0.0-beta.28` and `jora` to `1.0.0-alpha.13`
+
+## 1.6.0 (18-12-2019)
+
+* Updated `discovery` to `1.0.0-beta.27` [with new `jora` features](https://github.com/discoveryjs/jora/releases/tag/v1.0.0-alpha.11)
+* Fixed json parsing in cases when user has browser extensions which inject some content into pages with json
+
 ## 1.5.5 (12-12-2019)
 
 * Moved back missed build script

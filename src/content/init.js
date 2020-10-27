@@ -1,53 +1,69 @@
-import { WRAPPER_NODE } from '../../core/constants';
-
 /**
  * Initializes extension
  * @param {Function} getSettings
  */
-export async function init(getSettings) {
-    let json;
-    let raw;
+export function init(getSettings) {
+    let loaded = document.readyState === 'completed';
+    let pre = null;
+    let initialPreDisplay = '';
 
-    const { firstElementChild } = document.body;
-    let { textContent } = document.body;
+    requestAnimationFrame(function x() {
+        if (document.body && document.body.firstElementChild && document.body.firstElementChild.tagName === 'PRE') {
+            pre = document.body.firstElementChild;
+            initialPreDisplay = pre.style.display;
+            pre.style.display = 'none';
+        }
 
-    textContent = textContent.trim();
+        if (!loaded) {
+            requestAnimationFrame(x);
+        }
 
-    if (
-        (firstElementChild && firstElementChild.tagName === 'PRE') &&
-        (textContent.startsWith('{') || textContent.startsWith('['))
-    ) {
-        try {
-            json = JSON.parse(textContent);
-        } catch (_) {}
-    }
+        if (pre !== null && loaded) {
+            let json;
 
-    if (json) {
-        raw = document.body.innerHTML;
+            const textContent = pre.textContent.trim();
 
-        document.body.innerHTML = '';
+            if (!textContent.startsWith('{') && !textContent.startsWith('[')) {
+                return;
+            }
 
-        document.body.style.margin = 0;
-        document.body.style.padding = 0;
-        document.body.style.height = '100%';
-        document.body.style.border = 'none';
-        document.body.style.webkitTextSizeAdjust = '100%';
-        document.body.style['background-color'] = '#fff';
-        document.body.classList.add(WRAPPER_NODE);
+            try {
+                json = JSON.parse(textContent);
+            } catch (e) {
+                console.error(e.message); // eslint-disable-line no-console
+            }
 
-        const discoveryNode = document.createElement('div');
-        discoveryNode.style.height = '100%';
-        document.body.appendChild(discoveryNode);
+            if (!json) {
+                pre.style.display = initialPreDisplay;
+                return;
+            }
 
-        getSettings(settings => {
-            initDiscovery({
-                discoveryNode,
-                raw,
-                data: json,
-                settings
+            const raw = document.body.innerHTML;
+
+            document.body.innerHTML = '';
+
+            document.body.style.margin = 0;
+            document.body.style.padding = 0;
+            document.body.style.height = '100%';
+            document.body.style.border = 'none';
+            document.body.style.webkitTextSizeAdjust = '100%';
+            document.body.style['background-color'] = '#fff';
+
+            const discoveryNode = document.createElement('div');
+            discoveryNode.style.height = '100%';
+            document.body.appendChild(discoveryNode);
+
+            getSettings(settings => {
+                initDiscovery({
+                    discoveryNode,
+                    raw,
+                    data: json,
+                    settings
+                });
             });
-        });
-    }
+        }
+    });
+    window.addEventListener('DOMContentLoaded', () => loaded = true, false);
 }
 
 /**
@@ -56,13 +72,16 @@ export async function init(getSettings) {
  * @returns {Discovery}
  */
 export function initDiscovery(options) {
-    const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/lib.umd.js');
+    const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/discovery.umd.js');
     const settingsPage = require('../settings').default;
-    require('@discoveryjs/discovery/dist/lib.css');
-    require('./index.css');
+    const isolateStyleMarker = require('./index.css');
 
     const { settings } = options;
-    const discovery = new Widget(options.discoveryNode);
+    const { darkmode = 'auto' } = settings;
+    const discovery = new Widget(options.discoveryNode, null, {
+        isolateStyleMarker,
+        darkmode
+    });
 
     discovery.apply(router);
     discovery.apply(complexViews);
@@ -90,31 +109,27 @@ export function initDiscovery(options) {
         view: 'raw'
     }]);
 
-    discovery.addBadge(
-        'Index',
-        () => {
+    discovery.nav.append({
+        content: 'text:"Index"',
+        onClick: () => {
             discovery.setPage('default');
             history.replaceState(null, null, ' ');
         },
-        (host) => host.pageId !== 'default'
-    );
-    discovery.addBadge(
-        'Make report',
-        () => discovery.setPage('report'),
-        (host) => host.pageId !== 'report'
-    );
-    discovery.addBadge(
-        'Settings',
-        () => discovery.setPage('settings')
-    );
-    discovery.addBadge(
-        'Raw',
-        () => discovery.setPage('raw'),
-        (host) => host.pageId !== 'raw'
-    );
-    discovery.addBadge(
-        'Copy raw',
-        function() {
+        when: () => discovery.pageId !== 'default'
+    });
+    discovery.nav.append({
+        content: 'text:"Make report"',
+        onClick: () => discovery.setPage('report'),
+        when: () => discovery.pageId !== 'report'
+    });
+    discovery.nav.append({
+        content: 'text:"Raw"',
+        onClick: () => discovery.setPage('raw'),
+        when: () => discovery.pageId !== 'raw'
+    });
+    discovery.nav.append({
+        content: 'text:"Copy raw"',
+        onClick: function() {
             const { raw } = discovery.context;
             const div = document.createElement('div');
             div.innerHTML = raw;
@@ -131,16 +146,20 @@ export function initDiscovery(options) {
                 this.textContent = 'Copy raw';
             }, 700);
         },
-        (host) => {
-            if (host.pageId === 'raw') {
+        when: () => {
+            if (discovery.pageId === 'raw') {
                 document.body.classList.add('no-user-select');
             } else {
                 document.body.classList.remove('no-user-select');
             }
 
-            return host.pageId === 'raw';
+            return discovery.pageId === 'raw';
         }
-    );
+    });
+    discovery.nav.append({
+        content: 'text:"Settings"',
+        onClick: () => discovery.setPage('settings')
+    });
 
     discovery.setData(
         options.data,
@@ -161,7 +180,8 @@ export function initDiscovery(options) {
  */
 export function getSettings(cb) {
     chrome.storage.sync.get({
-        expandLevel: 3
+        expandLevel: 3,
+        darkmode: 'auto'
     }, settings => {
         cb(settings);
     });

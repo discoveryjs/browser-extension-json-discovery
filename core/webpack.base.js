@@ -41,13 +41,7 @@ const config = ({ entry = resolve('./content/inject'), manifest, outputPath, sta
                         loader: MiniCssExtractPlugin.loader
                     },
                     {
-                        loader: 'css-loader',
-                        options: {
-                            import: true
-                        }
-                    },
-                    {
-                        loader: require.resolve('./cssTransformLoader.js')
+                        loader: require.resolve('./css-loader.js')
                     }
                 ]
             },
