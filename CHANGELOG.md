@@ -1,4 +1,4 @@
-## next (1.8.0)
+## 1.8.0 (03-11-2020)
 
 * Increased performance when working with huge JSON-documents
 * Updated `discovery` to `1.0.0-beta.47`
