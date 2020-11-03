@@ -1,6 +1,8 @@
 ## next (1.8.0)
 
 * Increased performance when working with huge JSON-documents
+* Updated `discovery` to `1.0.0-beta.47`
+* Fixed table font color
 
 ## 1.7.1 (21-10-2020)
 
