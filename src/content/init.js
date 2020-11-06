@@ -61,7 +61,7 @@ export function init(getSettings) {
                     discoveryNode,
                     raw: textContent,
                     data: json,
-                    settings,
+                    settings
                 });
             });
         }
