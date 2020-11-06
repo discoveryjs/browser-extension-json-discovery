@@ -1,4 +1,9 @@
-## 1.8.1 (03-11-2020)
+## 1.9.0 (07-11-2020)
+
+* "Download JSON" button
+* Fixed `raw` mode css
+
+## 1.8.1 (06-11-2020)
 
 * Fixed bug with hidden `pre` on some sites
 * Fixed bug with non-working `raw` mode

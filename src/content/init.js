@@ -8,9 +8,14 @@ export function init(getSettings) {
     let initialPreDisplay = null;
 
     requestAnimationFrame(function x() {
-        if (document.body && document.body.firstElementChild && document.body.firstElementChild.tagName === 'PRE') {
+        if (
+            document.body &&
+            document.body.firstElementChild &&
+            document.body.firstElementChild.tagName === 'PRE' &&
+            initialPreDisplay === null
+        ) {
             pre = document.body.firstElementChild;
-            initialPreDisplay = initialPreDisplay || window.getComputedStyle(pre).display;
+            initialPreDisplay = window.getComputedStyle(pre).display;
             pre.style.display = 'none';
         }
 
@@ -40,16 +45,12 @@ export function init(getSettings) {
                 return;
             }
 
-            const raw = pre.innerHTML;
-
             document.body.innerHTML = '';
 
             document.body.style.margin = 0;
             document.body.style.padding = 0;
             document.body.style.height = '100%';
             document.body.style.border = 'none';
-            document.body.style.webkitTextSizeAdjust = '100%';
-            document.body.style['background-color'] = '#fff';
 
             const discoveryNode = document.createElement('div');
             discoveryNode.style.height = '100%';
@@ -58,9 +59,9 @@ export function init(getSettings) {
             getSettings(settings => {
                 initDiscovery({
                     discoveryNode,
-                    raw,
+                    raw: textContent,
                     data: json,
-                    settings,
+                    settings
                 });
             });
         }
@@ -99,13 +100,10 @@ export function initDiscovery(options) {
 
     discovery.view.define('raw', el => {
         const { raw } = discovery.context;
-        const pre = document.createElement('pre');
 
-        pre.classList.add('user-select');
-        pre.innerHTML = raw;
-
-        el.appendChild(pre);
-    });
+        el.classList.add('user-select');
+        el.textContent = raw;
+    }, { tag: 'pre' });
 
     discovery.page.define('raw', [{
         view: 'raw'
@@ -123,6 +121,19 @@ export function initDiscovery(options) {
         content: 'text:"Make report"',
         onClick: () => discovery.setPage('report'),
         when: () => discovery.pageId !== 'report'
+    });
+    discovery.nav.append({
+        content: 'text:"Download JSON"',
+        onClick: el => {
+            const blob = new Blob([options.raw], { type: 'application/json' });
+
+            const location = (window.location.hostname + window.location.pathname)
+                .replace(/[^a-z0-9]/gi, '-')
+                .replace(/-$/, '');
+            el.download = location.endsWith('-json') ? location.replace(/-json$/, '.json') : location + '.json';
+            el.href = window.URL.createObjectURL(blob);
+            // el.dataset.downloadurl = [contentType, a.download, a.href].join(':');
+        }
     });
     discovery.nav.append({
         content: 'text:"Raw"',
