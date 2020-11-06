@@ -16,6 +16,11 @@ table, caption, th, td, tr {
     user-select: text;
 }
 
+.view-raw {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
 .view-fieldset {
     width: 400px;
     display: flex;
