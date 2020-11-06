@@ -123,7 +123,7 @@ export function initDiscovery(options) {
         when: () => discovery.pageId !== 'report'
     });
     discovery.nav.append({
-        content: 'text:"Download JSON"',
+        content: 'text:"Save"',
         onClick: el => {
             const blob = new Blob([options.raw], { type: 'application/json' });
 
@@ -132,7 +132,6 @@ export function initDiscovery(options) {
                 .replace(/-$/, '');
             el.download = location.endsWith('-json') ? location.replace(/-json$/, '.json') : location + '.json';
             el.href = window.URL.createObjectURL(blob);
-            // el.dataset.downloadurl = [contentType, a.download, a.href].join(':');
         }
     });
     discovery.nav.append({
