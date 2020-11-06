@@ -5,12 +5,12 @@
 export function init(getSettings) {
     let loaded = document.readyState === 'completed';
     let pre = null;
-    let initialPreDisplay = '';
+    let initialPreDisplay = null;
 
     requestAnimationFrame(function x() {
         if (document.body && document.body.firstElementChild && document.body.firstElementChild.tagName === 'PRE') {
             pre = document.body.firstElementChild;
-            initialPreDisplay = pre.style.display;
+            initialPreDisplay = initialPreDisplay || window.getComputedStyle(pre).display;
             pre.style.display = 'none';
         }
 
@@ -24,12 +24,14 @@ export function init(getSettings) {
             const textContent = pre.textContent.trim();
 
             if (!textContent.startsWith('{') && !textContent.startsWith('[')) {
+                pre.style.display = initialPreDisplay;
                 return;
             }
 
             try {
                 json = JSON.parse(textContent);
             } catch (e) {
+                pre.style.display = initialPreDisplay;
                 console.error(e.message); // eslint-disable-line no-console
             }
 
@@ -38,7 +40,7 @@ export function init(getSettings) {
                 return;
             }
 
-            const raw = document.body.innerHTML;
+            const raw = pre.innerHTML;
 
             document.body.innerHTML = '';
 
@@ -58,7 +60,7 @@ export function init(getSettings) {
                     discoveryNode,
                     raw,
                     data: json,
-                    settings
+                    settings,
                 });
             });
         }
@@ -97,12 +99,12 @@ export function initDiscovery(options) {
 
     discovery.view.define('raw', el => {
         const { raw } = discovery.context;
-        const div = document.createElement('div');
+        const pre = document.createElement('pre');
 
-        div.classList.add('user-select');
-        div.innerHTML = raw;
+        pre.classList.add('user-select');
+        pre.innerHTML = raw;
 
-        el.appendChild(div);
+        el.appendChild(pre);
     });
 
     discovery.page.define('raw', [{

@@ -1,3 +1,8 @@
+## 1.8.1 (03-11-2020)
+
+* Fixed bug with hidden `pre` on some sites
+* Fixed bug with non-working `raw` mode
+
 ## 1.8.0 (03-11-2020)
 
 * Increased performance when working with huge JSON-documents
