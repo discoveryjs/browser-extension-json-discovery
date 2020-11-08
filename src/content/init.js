@@ -75,8 +75,7 @@ export function init(getSettings) {
  * @returns {Discovery}
  */
 export function initDiscovery(options) {
-    const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/discovery.umd.js');
-    const flashMessage = require('../flash-message').default;
+    const { Widget, router, complexViews, utils } = require('@discoveryjs/discovery/dist/discovery.umd.js');
     const settingsPage = require('../settings').default;
     const isolateStyleMarker = require('./index.css');
 
@@ -90,10 +89,23 @@ export function initDiscovery(options) {
     discovery.apply(router);
     discovery.apply(complexViews);
 
-    flashMessage(discovery);
-    settingsPage(discovery);
+    discovery.flashMessagesContainer = utils.createElement('div', 'flash-messages-container');
+    discovery.dom.container.append(discovery.flashMessagesContainer);
+    discovery.flashMessage = (text, type) => {
+        const fragment = document.createDocumentFragment();
 
-    discovery.view.render(discovery.dom.container, 'flash-message');
+        discovery.view.render(fragment, {
+            view: `alert-${type}`,
+            content: 'text'
+        }, text).then(() => {
+            const el = fragment.firstChild;
+
+            discovery.flashMessagesContainer.append(el);
+            setTimeout(() => el.remove(), 750);
+        });
+    };
+
+    settingsPage(discovery);
 
     discovery.page.define('default', [
         {

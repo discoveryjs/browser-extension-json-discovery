@@ -41,7 +41,7 @@ table, caption, th, td, tr {
     line-height: 34px;
 }
 
-.view-flash-message {
+.flash-messages-container {
     position: fixed;
     bottom: 20px;
     right: 20px;
