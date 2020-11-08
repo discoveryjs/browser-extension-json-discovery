@@ -1,3 +1,8 @@
+## 1.9.1 (08-11-2020)
+
+* Fixed `raw` mode css
+* Raw copy via `navigator.clipboard`
+
 ## 1.9.0 (07-11-2020)
 
 * "Download JSON" button

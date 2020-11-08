@@ -141,21 +141,18 @@ export function initDiscovery(options) {
     });
     discovery.nav.append({
         content: 'text:"Copy raw"',
-        onClick: function() {
+        onClick: async function(el) {
             const { raw } = discovery.context;
-            const div = document.createElement('div');
-            div.innerHTML = raw;
-            const rawText = div.textContent;
-            const el = document.createElement('textarea');
-            el.value = rawText;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
 
-            this.textContent = 'Copied!';
+            try {
+                await navigator.clipboard.writeText(raw);
+            } catch (err) {
+                console.error(err);
+            }
+
+            el.textContent = 'Copied!';
             setTimeout(() => {
-                this.textContent = 'Copy raw';
+                el.textContent = 'Copy raw';
             }, 700);
         },
         when: () => {
