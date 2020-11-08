@@ -75,7 +75,7 @@ export function init(getSettings) {
  * @returns {Discovery}
  */
 export function initDiscovery(options) {
-    const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/discovery.umd.js');
+    const { Widget, router, complexViews, utils } = require('@discoveryjs/discovery/dist/discovery.umd.js');
     const settingsPage = require('../settings').default;
     const isolateStyleMarker = require('./index.css');
 
@@ -88,6 +88,22 @@ export function initDiscovery(options) {
 
     discovery.apply(router);
     discovery.apply(complexViews);
+
+    discovery.flashMessagesContainer = utils.createElement('div', 'flash-messages-container');
+    discovery.dom.container.append(discovery.flashMessagesContainer);
+    discovery.flashMessage = (text, type) => {
+        const fragment = document.createDocumentFragment();
+
+        discovery.view.render(fragment, {
+            view: `alert-${type}`,
+            content: 'text'
+        }, text).then(() => {
+            const el = fragment.firstChild;
+
+            discovery.flashMessagesContainer.append(el);
+            setTimeout(() => el.remove(), 750);
+        });
+    };
 
     settingsPage(discovery);
 
@@ -105,9 +121,7 @@ export function initDiscovery(options) {
         el.textContent = raw;
     }, { tag: 'pre' });
 
-    discovery.page.define('raw', [{
-        view: 'raw'
-    }]);
+    discovery.page.define('raw', 'raw');
 
     discovery.nav.append({
         content: 'text:"Index"',
@@ -141,22 +155,16 @@ export function initDiscovery(options) {
     });
     discovery.nav.append({
         content: 'text:"Copy raw"',
-        onClick: function() {
+        onClick: async function() {
             const { raw } = discovery.context;
-            const div = document.createElement('div');
-            div.innerHTML = raw;
-            const rawText = div.textContent;
-            const el = document.createElement('textarea');
-            el.value = rawText;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
 
-            this.textContent = 'Copied!';
-            setTimeout(() => {
-                this.textContent = 'Copy raw';
-            }, 700);
+            try {
+                await navigator.clipboard.writeText(raw);
+            } catch (err) {
+                console.error(err); // eslint-disable-line no-console
+            }
+
+            discovery.flashMessage('Copied!', 'success');
         },
         when: () => {
             if (discovery.pageId === 'raw') {

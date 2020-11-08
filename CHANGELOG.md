@@ -1,3 +1,9 @@
+## 1.9.1 (08-11-2020)
+
+* Fixed `raw` mode css
+* Improved raw copy to clipboard performance
+* Flash message moved to the right bottom corner
+
 ## 1.9.0 (07-11-2020)
 
 * "Download JSON" button
