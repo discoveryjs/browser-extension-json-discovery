@@ -147,7 +147,7 @@ export function initDiscovery(options) {
             try {
                 await navigator.clipboard.writeText(raw);
             } catch (err) {
-                console.error(err);
+                console.error(err); // eslint-disable-line no-console
             }
 
             el.textContent = 'Copied!';
