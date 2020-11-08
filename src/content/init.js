@@ -93,6 +93,8 @@ export function initDiscovery(options) {
     flashMessage(discovery);
     settingsPage(discovery);
 
+    discovery.view.render(discovery.dom.container, 'flash-message');
+
     discovery.page.define('default', [
         {
             view: 'struct',
@@ -107,12 +109,7 @@ export function initDiscovery(options) {
         el.textContent = raw;
     }, { tag: 'pre' });
 
-    discovery.page.define('raw', [
-        {
-            view: 'raw'
-        },
-        'flash-message'
-    ]);
+    discovery.page.define('raw', 'raw');
 
     discovery.nav.append({
         content: 'text:"Index"',

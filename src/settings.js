@@ -86,8 +86,7 @@ export default discovery => {
                         }
                     }
                 ]
-            },
-            'flash-message'
+            }
         ], {}, settings);
     });
 
