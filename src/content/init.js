@@ -76,6 +76,7 @@ export function init(getSettings) {
  */
 export function initDiscovery(options) {
     const { Widget, router, complexViews } = require('@discoveryjs/discovery/dist/discovery.umd.js');
+    const flashMessage = require('../flash-message').default;
     const settingsPage = require('../settings').default;
     const isolateStyleMarker = require('./index.css');
 
@@ -89,6 +90,7 @@ export function initDiscovery(options) {
     discovery.apply(router);
     discovery.apply(complexViews);
 
+    flashMessage(discovery);
     settingsPage(discovery);
 
     discovery.page.define('default', [
@@ -105,9 +107,20 @@ export function initDiscovery(options) {
         el.textContent = raw;
     }, { tag: 'pre' });
 
-    discovery.page.define('raw', [{
-        view: 'raw'
-    }]);
+    discovery.page.define('raw', function(el, data, context) {
+        const { message } = context;
+
+        discovery.view.render(el, [
+            {
+                view: 'raw'
+            },
+            {
+                view: 'flash-message',
+                when: () => message,
+                message
+            }
+        ]);
+    });
 
     discovery.nav.append({
         content: 'text:"Index"',
@@ -141,7 +154,7 @@ export function initDiscovery(options) {
     });
     discovery.nav.append({
         content: 'text:"Copy raw"',
-        onClick: async function(el) {
+        onClick: async function() {
             const { raw } = discovery.context;
 
             try {
@@ -150,10 +163,7 @@ export function initDiscovery(options) {
                 console.error(err); // eslint-disable-line no-console
             }
 
-            el.textContent = 'Copied!';
-            setTimeout(() => {
-                el.textContent = 'Copy raw';
-            }, 700);
+            discovery.flashMessage({}, 'Copied!', 'success');
         },
         when: () => {
             if (discovery.pageId === 'raw') {

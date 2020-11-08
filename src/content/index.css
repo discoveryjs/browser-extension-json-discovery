@@ -16,10 +16,6 @@ table, caption, th, td, tr {
     user-select: text;
 }
 
-.page-raw {
-    overflow-x: hidden;
-}
-
 .view-raw {
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -47,7 +43,7 @@ table, caption, th, td, tr {
 
 .view-flash-message {
     position: fixed;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
 }
 

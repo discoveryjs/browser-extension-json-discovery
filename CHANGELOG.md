@@ -2,6 +2,7 @@
 
 * Fixed `raw` mode css
 * Raw copy via `navigator.clipboard`
+* Flash message moved to the right bottom corner
 
 ## 1.9.0 (07-11-2020)
 
