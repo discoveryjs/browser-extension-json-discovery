@@ -1,31 +1,27 @@
+const FLASH_MESSAGE_SELECTORS = {
+    success: 'discovery-flash-message-success',
+    danger: 'discovery-flash-message-danger'
+};
+
 export default discovery => {
-    discovery.view.define('flash-message', function(el, config) {
-        const { message } = config;
-        const { text, type } = message;
-        const view = 'alert' + (type ? `-${type}` : '');
-
-        discovery.view.render(el, {
-            view,
-            content: 'text:"' + text + '"'
-        });
+    discovery.view.define('flash-message', function(el) {
+        discovery.view.render(el, Object.entries(FLASH_MESSAGE_SELECTORS).map(([type, className]) => ({
+            view: `alert-${type}`,
+            className,
+            content: 'text:""'
+        })));
     });
-    discovery.flashMessage = (data, text, type) => {
-        const message = {
-            text,
-            type
-        };
+    discovery.flashMessage = (text, type) => {
+        const el = document.querySelector('.' + FLASH_MESSAGE_SELECTORS[type]);
 
-        discovery.setData(
-            discovery.data,
-            Object.assign(discovery.context, data, { message })
-        );
+        if (el) {
+            el.textContent = text;
+            el.style.display = 'block';
 
-        setTimeout(() => {
-            discovery.setData(
-                discovery.data,
-                Object.assign(discovery.context, data, { message: null })
-            );
-        }, 750);
+            setTimeout(() => {
+                el.style.display = 'none';
+            }, 750);
+        }
     };
 };
 

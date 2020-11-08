@@ -70,7 +70,7 @@ export default discovery => {
     ].map(content => ({ view: 'fieldset', content }));
 
     discovery.page.define('settings', function(el, data, context) {
-        const { settings, message } = context;
+        const { settings } = context;
 
         discovery.view.render(el, [
             'h1:"Settings"',
@@ -87,12 +87,8 @@ export default discovery => {
                     }
                 ]
             },
-            {
-                view: 'flash-message',
-                when: 'message',
-                message
-            }
-        ], { message }, settings);
+            'flash-message'
+        ], {}, settings);
     });
 
     /**
@@ -109,9 +105,9 @@ export default discovery => {
                 safari.extension.dispatchMessage('setSettings', settings);
             }
 
-            discovery.flashMessage({ settings }, 'Options saved.', 'success');
+            discovery.flashMessage('Options saved.', 'success');
         } else {
-            discovery.flashMessage({ settings }, errors.join(' '), 'danger');
+            discovery.flashMessage(errors.join(' '), 'danger');
         }
     }
 

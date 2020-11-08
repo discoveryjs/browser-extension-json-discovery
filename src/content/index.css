@@ -47,6 +47,10 @@ table, caption, th, td, tr {
     right: 20px;
 }
 
+.view-flash-message .view-alert {
+    display: none;
+}
+
 /* Safari quirk mode fix */
 .view-expand > .header > .trigger {
     position: relative;

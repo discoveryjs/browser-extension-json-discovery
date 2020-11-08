@@ -107,20 +107,12 @@ export function initDiscovery(options) {
         el.textContent = raw;
     }, { tag: 'pre' });
 
-    discovery.page.define('raw', function(el, data, context) {
-        const { message } = context;
-
-        discovery.view.render(el, [
-            {
-                view: 'raw'
-            },
-            {
-                view: 'flash-message',
-                when: () => message,
-                message
-            }
-        ]);
-    });
+    discovery.page.define('raw', [
+        {
+            view: 'raw'
+        },
+        'flash-message'
+    ]);
 
     discovery.nav.append({
         content: 'text:"Index"',
@@ -163,7 +155,7 @@ export function initDiscovery(options) {
                 console.error(err); // eslint-disable-line no-console
             }
 
-            discovery.flashMessage({}, 'Copied!', 'success');
+            discovery.flashMessage('Copied!', 'success');
         },
         when: () => {
             if (discovery.pageId === 'raw') {
