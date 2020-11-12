@@ -1,3 +1,7 @@
+## 1.9.2 (12-11-2020)
+
+* Updated `discovery` to `1.0.0-beta.50`
+
 ## 1.9.1 (08-11-2020)
 
 * Fixed `raw` mode css
