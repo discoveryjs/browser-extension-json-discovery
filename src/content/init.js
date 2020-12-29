@@ -1,3 +1,4 @@
+/* global ISOLATE_STYLE_MARKER */
 /**
  * Initializes extension
  * @param {Function} getSettings
@@ -77,12 +78,11 @@ export function init(getSettings) {
 export function initDiscovery(options) {
     const { Widget, router, complexViews, utils } = require('@discoveryjs/discovery/dist/discovery.umd.js');
     const settingsPage = require('../settings').default;
-    const isolateStyleMarker = require('./index.css');
 
     const { settings } = options;
     const { darkmode = 'auto' } = settings;
     const discovery = new Widget(options.discoveryNode, null, {
-        isolateStyleMarker,
+        isolateStyleMarker: ISOLATE_STYLE_MARKER,
         darkmode
     });
 

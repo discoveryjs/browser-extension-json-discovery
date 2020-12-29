@@ -1,4 +1,4 @@
-@import '../../node_modules/@discoveryjs/discovery/dist/discovery.raw.css';
+@import '@discoveryjs/discovery/dist/discovery.raw.css';
 
 table, caption, th, td, tr {
     color: inherit;

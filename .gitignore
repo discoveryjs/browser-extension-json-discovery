@@ -1,6 +1,6 @@
 node_modules
 npm-debug.log
-build*
+build/*
 !build.sh
 safari/JsonDiscovery/JsonDiscovery Extension/js
 safari/JsonDiscovery/JsonDiscovery Extension/css
