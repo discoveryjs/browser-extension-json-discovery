@@ -1,15 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 const bundleJs = require('esbuild').build;
-const { bundleCss } = require('@discoveryjs/cli').build;
-// const manifestBase = require('../src/manifest.js');
-// const manifestFirefox = require('../src/manifest-firefox.js');
+const manifest = require('../src/manifest.js');
+
+const { NODE_ENV } = process.env;
+const watch = NODE_ENV !== 'production';
 
 const indir = path.join(__dirname, '/../src');
-const outdir = path.join(__dirname, '/../build-chrome');
-const isolateOptions = {
-    isolate: true
-};
+
+const browsers = [
+    'chrome',
+    'firefox'
+];
 
 function copyFiles(src, dest) {
     fs.mkdirSync(dest, { recursive: true });
@@ -23,12 +25,13 @@ function copyFiles(src, dest) {
     }
 }
 
-async function build(outdir) {
-    const isolate = 'xxx';
-    // const { content: css, isolate } = await bundleCss(indir + '/index.css', isolateOptions);
-    // fs.mkdirSync(outdir, { recursive: true });
-    // fs.writeFileSync(outdir + '/inject.css', css);
-    copyFiles(path.join(indir, 'manifest.json'), outdir);
+async function build(browser) {
+    const outdir = path.join(__dirname, `/../build-${browser}`);
+
+    fs.rmdirSync(outdir, { recursive: true });
+    fs.mkdirSync(outdir, { recursive: true });
+    fs.writeFileSync(outdir + '/manifest.json', manifest(browser));
+
     copyFiles(path.join(indir, 'icons'), outdir);
 
     bundleJs({
@@ -36,28 +39,28 @@ async function build(outdir) {
             path.join(indir, 'content/index.css'),
             path.join(indir, 'content/inject.js')
         ],
-        loader: { '.png': 'file' },
         bundle: true,
         minify: true,
         outdir,
         define: {
-            ISOLATE_STYLE_MARKER: JSON.stringify(isolate)
+            ISOLATE_STYLE_MARKER: null
         }
     }).catch(() => process.exit(1));
 }
 
-build(outdir);
+const buildAll = async function() {
+    console.log('Building bundles...'); // eslint-disable-line no-console
+    for (const browser of browsers) {
+        await build(browser);
+    }
+};
 
-// const chromeConfig = config({
-//     manifest: manifestBase,
-//     outputPath: 'build-chrome'
-// });
-// const firefoxConfig = config({
-//     manifest: manifestFirefox,
-//     outputPath: 'build-firefox'
-// });
-// const safariConfig = config({
-//     entry: resolve('./content/inject-safari'),
-//     outputPath: 'safari/JsonDiscovery/JsonDiscovery Extension',
-//     staticCopy: false
-// });
+(async function() {
+    await buildAll();
+
+    if (watch) {
+        fs.watch(indir, { recursive: true }, async function() {
+            await buildAll();
+        });
+    }
+})();
