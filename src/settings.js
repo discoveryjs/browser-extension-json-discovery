@@ -104,6 +104,7 @@ export default discovery => {
                 safari.extension.dispatchMessage('setSettings', settings);
             }
 
+            discovery.context.settings = settings;
             discovery.flashMessage('Options saved.', 'success');
         } else {
             discovery.flashMessage(errors.join(' '), 'danger');

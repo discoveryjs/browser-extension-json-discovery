@@ -110,7 +110,7 @@ export function initDiscovery(options) {
     discovery.page.define('default', [
         {
             view: 'struct',
-            expanded: parseInt(settings.expandLevel, 10) || 0
+            expanded: '=+#.settings.expandLevel'
         }
     ]);
 
