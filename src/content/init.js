@@ -50,7 +50,7 @@ export function init(getSettings) {
 
             document.body.style.margin = 0;
             document.body.style.padding = 0;
-            document.body.style.height = '100%';
+            document.body.style.height = '100vh';
             document.body.style.border = 'none';
 
             const discoveryNode = document.createElement('div');
