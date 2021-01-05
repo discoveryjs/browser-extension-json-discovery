@@ -10,7 +10,8 @@ const indir = path.join(__dirname, '/../src');
 
 const browsers = [
     'chrome',
-    'firefox'
+    'firefox',
+    'safari'
 ];
 
 function copyFiles(src, dest) {
@@ -32,12 +33,14 @@ async function build(browser) {
     fs.mkdirSync(outdir, { recursive: true });
     fs.writeFileSync(outdir + '/manifest.json', manifest(browser));
 
-    copyFiles(path.join(indir, 'icons'), outdir);
+    if (browser !== 'safari') {
+        copyFiles(path.join(indir, 'icons'), outdir);
+    }
 
     bundleJs({
         entryPoints: [
             path.join(indir, 'content/index.css'),
-            path.join(indir, 'content/inject.js')
+            path.join(indir, browser === 'safari' ? 'content/inject-safari.js' : 'content/inject.js')
         ],
         bundle: true,
         minify: true,
