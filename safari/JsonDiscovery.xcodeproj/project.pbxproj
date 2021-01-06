@@ -14,9 +14,10 @@
 		A45BCF0825A4C93A00FD9898 /* JsonDiscovery Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = A45BCF0725A4C93A00FD9898 /* JsonDiscovery Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		A45BCF0D25A4C93A00FD9898 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A45BCF0C25A4C93A00FD9898 /* Cocoa.framework */; };
 		A45BCF1025A4C93A00FD9898 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45BCF0F25A4C93A00FD9898 /* SafariWebExtensionHandler.swift */; };
-		A45BCF2025A4C93A00FD9898 /* inject-safari.js in Resources */ = {isa = PBXBuildFile; fileRef = A45BCF1D25A4C93A00FD9898 /* inject-safari.js */; };
 		A45BCF2125A4C93A00FD9898 /* index.css in Resources */ = {isa = PBXBuildFile; fileRef = A45BCF1E25A4C93A00FD9898 /* index.css */; };
 		A45BCF2225A4C93A00FD9898 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = A45BCF1F25A4C93A00FD9898 /* manifest.json */; };
+		A4E7B0A725A5AD1400F1AD49 /* inject.js in Resources */ = {isa = PBXBuildFile; fileRef = A4E7B0A625A5AD1400F1AD49 /* inject.js */; };
+		A4E7B0AB25A5AE8200F1AD49 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = A4E7B0AA25A5AE8200F1AD49 /* icons */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,9 +57,10 @@
 		A45BCF0F25A4C93A00FD9898 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
 		A45BCF1125A4C93A00FD9898 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A45BCF1225A4C93A00FD9898 /* JsonDiscovery_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JsonDiscovery_Extension.entitlements; sourceTree = "<group>"; };
-		A45BCF1D25A4C93A00FD9898 /* inject-safari.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "inject-safari.js"; path = "../../build-safari/inject-safari.js"; sourceTree = "<group>"; };
 		A45BCF1E25A4C93A00FD9898 /* index.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = index.css; path = "../../build-safari/index.css"; sourceTree = "<group>"; };
 		A45BCF1F25A4C93A00FD9898 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = "../../build-safari/manifest.json"; sourceTree = "<group>"; };
+		A4E7B0A625A5AD1400F1AD49 /* inject.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = inject.js; path = "../../build-safari/inject.js"; sourceTree = "<group>"; };
+		A4E7B0AA25A5AE8200F1AD49 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = "../../build-safari/icons"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,7 +136,8 @@
 		A45BCF1C25A4C93A00FD9898 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A45BCF1D25A4C93A00FD9898 /* inject-safari.js */,
+				A4E7B0AA25A5AE8200F1AD49 /* icons */,
+				A4E7B0A625A5AD1400F1AD49 /* inject.js */,
 				A45BCF1E25A4C93A00FD9898 /* index.css */,
 				A45BCF1F25A4C93A00FD9898 /* manifest.json */,
 			);
@@ -232,8 +235,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A45BCF2125A4C93A00FD9898 /* index.css in Resources */,
+				A4E7B0AB25A5AE8200F1AD49 /* icons in Resources */,
 				A45BCF2225A4C93A00FD9898 /* manifest.json in Resources */,
-				A45BCF2025A4C93A00FD9898 /* inject-safari.js in Resources */,
+				A4E7B0A725A5AD1400F1AD49 /* inject.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

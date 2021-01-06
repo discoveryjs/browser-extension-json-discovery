@@ -4,7 +4,7 @@
  * @param {Function} getSettings
  */
 export function init(getSettings) {
-    let loaded = document.readyState === 'completed';
+    let loaded = document.readyState === 'complete';
     let pre = null;
     let initialPreDisplay = null;
 
