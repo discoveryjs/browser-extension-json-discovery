@@ -38,10 +38,12 @@ async function build(browser) {
     bundleJs({
         entryPoints: [
             path.join(indir, 'content/index.css'),
+            path.join(indir, 'content/init.js'),
             path.join(indir, 'content/inject.js')
         ],
         bundle: true,
         minify: true,
+        format: 'esm',
         outdir,
         define: {
             ISOLATE_STYLE_MARKER: null

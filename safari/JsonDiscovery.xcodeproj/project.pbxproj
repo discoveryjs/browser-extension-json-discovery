@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A4304B7D25A5D99B0073DCEC /* init.js in Resources */ = {isa = PBXBuildFile; fileRef = A4304B7C25A5D99B0073DCEC /* init.js */; };
 		A45BCEFA25A4C93900FD9898 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45BCEF925A4C93900FD9898 /* AppDelegate.swift */; };
 		A45BCEFD25A4C93900FD9898 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A45BCEFB25A4C93900FD9898 /* Main.storyboard */; };
 		A45BCEFF25A4C93900FD9898 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45BCEFE25A4C93900FD9898 /* ViewController.swift */; };
@@ -45,6 +46,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A4304B7C25A5D99B0073DCEC /* init.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = init.js; path = "../../build-safari/init.js"; sourceTree = "<group>"; };
 		A45BCEF525A4C93900FD9898 /* JsonDiscovery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JsonDiscovery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A45BCEF825A4C93900FD9898 /* JsonDiscovery.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JsonDiscovery.entitlements; sourceTree = "<group>"; };
 		A45BCEF925A4C93900FD9898 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 		A45BCF1C25A4C93A00FD9898 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A4304B7C25A5D99B0073DCEC /* init.js */,
 				A4E7B0AA25A5AE8200F1AD49 /* icons */,
 				A4E7B0A625A5AD1400F1AD49 /* inject.js */,
 				A45BCF1E25A4C93A00FD9898 /* index.css */,
@@ -235,6 +238,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A45BCF2125A4C93A00FD9898 /* index.css in Resources */,
+				A4304B7D25A5D99B0073DCEC /* init.js in Resources */,
 				A4E7B0AB25A5AE8200F1AD49 /* icons in Resources */,
 				A45BCF2225A4C93A00FD9898 /* manifest.json in Resources */,
 				A4E7B0A725A5AD1400F1AD49 /* inject.js in Resources */,
