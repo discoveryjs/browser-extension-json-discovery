@@ -1,80 +1,96 @@
-let loaded = document.readyState === 'complete';
-let pre = null;
-let initialPreDisplay = null;
+export const init = initDiscoveryBundled => {
+    let loaded = document.readyState === 'complete';
+    let pre = null;
+    let initialPreDisplay = null;
+    let af;
 
-requestAnimationFrame(async function x() {
-    if (
-        document.body &&
-        document.body.firstElementChild &&
-        document.body.firstElementChild.tagName === 'PRE' &&
-        initialPreDisplay === null
-    ) {
-        pre = document.body.firstElementChild;
-        initialPreDisplay = window.getComputedStyle(pre).display;
-        pre.style.display = 'none';
-    }
-
-    if (!loaded) {
-        requestAnimationFrame(x);
-    }
-
-    if (pre !== null && loaded) {
-        let json;
-
-        const textContent = pre.textContent.trim();
-
-        if (!textContent.startsWith('{') && !textContent.startsWith('[')) {
-            pre.style.display = initialPreDisplay;
-            return;
+    af = requestAnimationFrame(async function x() {
+        if (
+            document.body &&
+            document.body.firstElementChild &&
+            document.body.firstElementChild.tagName === 'PRE' &&
+            initialPreDisplay === null
+        ) {
+            pre = document.body.firstElementChild;
+            initialPreDisplay = window.getComputedStyle(pre).display;
+            pre.style.display = 'none';
         }
 
-        try {
-            json = JSON.parse(textContent);
-        } catch (e) {
-            pre.style.display = initialPreDisplay;
-            console.error(e.message); // eslint-disable-line no-console
+        if (!loaded) {
+            cancelAnimationFrame(af);
+            af = requestAnimationFrame(x);
         }
 
-        if (!json) {
-            pre.style.display = initialPreDisplay;
-            return;
-        }
+        if (pre !== null && loaded) {
+            let json;
 
-        document.body.innerHTML = '';
+            const textContent = pre.textContent.trim();
 
-        document.body.style.margin = 0;
-        document.body.style.padding = 0;
-        document.body.style.height = '100vh';
-        document.body.style.border = 'none';
+            if (!textContent.startsWith('{') && !textContent.startsWith('[')) {
+                pre.style.display = initialPreDisplay;
+                return;
+            }
 
-        const shadow = document.body.attachShadow({ mode: 'open' });
+            try {
+                json = JSON.parse(textContent);
+            } catch (e) {
+                pre.style.display = initialPreDisplay;
+                console.error(e.message); // eslint-disable-line no-console
+            }
 
-        const styles = document.createElement('link');
-        styles.rel = 'stylesheet';
-        styles.href = chrome.runtime.getURL('index.css');
+            if (!json) {
+                pre.style.display = initialPreDisplay;
+                return;
+            }
 
-        const discoveryNode = document.createElement('div');
-        discoveryNode.style.height = '100%';
+            document.body.innerHTML = '';
 
-        shadow.appendChild(styles);
-        shadow.appendChild(discoveryNode);
+            document.body.style.margin = 0;
+            document.body.style.padding = 0;
+            document.body.style.height = '100vh';
+            document.body.style.border = 'none';
 
-        try {
-            const { initDiscovery } = await import(chrome.runtime.getURL('inject.js'));
+            const shadow = document.body.attachShadow({ mode: 'open' });
 
-            getSettings(settings => {
-                initDiscovery({
-                    discoveryNode,
-                    raw: textContent,
-                    data: json,
-                    settings
+            const styles = document.createElement('link');
+            styles.rel = 'stylesheet';
+            styles.href = chrome.runtime.getURL('index.css');
+
+            const discoveryNode = document.createElement('div');
+            discoveryNode.style.height = '100%';
+
+            shadow.appendChild(styles);
+            shadow.appendChild(discoveryNode);
+
+            // Firefox bundled version
+            if (typeof initDiscoveryBundled === 'function') {
+                getSettings(settings => {
+                    initDiscoveryBundled({
+                        discoveryNode,
+                        raw: textContent,
+                        data: json,
+                        settings
+                    });
                 });
-            });
-        } catch (_) {}
-    }
-});
+            }
 
-window.addEventListener('DOMContentLoaded', () => loaded = true, false);
+            try {
+                const { initDiscovery } = await import(chrome.runtime.getURL('init-discovery.js'));
+
+                getSettings(settings => {
+                    initDiscovery({
+                        discoveryNode,
+                        raw: textContent,
+                        data: json,
+                        settings
+                    });
+                });
+            } catch (_) {}
+        }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => loaded = true, false);
+};
 
 /**
  * Restores settings from storage

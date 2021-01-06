@@ -18,15 +18,8 @@ module.exports = function(browser = 'chrome') {
         delete manifest.offline_enabled;
     }
 
-    if (browser === 'safari') {
-        // delete manifest.icons;
-        // delete manifest.offline_enabled;
-        // delete manifest.content_scripts;
-        // delete manifest.version;
-        // delete manifest.description;
-        // delete manifest.short_name;
-        // delete manifest.name;
-        // delete manifest.manifest_version;
+    if (browser === 'firefox') {
+        manifest.content_scripts[0].js[0] = 'loader-firefox.js';
     }
 
     return JSON.stringify(manifest, null, 4);
