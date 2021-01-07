@@ -50,26 +50,15 @@ export const init = initDiscoveryBundled => {
             document.body.style.height = '100vh';
             document.body.style.border = 'none';
 
-            const shadow = document.body.attachShadow({ mode: 'open' });
-
-            const styles = document.createElement('link');
-            styles.rel = 'stylesheet';
-            styles.href = chrome.runtime.getURL('index.css');
-
-            const discoveryNode = document.createElement('div');
-            discoveryNode.style.height = '100%';
-
-            shadow.appendChild(styles);
-            shadow.appendChild(discoveryNode);
-
             // Firefox bundled version
             if (typeof initDiscoveryBundled === 'function') {
                 getSettings(settings => {
                     initDiscoveryBundled({
-                        discoveryNode,
+                        node: document.body,
                         raw: textContent,
                         data: json,
-                        settings
+                        settings,
+                        styles: [chrome.runtime.getURL('index.css')]
                     });
                 });
             }
@@ -79,10 +68,11 @@ export const init = initDiscoveryBundled => {
 
                 getSettings(settings => {
                     initDiscovery({
-                        discoveryNode,
+                        node: document.body,
                         raw: textContent,
                         data: json,
-                        settings
+                        settings,
+                        styles: [chrome.runtime.getURL('index.css')]
                     });
                 });
             } catch (_) {}

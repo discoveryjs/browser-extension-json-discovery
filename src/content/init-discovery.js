@@ -4,13 +4,14 @@
  * @returns {Discovery}
  */
 export function initDiscovery(options) {
-    const { Widget, router, complexViews, utils } = require('@discoveryjs/discovery/dist/discovery.umd.js');
+    const { Widget, router, complexViews, utils } = require('@discoveryjs/discovery/dist/discovery.js');
     const settingsPage = require('../settings').default;
 
     const { settings } = options;
     const { darkmode = 'auto' } = settings;
-    const discovery = new Widget(options.discoveryNode, null, {
-        darkmode
+    const discovery = new Widget(options.node, null, {
+        darkmode,
+        styles: options.styles
     });
 
     discovery.apply(router);
