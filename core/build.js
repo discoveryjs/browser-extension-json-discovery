@@ -1,5 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const csstree = require('css-tree');
+const mime = require('mime');
+const crypto = require('crypto');
 const bundleJs = require('esbuild').build;
 const manifest = require('../src/manifest.js');
 
@@ -13,18 +16,6 @@ const browsers = [
     'firefox',
     'safari'
 ];
-
-function copyFiles(src, dest) {
-    fs.mkdirSync(dest, { recursive: true });
-
-    if (fs.statSync(src).isDirectory()) {
-        fs.readdirSync(src).forEach(p =>
-            copyFiles(path.join(src, p), path.join(dest, path.basename(src)))
-        );
-    } else {
-        fs.copyFileSync(src, path.join(dest, path.basename(src)));
-    }
-}
 
 async function build(browser) {
     const outdir = path.join(__dirname, `/../build-${browser}`);
@@ -45,7 +36,37 @@ async function build(browser) {
         // minify: true,
         format: 'esm',
         outdir
-    }).catch(() => process.exit(1));
+    })
+        .then(() => {
+            const css = fs.readFileSync(path.join(outdir, 'index.css'), 'utf8');
+            const ast = csstree.parse(css);
+
+            csstree.walk(ast, {
+                enter(node) {
+                    if (node.type === 'Url') {
+                        const value = getValueFromStringOrRaw(node.value);
+                        const [, mimeType, content] = value.match(/^data:(.*);base64,(.*)$/);
+                        const filename = crypto
+                            .createHash('sha1')
+                            .update(content)
+                            .digest('hex') + '.' + mime.getExtension(mimeType);
+
+                        fs.writeFileSync(path.join(outdir, 'icons', filename), Buffer.from(content, 'base64'));
+
+                        node.value = {
+                            type: 'Raw',
+                            value: `icons/${filename}`
+                        };
+                    }
+                }
+            });
+
+            fs.writeFileSync(path.join(outdir, 'index.css'), csstree.generate(ast));
+        })
+        .catch((error) => {
+            console.error(error); // eslint-disable-line no-console
+            process.exit(1);
+        });
 }
 
 const buildAll = async function() {
@@ -64,3 +85,27 @@ const buildAll = async function() {
         });
     }
 })();
+
+function copyFiles(src, dest) {
+    fs.mkdirSync(dest, { recursive: true });
+
+    if (fs.statSync(src).isDirectory()) {
+        fs.readdirSync(src).forEach(p =>
+            copyFiles(path.join(src, p), path.join(dest, path.basename(src)))
+        );
+    } else {
+        fs.copyFileSync(src, path.join(dest, path.basename(src)));
+    }
+}
+
+function getValueFromStringOrRaw(node) {
+    switch (node.type) {
+        case 'String':
+            return node.value.substring(1, node.value.length - 1);
+
+        case 'Raw':
+            return node.value;
+    }
+
+    return null;
+}

@@ -1,3 +1,5 @@
+import { loader } from '@discoveryjs/discovery/dist/discovery-loader.js';
+
 export const init = initDiscoveryBundled => {
     let loaded = document.readyState === 'complete';
     let pre = null;
@@ -56,10 +58,9 @@ export const init = initDiscoveryBundled => {
                     initDiscoveryBundled({
                         node: document.body,
                         raw: textContent,
-                        data: json,
                         settings,
                         styles: [chrome.runtime.getURL('index.css')]
-                    });
+                    }, json);
                 });
             }
 
@@ -67,12 +68,14 @@ export const init = initDiscoveryBundled => {
                 const { initDiscovery } = await import(chrome.runtime.getURL('init-discovery.js'));
 
                 getSettings(settings => {
-                    initDiscovery({
-                        node: document.body,
-                        raw: textContent,
+                    loader({
+                        module: initDiscovery,
                         data: json,
-                        settings,
-                        styles: [chrome.runtime.getURL('index.css')]
+                        options: {
+                            node: document.body,
+                            raw: textContent,
+                            settings
+                        }
                     });
                 });
             } catch (_) {}

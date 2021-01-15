@@ -1,21 +1,21 @@
 /**
  * Discovery initialization
  * @param {Object} options
+ * @param {Object} data
  * @returns {Discovery}
  */
-export function initDiscovery(options) {
-    const { Widget, router, complexViews, utils } = require('@discoveryjs/discovery/dist/discovery.js');
+export function initDiscovery(options, data) {
+    const { Widget, router, utils } = require('@discoveryjs/discovery/dist/discovery.js');
     const settingsPage = require('../settings').default;
 
     const { settings } = options;
     const { darkmode = 'auto' } = settings;
     const discovery = new Widget(options.node, null, {
         darkmode,
-        styles: options.styles
+        styles: [{ type: 'link', data: chrome.runtime.getURL('index.css') }]
     });
 
     discovery.apply(router);
-    discovery.apply(complexViews);
 
     discovery.flashMessagesContainer = utils.createElement('div', 'flash-messages-container');
     discovery.dom.container.append(discovery.flashMessagesContainer);
@@ -110,7 +110,7 @@ export function initDiscovery(options) {
     });
 
     discovery.setData(
-        options.data,
+        data,
         {
             name: options.title,
             raw: options.raw,
