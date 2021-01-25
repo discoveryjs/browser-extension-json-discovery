@@ -35,7 +35,10 @@ async function build(browser) {
         bundle: true,
         // minify: true,
         format: 'esm',
-        outdir
+        outdir,
+        define: {
+            global: 'window'
+        }
     })
         .then(() => {
             const css = fs.readFileSync(path.join(outdir, 'index.css'), 'utf8');

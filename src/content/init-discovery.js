@@ -1,3 +1,6 @@
+import { Widget, router, utils } from '@discoveryjs/discovery';
+import settingsPage from '../settings';
+
 /**
  * Discovery initialization
  * @param {Object} options
@@ -5,14 +8,11 @@
  * @returns {Discovery}
  */
 export function initDiscovery(options, data) {
-    const { Widget, router, utils } = require('@discoveryjs/discovery/dist/discovery.js');
-    const settingsPage = require('../settings').default;
-
     const { settings } = options;
     const { darkmode = 'auto' } = settings;
     const discovery = new Widget(options.node, null, {
         darkmode,
-        styles: [{ type: 'link', data: chrome.runtime.getURL('index.css') }]
+        styles: [{ type: 'link', href: chrome.runtime.getURL('index.css') }]
     });
 
     discovery.apply(router);

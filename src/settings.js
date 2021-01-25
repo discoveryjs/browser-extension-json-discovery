@@ -1,3 +1,5 @@
+import { utils } from '@discoveryjs/discovery';
+
 export default discovery => {
     discovery.view.define('label', function(el, config = {}) {
         const { text } = config;
@@ -34,7 +36,9 @@ export default discovery => {
                 let selfValue;
 
                 detachToggleDarkMode();
-                detachToggleDarkMode = discovery.darkmode.on((value, mode) => {
+                detachToggleDarkMode = discovery.darkmode.subscribe((value, mode) => {
+                    utils.applyContainerStyles(discovery.dom.wrapper.parentNode, { darkmode: value });
+
                     const newValue = mode === 'auto' ? 'auto' : value;
 
                     if (newValue === selfValue) {

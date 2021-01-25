@@ -54,30 +54,31 @@ export const init = initDiscoveryBundled => {
 
             // Firefox bundled version
             if (typeof initDiscoveryBundled === 'function') {
-                getSettings(settings => {
-                    initDiscoveryBundled({
-                        node: document.body,
-                        raw: textContent,
-                        settings,
-                        styles: [chrome.runtime.getURL('index.css')]
-                    }, json);
-                });
+                const settings = await getSettings();
+
+                initDiscoveryBundled({
+                    node: document.body,
+                    raw: textContent,
+                    settings,
+                    styles: [chrome.runtime.getURL('index.css')]
+                }, json);
             }
 
             try {
+                const settings = await getSettings();
+                const data = await loader({
+                    data: json,
+                    darkmode: settings.darkmode
+                });
+
                 const { initDiscovery } = await import(chrome.runtime.getURL('init-discovery.js'));
 
-                getSettings(settings => {
-                    loader({
-                        module: initDiscovery,
-                        data: json,
-                        options: {
-                            node: document.body,
-                            raw: textContent,
-                            settings
-                        }
-                    });
-                });
+                initDiscovery({
+                    node: document.body,
+                    raw: textContent,
+                    settings,
+                    styles: [chrome.runtime.getURL('index.css')]
+                }, data);
             } catch (_) {}
         }
     });
@@ -87,13 +88,15 @@ export const init = initDiscoveryBundled => {
 
 /**
  * Restores settings from storage
- * @param {Function} cb
+ * @returns {Promise}
  */
-function getSettings(cb) {
-    chrome.storage.sync.get({
-        expandLevel: 3,
-        darkmode: 'auto'
-    }, settings => {
-        cb(settings);
+function getSettings() {
+    return new Promise(resolve => {
+        chrome.storage.sync.get({
+            expandLevel: 3,
+            darkmode: 'auto'
+        }, settings => {
+            resolve(settings);
+        });
     });
 }
