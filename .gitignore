@@ -2,5 +2,8 @@ node_modules
 npm-debug.log
 build*
 !build.js
+xcuserdata
+*.xcuserstate
+*.xcworkspace
 safari/JsonDiscovery/JsonDiscovery Extension/js
 safari/JsonDiscovery/JsonDiscovery Extension/css

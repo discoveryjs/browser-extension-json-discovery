@@ -1,4 +1,4 @@
-import { loader } from '@discoveryjs/discovery/dist/discovery-loader.js';
+import { preloader } from '@discoveryjs/discovery/dist/discovery-preloader.js';
 
 export const init = initDiscoveryBundled => {
     let loaded = document.readyState === 'complete';
@@ -66,19 +66,23 @@ export const init = initDiscoveryBundled => {
 
             try {
                 const settings = await getSettings();
-                const data = await loader({
-                    data: json,
+
+                const { progressbar } = preloader({
+                    container: document.body,
                     darkmode: settings.darkmode
                 });
 
                 const { initDiscovery } = await import(chrome.runtime.getURL('init-discovery.js'));
 
-                initDiscovery({
+                await initDiscovery({
                     node: document.body,
                     raw: textContent,
                     settings,
-                    styles: [chrome.runtime.getURL('index.css')]
-                }, data);
+                    styles: [chrome.runtime.getURL('index.css')],
+                    progressbar
+                }, json);
+
+                progressbar.dispose();
             } catch (_) {}
         }
     });

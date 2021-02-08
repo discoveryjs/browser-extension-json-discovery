@@ -8,7 +8,7 @@ import settingsPage from '../settings';
  * @returns {Discovery}
  */
 export function initDiscovery(options, data) {
-    const { settings } = options;
+    const { settings, progressbar } = options;
     const { darkmode = 'auto' } = settings;
     const discovery = new Widget(options.node, null, {
         darkmode,
@@ -109,15 +109,14 @@ export function initDiscovery(options, data) {
         onClick: () => discovery.setPage('settings')
     });
 
-    discovery.setData(
+    return discovery.setDataProgress(
         data,
         {
             name: options.title,
             raw: options.raw,
             settings,
             createdAt: new Date().toISOString() // TODO fix in discovery
-        }
+        },
+        progressbar
     );
-
-    return discovery;
 }
