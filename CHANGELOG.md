@@ -1,3 +1,15 @@
+## 1.10.0 (09-02-2020)
+
+* Build system reworked using `esbuild`
+* Fixed bug with darkmode styles applied to the part of the page in Chrome
+* Fixed darkmode "blinking" issue
+* Disabled "inspector" when you press `Alt` button
+* Fixed bug when you have to reload page to apply settings
+* Increased performance by splitting code loading into two stages (Chrome & Safari only)
+* Style isolation via ShadowDOM
+* Fixed issues when CSP blocked some images and icons
+* Updated `discovery` to `1.0.0-beta.53`
+
 ## 1.9.2 (12-11-2020)
 
 * Updated `discovery` to `1.0.0-beta.50`

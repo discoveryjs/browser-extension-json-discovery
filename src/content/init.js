@@ -1,13 +1,12 @@
-/**
- * Initializes extension
- * @param {Function} getSettings
- */
-export function init(getSettings) {
-    let loaded = document.readyState === 'completed';
+import { preloader } from '@discoveryjs/discovery/dist/discovery-preloader.js';
+
+export const init = initDiscoveryBundled => {
+    let loaded = document.readyState === 'complete';
     let pre = null;
     let initialPreDisplay = null;
+    let af;
 
-    requestAnimationFrame(function x() {
+    af = requestAnimationFrame(async function x() {
         if (
             document.body &&
             document.body.firstElementChild &&
@@ -20,7 +19,8 @@ export function init(getSettings) {
         }
 
         if (!loaded) {
-            requestAnimationFrame(x);
+            cancelAnimationFrame(af);
+            af = requestAnimationFrame(x);
         }
 
         if (pre !== null && loaded) {
@@ -49,160 +49,58 @@ export function init(getSettings) {
 
             document.body.style.margin = 0;
             document.body.style.padding = 0;
-            document.body.style.height = '100%';
+            document.body.style.height = '100vh';
             document.body.style.border = 'none';
 
-            const discoveryNode = document.createElement('div');
-            discoveryNode.style.height = '100%';
-            document.body.appendChild(discoveryNode);
+            // Firefox bundled version
+            if (typeof initDiscoveryBundled === 'function') {
+                const settings = await getSettings();
 
-            getSettings(settings => {
-                initDiscovery({
-                    discoveryNode,
+                initDiscoveryBundled({
+                    node: document.body,
                     raw: textContent,
-                    data: json,
-                    settings
-                });
-            });
-        }
-    });
-    window.addEventListener('DOMContentLoaded', () => loaded = true, false);
-}
-
-/**
- * Discovery initialization
- * @param {Object} options
- * @returns {Discovery}
- */
-export function initDiscovery(options) {
-    const { Widget, router, complexViews, utils } = require('@discoveryjs/discovery/dist/discovery.umd.js');
-    const settingsPage = require('../settings').default;
-    const isolateStyleMarker = require('./index.css');
-
-    const { settings } = options;
-    const { darkmode = 'auto' } = settings;
-    const discovery = new Widget(options.discoveryNode, null, {
-        isolateStyleMarker,
-        darkmode
-    });
-
-    discovery.apply(router);
-    discovery.apply(complexViews);
-
-    discovery.flashMessagesContainer = utils.createElement('div', 'flash-messages-container');
-    discovery.dom.container.append(discovery.flashMessagesContainer);
-    discovery.flashMessage = (text, type) => {
-        const fragment = document.createDocumentFragment();
-
-        discovery.view.render(fragment, {
-            view: `alert-${type}`,
-            content: 'text'
-        }, text).then(() => {
-            const el = fragment.firstChild;
-
-            discovery.flashMessagesContainer.append(el);
-            setTimeout(() => el.remove(), 750);
-        });
-    };
-
-    settingsPage(discovery);
-
-    discovery.page.define('default', [
-        {
-            view: 'struct',
-            expanded: parseInt(settings.expandLevel, 10) || 0
-        }
-    ]);
-
-    discovery.view.define('raw', el => {
-        const { raw } = discovery.context;
-
-        el.classList.add('user-select');
-        el.textContent = raw;
-    }, { tag: 'pre' });
-
-    discovery.page.define('raw', 'raw');
-
-    discovery.nav.append({
-        content: 'text:"Index"',
-        onClick: () => {
-            discovery.setPage('default');
-            history.replaceState(null, null, ' ');
-        },
-        when: () => discovery.pageId !== 'default'
-    });
-    discovery.nav.append({
-        content: 'text:"Make report"',
-        onClick: () => discovery.setPage('report'),
-        when: () => discovery.pageId !== 'report'
-    });
-    discovery.nav.append({
-        content: 'text:"Save"',
-        onClick: el => {
-            const blob = new Blob([options.raw], { type: 'application/json' });
-
-            const location = (window.location.hostname + window.location.pathname)
-                .replace(/[^a-z0-9]/gi, '-')
-                .replace(/-$/, '');
-            el.download = location.endsWith('-json') ? location.replace(/-json$/, '.json') : location + '.json';
-            el.href = window.URL.createObjectURL(blob);
-        }
-    });
-    discovery.nav.append({
-        content: 'text:"Raw"',
-        onClick: () => discovery.setPage('raw'),
-        when: () => discovery.pageId !== 'raw'
-    });
-    discovery.nav.append({
-        content: 'text:"Copy raw"',
-        onClick: async function() {
-            const { raw } = discovery.context;
+                    settings,
+                    styles: [chrome.runtime.getURL('index.css')]
+                }, json);
+            }
 
             try {
-                await navigator.clipboard.writeText(raw);
-            } catch (err) {
-                console.error(err); // eslint-disable-line no-console
-            }
+                const settings = await getSettings();
 
-            discovery.flashMessage('Copied!', 'success');
-        },
-        when: () => {
-            if (discovery.pageId === 'raw') {
-                document.body.classList.add('no-user-select');
-            } else {
-                document.body.classList.remove('no-user-select');
-            }
+                const { progressbar } = preloader({
+                    container: document.body,
+                    darkmode: settings.darkmode
+                });
 
-            return discovery.pageId === 'raw';
+                const { initDiscovery } = await import(chrome.runtime.getURL('init-discovery.js'));
+
+                await initDiscovery({
+                    node: document.body,
+                    raw: textContent,
+                    settings,
+                    styles: [chrome.runtime.getURL('index.css')],
+                    progressbar
+                }, json);
+
+                progressbar.dispose();
+            } catch (_) {}
         }
     });
-    discovery.nav.append({
-        content: 'text:"Settings"',
-        onClick: () => discovery.setPage('settings')
-    });
 
-    discovery.setData(
-        options.data,
-        {
-            name: options.title,
-            raw: options.raw,
-            settings,
-            createdAt: new Date().toISOString() // TODO fix in discovery
-        }
-    );
-
-    return discovery;
-}
+    window.addEventListener('DOMContentLoaded', () => loaded = true, false);
+};
 
 /**
  * Restores settings from storage
- * @param {Function} cb
+ * @returns {Promise}
  */
-export function getSettings(cb) {
-    chrome.storage.sync.get({
-        expandLevel: 3,
-        darkmode: 'auto'
-    }, settings => {
-        cb(settings);
+function getSettings() {
+    return new Promise(resolve => {
+        chrome.storage.sync.get({
+            expandLevel: 3,
+            darkmode: 'auto'
+        }, settings => {
+            resolve(settings);
+        });
     });
 }
