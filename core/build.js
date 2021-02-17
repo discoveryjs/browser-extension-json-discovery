@@ -26,65 +26,78 @@ async function build(browser) {
 
     copyFiles(path.join(indir, 'icons'), outdir);
 
-    bundleJs({
+    // build bundle
+    await bundleJs({
         entryPoints: [
             path.join(indir, 'content/index.css'),
             path.join(indir, browser === 'firefox' ? 'content/loader-firefox.js' : 'content/loader.js'),
             path.join(indir, 'content/init-discovery.js')
         ],
         bundle: true,
-        // minify: true,
+        minify: true,
         format: 'esm',
         outdir,
         define: {
             global: 'window'
         }
-    })
-        .then(() => {
-            const css = fs.readFileSync(path.join(outdir, 'index.css'), 'utf8');
-            const ast = csstree.parse(css);
+    });
 
-            csstree.walk(ast, {
-                enter(node) {
-                    if (node.type === 'Url') {
-                        const value = getValueFromStringOrRaw(node.value);
-                        const [, mimeType, content] = value.match(/^data:(.*);base64,(.*)$/);
-                        const filename = crypto
-                            .createHash('sha1')
-                            .update(content)
-                            .digest('hex') + '.' + mime.getExtension(mimeType);
+    // CSS post-process
+    const css = fs.readFileSync(path.join(outdir, 'index.css'), 'utf8');
+    const ast = csstree.parse(css);
 
-                        fs.writeFileSync(path.join(outdir, 'icons', filename), Buffer.from(content, 'base64'));
+    csstree.walk(ast, {
+        enter(node) {
+            if (node.type === 'Url') {
+                const value = getValueFromStringOrRaw(node.value);
+                const [, mimeType, content] = value.match(/^data:(.*);base64,(.*)$/);
+                const filename = crypto
+                    .createHash('sha1')
+                    .update(content)
+                    .digest('hex') + '.' + mime.getExtension(mimeType);
 
-                        node.value = {
-                            type: 'Raw',
-                            value: `icons/${filename}`
-                        };
-                    }
-                }
-            });
+                fs.writeFileSync(path.join(outdir, 'icons', filename), Buffer.from(content, 'base64'));
 
-            fs.writeFileSync(path.join(outdir, 'index.css'), csstree.generate(ast));
-        })
-        .catch((error) => {
-            console.error(error); // eslint-disable-line no-console
-            process.exit(1);
-        });
+                node.value = {
+                    type: 'Raw',
+                    value: `icons/${filename}`
+                };
+            }
+        }
+    });
+
+    fs.writeFileSync(path.join(outdir, 'index.css'), csstree.generate(ast));
 }
 
 const buildAll = async function() {
-    console.log('Building bundles...'); // eslint-disable-line no-console
+    console.log('Building bundles:'); // eslint-disable-line no-console
+
     for (const browser of browsers) {
-        await build(browser);
+        console.log(`  ${browser}...`);
+        try {
+            await build(browser);
+        } catch {
+            return;
+        }
     }
+
+    console.log('  OK');
 };
 
 (async function() {
     await buildAll();
 
     if (watch) {
-        fs.watch(indir, { recursive: true }, async function() {
-            await buildAll();
+        const lastChange = new Map();
+
+        fs.watch(indir, { recursive: true }, function(_, fn) {
+            const mtime = Number(fs.statSync(path.join(indir, fn)).mtime);
+
+            // avoid build when file doesn't changed but event is received
+            if (lastChange.get(fn) !== mtime) {
+                lastChange.set(fn, mtime);
+                buildAll();
+            }
         });
     }
 })();
