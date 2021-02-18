@@ -1,19 +1,7 @@
 @import '@discoveryjs/discovery/dist/discovery.css';
 
-table, caption, th, td, tr {
-    color: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    font-style: inherit;
-    font-variant: inherit;
-}
-
 .no-user-select {
     user-select: none;
-}
-
-.user-select {
-    user-select: text;
 }
 
 .view-raw {
