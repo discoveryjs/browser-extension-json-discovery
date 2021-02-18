@@ -1,3 +1,8 @@
+## 1.10.0 (15-02-2020)
+
+* Fixed bug where an extension might not load on some pages with strict CSP rules
+* Updated `discovery` to `1.0.0-beta.54`
+
 ## 1.10.0 (09-02-2020)
 
 * Build system reworked using `esbuild`

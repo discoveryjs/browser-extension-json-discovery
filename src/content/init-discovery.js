@@ -12,6 +12,7 @@ export function initDiscovery(options, data) {
     const { darkmode = 'auto' } = settings;
     const discovery = new Widget(options.node, null, {
         darkmode,
+        darkmodePersistent: false,
         styles: [{ type: 'link', href: chrome.runtime.getURL('index.css') }]
     });
 

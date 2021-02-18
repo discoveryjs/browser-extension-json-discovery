@@ -18,9 +18,5 @@ module.exports = function(browser = 'chrome') {
         delete manifest.offline_enabled;
     }
 
-    if (browser === 'firefox') {
-        manifest.content_scripts[0].js[0] = 'loader-firefox.js';
-    }
-
     return JSON.stringify(manifest, null, 4);
 };

@@ -15,15 +15,13 @@
         "storage"
     ],
     "content_scripts": [{
-        "js": ["loader.js"],
+        "js": ["init.js"],
         "run_at": "document_start",
         "matches": ["<all_urls>"]
     }],
     "web_accessible_resources": [
         "index.css",
-        "loader.css",
-        "init-discovery.js",
-        "icons/*"
+        "loader.css"
     ],
     "offline_enabled": true
 }

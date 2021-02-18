@@ -31,8 +31,7 @@ async function build(browser) {
         entryPoints: [
             path.join(indir, 'content/index.css'),
             path.join(indir, 'content/loader.css'),
-            path.join(indir, browser === 'firefox' ? 'content/loader-firefox.js' : 'content/loader.js'),
-            path.join(indir, 'content/init-discovery.js')
+            path.join(indir, 'content/init.js')
         ],
         bundle: true,
         minify: true,
