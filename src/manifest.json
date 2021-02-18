@@ -21,7 +21,8 @@
     }],
     "web_accessible_resources": [
         "index.css",
-        "loader.css"
+        "loader.css",
+        "icons/*"
     ],
     "offline_enabled": true
 }
