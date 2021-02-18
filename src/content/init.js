@@ -1,10 +1,11 @@
-import { preloader } from '@discoveryjs/discovery/dist/discovery-preloader.js';
+import { preloader as createPreloader } from '@discoveryjs/discovery/dist/discovery-preloader.js';
 
 export const init = initDiscoveryBundled => {
     let loaded = document.readyState === 'complete';
     let pre = null;
     let initialPreDisplay = null;
     let af;
+    let preloader;
 
     af = requestAnimationFrame(async function x() {
         if (
@@ -16,6 +17,13 @@ export const init = initDiscoveryBundled => {
             pre = document.body.firstElementChild;
             initialPreDisplay = window.getComputedStyle(pre).display;
             pre.style.display = 'none';
+
+            const settings = await getSettings();
+            preloader = createPreloader({
+                container: document.body,
+                styles: [{ type: 'link', href: chrome.runtime.getURL('loader.css') }],
+                darkmode: settings.darkmode
+            });
         }
 
         if (!loaded) {
@@ -45,7 +53,8 @@ export const init = initDiscoveryBundled => {
                 return;
             }
 
-            document.body.innerHTML = '';
+            // document.body.innerHTML = '';
+            pre.remove();
 
             document.body.style.margin = 0;
             document.body.style.padding = 0;
@@ -62,16 +71,12 @@ export const init = initDiscoveryBundled => {
                     settings,
                     styles: [chrome.runtime.getURL('index.css')]
                 }, json);
+
+                return;
             }
 
             try {
                 const settings = await getSettings();
-
-                const { progressbar } = preloader({
-                    container: document.body,
-                    darkmode: settings.darkmode
-                });
-
                 const { initDiscovery } = await import(chrome.runtime.getURL('init-discovery.js'));
 
                 await initDiscovery({
@@ -79,10 +84,10 @@ export const init = initDiscoveryBundled => {
                     raw: textContent,
                     settings,
                     styles: [chrome.runtime.getURL('index.css')],
-                    progressbar
+                    progressbar: preloader.progressbar
                 }, json);
 
-                progressbar.dispose();
+                preloader.el.remove();
             } catch (_) {}
         }
     });

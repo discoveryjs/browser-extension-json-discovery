@@ -21,6 +21,7 @@
     }],
     "web_accessible_resources": [
         "index.css",
+        "loader.css",
         "init-discovery.js",
         "icons/*"
     ],

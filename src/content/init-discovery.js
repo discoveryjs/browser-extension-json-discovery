@@ -45,24 +45,27 @@ export function initDiscovery(options, data) {
     discovery.view.define('raw', el => {
         const { raw } = discovery.context;
 
-        el.classList.add('user-select');
         el.textContent = raw;
     }, { tag: 'pre' });
 
     discovery.page.define('raw', 'raw');
+    discovery.on('pageHashChange', () => {
+        // FIXME: This doesn't work since styles are in SD. Should be removed?
+        document.body.classList.toggle('no-user-select', discovery.pageId === 'raw');
+    });
 
     discovery.nav.append({
+        when: () => discovery.pageId !== 'default',
         content: 'text:"Index"',
         onClick: () => {
             discovery.setPage('default');
             history.replaceState(null, null, ' ');
-        },
-        when: () => discovery.pageId !== 'default'
+        }
     });
     discovery.nav.append({
+        when: () => discovery.pageId !== 'report',
         content: 'text:"Make report"',
-        onClick: () => discovery.setPage('report'),
-        when: () => discovery.pageId !== 'report'
+        onClick: () => discovery.setPage('report')
     });
     discovery.nav.append({
         content: 'text:"Save"',
@@ -77,11 +80,12 @@ export function initDiscovery(options, data) {
         }
     });
     discovery.nav.append({
+        when: () => discovery.pageId !== 'raw',
         content: 'text:"Raw"',
-        onClick: () => discovery.setPage('raw'),
-        when: () => discovery.pageId !== 'raw'
+        onClick: () => discovery.setPage('raw')
     });
     discovery.nav.append({
+        when: () => discovery.pageId === 'raw',
         content: 'text:"Copy raw"',
         onClick: async function() {
             const { raw } = discovery.context;
@@ -93,15 +97,6 @@ export function initDiscovery(options, data) {
             }
 
             discovery.flashMessage('Copied!', 'success');
-        },
-        when: () => {
-            if (discovery.pageId === 'raw') {
-                document.body.classList.add('no-user-select');
-            } else {
-                document.body.classList.remove('no-user-select');
-            }
-
-            return discovery.pageId === 'raw';
         }
     });
     discovery.nav.append({

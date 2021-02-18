@@ -20,6 +20,7 @@ table, caption, th, td, tr {
     word-wrap: break-word;
     white-space: pre-wrap;
     word-break: break-all;
+    user-select: text;
 }
 
 .view-fieldset {
