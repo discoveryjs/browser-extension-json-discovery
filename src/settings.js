@@ -1,3 +1,5 @@
+import { utils } from '@discoveryjs/discovery';
+
 export default discovery => {
     discovery.view.define('label', function(el, config = {}) {
         const { text } = config;
@@ -22,17 +24,6 @@ export default discovery => {
         discovery.view.render(el, content, data, context);
     });
 
-    discovery.view.define('flash-message', function(el, config) {
-        const { message } = config;
-        const { text, type } = message;
-        const view = 'alert' + (type ? `-${type}` : '');
-
-        discovery.view.render(el, {
-            view,
-            content: 'text:"' + text + '"'
-        });
-    });
-
     let detachToggleDarkMode = () => {};
 
     const modifiers = [
@@ -45,7 +36,9 @@ export default discovery => {
                 let selfValue;
 
                 detachToggleDarkMode();
-                detachToggleDarkMode = discovery.darkmode.on((value, mode) => {
+                detachToggleDarkMode = discovery.darkmode.subscribe((value, mode) => {
+                    utils.applyContainerStyles(discovery.dom.wrapper.parentNode, { darkmode: value });
+
                     const newValue = mode === 'auto' ? 'auto' : value;
 
                     if (newValue === selfValue) {
@@ -81,7 +74,7 @@ export default discovery => {
     ].map(content => ({ view: 'fieldset', content }));
 
     discovery.page.define('settings', function(el, data, context) {
-        const { settings, message } = context;
+        const { settings } = context;
 
         discovery.view.render(el, [
             'h1:"Settings"',
@@ -97,13 +90,8 @@ export default discovery => {
                         }
                     }
                 ]
-            },
-            {
-                view: 'flash-message',
-                when: 'message',
-                message
             }
-        ], { message }, settings);
+        ], {}, settings);
     });
 
     /**
@@ -120,35 +108,11 @@ export default discovery => {
                 safari.extension.dispatchMessage('setSettings', settings);
             }
 
-            flashMessage({ settings }, 'Options saved.', 'success');
+            discovery.context.settings = settings;
+            discovery.flashMessage('Options saved.', 'success');
         } else {
-            flashMessage({ settings }, errors.join(' '), 'danger');
+            discovery.flashMessage(errors.join(' '), 'danger');
         }
-    }
-
-    /**
-     * Creates flash info-message
-     * @param {Object} data
-     * @param {string} text
-     * @param {string} type
-     */
-    function flashMessage(data, text, type) {
-        const message = {
-            text,
-            type
-        };
-
-        discovery.setData(
-            discovery.data,
-            Object.assign(discovery.context, data, { message })
-        );
-
-        setTimeout(() => {
-            discovery.setData(
-                discovery.data,
-                Object.assign(discovery.context, data, { message: null })
-            );
-        }, 750);
     }
 
     /**

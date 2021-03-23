@@ -1,10 +1,25 @@
-@import '../../node_modules/@discoveryjs/discovery/dist/discovery.raw.css';
+@import '@discoveryjs/discovery/dist/discovery.css';
+
+table, caption, th, td, tr {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    font-style: inherit;
+    font-variant: inherit;
+}
 
 .no-user-select {
     user-select: none;
 }
 
 .user-select {
+    user-select: text;
+}
+
+.view-raw {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-all;
     user-select: text;
 }
 
@@ -27,9 +42,9 @@
     line-height: 34px;
 }
 
-.view-flash-message {
+.flash-messages-container {
     position: fixed;
-    top: 20px;
+    bottom: 20px;
     right: 20px;
 }
 

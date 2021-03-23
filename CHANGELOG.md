@@ -1,6 +1,49 @@
-## next (1.8.0)
+## 1.10.2 (18-02-2020)
+
+* Fixed manifest to get icons accessible
+
+## 1.10.1 (18-02-2020)
+
+* Fixed bug where an extension might not load on some pages with strict CSP rules
+* Updated `discovery` to `1.0.0-beta.55`
+
+## 1.10.0 (09-02-2020)
+
+* Build system reworked using `esbuild`
+* Fixed bug with darkmode styles applied to the part of the page in Chrome
+* Fixed darkmode "blinking" issue
+* Disabled "inspector" when you press `Alt` button
+* Fixed bug when you have to reload page to apply settings
+* Increased performance by splitting code loading into two stages (Chrome & Safari only)
+* Style isolation via ShadowDOM
+* Fixed issues when CSP blocked some images and icons
+* Updated `discovery` to `1.0.0-beta.53`
+
+## 1.9.2 (12-11-2020)
+
+* Updated `discovery` to `1.0.0-beta.50`
+
+## 1.9.1 (08-11-2020)
+
+* Fixed `raw` mode css
+* Improved raw copy to clipboard performance
+* Flash message moved to the right bottom corner
+
+## 1.9.0 (07-11-2020)
+
+* "Download JSON" button
+* Fixed `raw` mode css
+
+## 1.8.1 (06-11-2020)
+
+* Fixed bug with hidden `pre` on some sites
+* Fixed bug with non-working `raw` mode
+
+## 1.8.0 (03-11-2020)
 
 * Increased performance when working with huge JSON-documents
+* Updated `discovery` to `1.0.0-beta.47`
+* Fixed table font color
 
 ## 1.7.1 (21-10-2020)
 
