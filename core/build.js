@@ -73,7 +73,8 @@ const buildAll = async function() {
     console.log('Building bundles:'); // eslint-disable-line no-console
 
     for (const browser of browsers) {
-        console.log(`  ${browser}...`);
+        console.log(`  ${browser}...`); // eslint-disable-line no-console
+
         try {
             await build(browser);
         } catch {
@@ -81,7 +82,7 @@ const buildAll = async function() {
         }
     }
 
-    console.log('  OK');
+    console.log('  OK'); // eslint-disable-line no-console
 };
 
 (async function() {
