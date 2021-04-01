@@ -153,7 +153,7 @@ async function checkLoaded(settings) {
 
         await initDiscovery({
             node: document.body,
-            raw: pre.textContent, // FIXME: should be computed lazyly
+            getRaw: () => pre.textContent,
             settings,
             styles: [chrome.runtime.getURL('index.css')],
             progressbar: preloader.progressbar

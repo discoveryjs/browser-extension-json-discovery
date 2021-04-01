@@ -8,7 +8,7 @@ import settingsPage from '../settings';
  * @returns {Discovery}
  */
 export function initDiscovery(options, data) {
-    const { settings, progressbar } = options;
+    const { settings, progressbar, getRaw } = options;
     const { darkmode = 'auto' } = settings;
     const discovery = new Widget(options.node, null, {
         darkmode,
@@ -44,9 +44,7 @@ export function initDiscovery(options, data) {
     ]);
 
     discovery.view.define('raw', el => {
-        const { raw } = discovery.context;
-
-        el.textContent = raw;
+        el.textContent = getRaw();
     }, { tag: 'pre' });
 
     discovery.page.define('raw', 'raw');
@@ -71,11 +69,11 @@ export function initDiscovery(options, data) {
     discovery.nav.append({
         content: 'text:"Save"',
         onClick: el => {
-            const blob = new Blob([options.raw], { type: 'application/json' });
-
+            const blob = new Blob([getRaw()], { type: 'application/json' });
             const location = (window.location.hostname + window.location.pathname)
                 .replace(/[^a-z0-9]/gi, '-')
                 .replace(/-$/, '');
+
             el.download = location.endsWith('-json') ? location.replace(/-json$/, '.json') : location + '.json';
             el.href = window.URL.createObjectURL(blob);
         }
@@ -89,10 +87,8 @@ export function initDiscovery(options, data) {
         when: () => discovery.pageId === 'raw',
         content: 'text:"Copy raw"',
         onClick: async function() {
-            const { raw } = discovery.context;
-
             try {
-                await navigator.clipboard.writeText(raw);
+                await navigator.clipboard.writeText(getRaw());
             } catch (err) {
                 console.error(err); // eslint-disable-line no-console
             }
@@ -109,7 +105,6 @@ export function initDiscovery(options, data) {
         data,
         {
             name: options.title,
-            raw: options.raw,
             settings,
             createdAt: new Date().toISOString() // TODO fix in discovery
         },
