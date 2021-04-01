@@ -1,3 +1,9 @@
+## next
+
+- Improved data loading and page chages rollback when data is not a JSON or broken JSON
+- Added progressbar on data loading
+- Added inspect button to navbar
+
 ## 1.10.3 (01-04-2021)
 
 * Fixed bug, when extension could overlap part of content on pages with plain/text

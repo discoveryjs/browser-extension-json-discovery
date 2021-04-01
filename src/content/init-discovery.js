@@ -1,4 +1,4 @@
-import { Widget, router, utils } from '@discoveryjs/discovery';
+import { Widget, router, utils, navButtons } from '@discoveryjs/discovery';
 import settingsPage from '../settings';
 
 /**
@@ -11,6 +11,7 @@ export function initDiscovery(options, data) {
     const { settings, progressbar, getRaw } = options;
     const { darkmode = 'auto' } = settings;
     const discovery = new Widget(options.node, null, {
+        inspector: true,
         darkmode,
         darkmodePersistent: false,
         styles: [{ type: 'link', href: chrome.runtime.getURL('index.css') }]
@@ -66,6 +67,7 @@ export function initDiscovery(options, data) {
         content: 'text:"Make report"',
         onClick: () => discovery.setPage('report')
     });
+    discovery.apply(navButtons.inspect);
     discovery.nav.append({
         content: 'text:"Save"',
         onClick: el => {
