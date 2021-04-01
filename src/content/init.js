@@ -7,6 +7,15 @@ let initialPreDisplay = null;
 let af;
 let preloader;
 
+function rollBackExtension() {
+    if (pre) {
+        pre.style.display = initialPreDisplay;
+    }
+    if (preloader && preloader.el) {
+        preloader.el.remove();
+    }
+}
+
 af = requestAnimationFrame(async function x() {
     if (
         document.body &&
@@ -37,19 +46,19 @@ af = requestAnimationFrame(async function x() {
         const textContent = pre.textContent.trim();
 
         if (!textContent.startsWith('{') && !textContent.startsWith('[')) {
-            pre.style.display = initialPreDisplay;
+            rollBackExtension();
             return;
         }
 
         try {
             json = JSON.parse(textContent);
         } catch (e) {
-            pre.style.display = initialPreDisplay;
+            rollBackExtension();
             console.error(e.message); // eslint-disable-line no-console
         }
 
         if (!json) {
-            pre.style.display = initialPreDisplay;
+            rollBackExtension();
             return;
         }
 
