@@ -16,7 +16,7 @@
     "babel-eslint": "^10.1.0",
     "css-tree": "^1.1.2",
     "esbuild": "^0.8.46",
-    "eslint": "^4.9.0",
+    "eslint": "^7.0.0",
     "jszip": "^3.5.0",
     "mime": "^2.4.7"
   }
