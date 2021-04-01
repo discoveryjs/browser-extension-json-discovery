@@ -1,13 +1,17 @@
-## 1.10.2 (18-02-2020)
+## 1.10.3 (01-04-2021)
+
+* Fixed bug, when extension could overlap part of content on pages with plain/text
+
+## 1.10.2 (18-02-2021)
 
 * Fixed manifest to get icons accessible
 
-## 1.10.1 (18-02-2020)
+## 1.10.1 (18-02-2021)
 
 * Fixed bug where an extension might not load on some pages with strict CSP rules
 * Updated `discovery` to `1.0.0-beta.55`
 
-## 1.10.0 (09-02-2020)
+## 1.10.0 (09-02-2021)
 
 * Build system reworked using `esbuild`
 * Fixed bug with darkmode styles applied to the part of the page in Chrome
