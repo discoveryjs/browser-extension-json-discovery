@@ -49,14 +49,10 @@ export function initDiscovery(options, data) {
     }, { tag: 'pre' });
 
     discovery.page.define('raw', 'raw');
-    discovery.on('pageHashChange', () => {
-        // FIXME: This doesn't work since styles are in SD. Should be removed?
-        document.body.classList.toggle('no-user-select', discovery.pageId === 'raw');
-    });
 
     discovery.nav.append({
         when: () => discovery.pageId !== 'default',
-        content: 'text:"Index"',
+        content: 'text:"Default view"',
         onClick: () => {
             discovery.setPage('default');
             history.replaceState(null, null, ' ');
@@ -68,8 +64,8 @@ export function initDiscovery(options, data) {
         onClick: () => discovery.setPage('report')
     });
     discovery.apply(navButtons.inspect);
-    discovery.nav.append({
-        content: 'text:"Save"',
+    discovery.nav.menu.append({
+        content: 'text:"Download JSON"',
         onClick: el => {
             const blob = new Blob([getRaw()], { type: 'application/json' });
             const location = (window.location.hostname + window.location.pathname)
@@ -82,12 +78,14 @@ export function initDiscovery(options, data) {
     });
     discovery.nav.append({
         when: () => discovery.pageId !== 'raw',
-        content: 'text:"Raw"',
-        onClick: () => discovery.setPage('raw')
+        content: 'text:"JSON"',
+        onClick: () => discovery.setPage('raw'),
+        postRender(el) {
+            el.title = 'Show JSON as is';
+        }
     });
-    discovery.nav.append({
-        when: () => discovery.pageId === 'raw',
-        content: 'text:"Copy raw"',
+    discovery.nav.menu.append({
+        content: 'text:"Copy JSON to clipboard"',
         onClick: async function() {
             try {
                 await navigator.clipboard.writeText(getRaw());
@@ -98,7 +96,7 @@ export function initDiscovery(options, data) {
             discovery.flashMessage('Copied!', 'success');
         }
     });
-    discovery.nav.append({
+    discovery.nav.menu.append({
         content: 'text:"Settings"',
         onClick: () => discovery.setPage('settings')
     });
