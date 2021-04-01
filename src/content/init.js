@@ -1,4 +1,5 @@
-import { preloader as createPreloader } from '@discoveryjs/discovery/dist/discovery-preloader.js';
+import { rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles';
+import { preloader as createPreloader } from '@discoveryjs/discovery/src/preloader.js';
 import { parseChunked } from '@discoveryjs/json-ext';
 import { initDiscovery } from './init-discovery';
 
@@ -7,7 +8,7 @@ let loadedTimer;
 let pre = null;
 let preCursor;
 let initialPreDisplay = null;
-let preloader;
+let preloader = null;
 let pushChunk = () => {};
 const chunkBuffer = [];
 const getChunk = () => {
@@ -45,44 +46,47 @@ const data = parseChunked(async function*() {
         yield chunk;
         size += chunk.length;
 
-        if (preloader) {
+        if (preloader !== null) {
             await preloader.progressbar.setState(getState(false));
         }
     }
 
-    preloader.progressbar.setState(getState(true));
-});
-
-data.catch(error => {
-    cancelAnimationFrame(loadedTimer);
-    preloader.el.remove();
-    document.body.style.cssText = '';
-
-    if (pre !== null) {
-        requestAnimationFrame(() => {
-            // it might to take a lot of time to render large text,
-            // so make it visible in next frame to allow styles rollback
-            pre.style.display = initialPreDisplay;
-            pre = null;
-        });
+    if (preloader !== null) {
+        preloader.progressbar.setState(getState(true));
     }
-
-    console.error('[JsonDiscovery] Failed to parse JSON', error); // eslint-disable-line no-console
 });
 
-const flushData = () => {
+const flushData = (settings) => {
     if (pre === null) {
         return;
     }
 
     while (true) {
-        const chunkNode = preCursor === undefined ? pre.firstChild : preCursor.nextSibling;
+        const isFirstChunk = preCursor === undefined;
+        const chunkNode = isFirstChunk ? pre.firstChild : preCursor.nextSibling;
 
         if (!chunkNode) {
             break;
         }
 
         if (chunkNode.nodeType === Node.TEXT_NODE) {
+            if (isFirstChunk) {
+                if (/^\s*[{[]/.test(chunkNode.nodeValue)) {
+                    // probably JSON
+                    preloader = createPreloader({
+                        container: document.body,
+                        styles: [{ type: 'link', href: chrome.runtime.getURL('loader.css') }],
+                        darkmode: settings.darkmode
+                    });
+                    preloader.progressbar.setState({ stage: 'request' });            
+                } else {
+                    // not a JSON
+                    const error = new Error('Rollback');
+                    error.rollback = true;
+                    throw error;
+                }
+            }
+
             pushChunk(chunkNode.nodeValue);
         }
 
@@ -90,7 +94,31 @@ const flushData = () => {
     }
 };
 
-loadedTimer = requestAnimationFrame(async function checkLoaded() {
+function rollbackPageChanges(error) {
+    chunkBuffer.length = 0; // clean up buffer
+    cancelAnimationFrame(loadedTimer);
+    rollbackContainerStyles(document.body);
+
+    if (preloader !== null) {
+        preloader.el.remove();
+        preloader = null;
+    }
+
+    // it might to take a lot of time to render large text,
+    // so make it visible in next frame to allow styles rollback
+    requestAnimationFrame(() => {
+        if (pre !== null) {
+            pre.style.display = initialPreDisplay;
+            pre = null;
+        }
+    });
+
+    if (!error.rollback) {
+        console.error('[JsonDiscovery] Failed to parse JSON', error); // eslint-disable-line no-console
+    }
+}
+
+async function checkLoaded(settings) {
     if (
         initialPreDisplay === null &&
         document.body &&
@@ -100,43 +128,28 @@ loadedTimer = requestAnimationFrame(async function checkLoaded() {
         pre = document.body.firstElementChild;
         initialPreDisplay = window.getComputedStyle(pre).display;
         pre.style.display = 'none';
-
-        const settings = await getSettings();
-        preloader = createPreloader({
-            container: document.body,
-            styles: [{ type: 'link', href: chrome.runtime.getURL('loader.css') }],
-            darkmode: settings.darkmode
-        });
-        preloader.progressbar.setState({ stage: 'request' });
     }
 
     if (!loaded) {
-        flushData();
-        loadedTimer = requestAnimationFrame(checkLoaded);
+        flushData(settings);
+        loadedTimer = requestAnimationFrame(() =>
+            checkLoaded(settings).catch(rollbackPageChanges)
+        );
         return;
     }
 
     if (pre !== null) {
-        let json;
+        flushData(settings);
+        pushChunk(null); // end of input
 
-        flushData();
-        pushChunk(null);
+        const json = await data;
 
-        try {
-            json = await data;
-            preloader.progressbar.setState({ stage: 'done' });
-        } catch (e) {
-            return;
-        }
-
-        // document.body.innerHTML = '';
+        preloader.progressbar.setState({ stage: 'done' });
         pre.remove();
 
         document.body.style.margin = 0;
         document.body.style.padding = 0;
         document.body.style.border = 'none';
-
-        const settings = await getSettings();
 
         await initDiscovery({
             node: document.body,
@@ -148,9 +161,12 @@ loadedTimer = requestAnimationFrame(async function checkLoaded() {
 
         preloader.el.remove();
     }
-});
+}
 
 window.addEventListener('DOMContentLoaded', () => loaded = true, false);
+getSettings()
+    .then(checkLoaded)
+    .catch(rollbackPageChanges);
 
 /**
  * Restores settings from storage
