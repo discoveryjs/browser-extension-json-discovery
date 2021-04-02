@@ -4,8 +4,10 @@
 - Added progressbar on data loading
 - Added inspect button to navigation bar
 - Rearranged navigation bar buttons to be more compact
+- Added "Copy to clipboard" and "Download as file" buttons to default page header
+- Added "Collapse all" and "Expand all" buttons to default page header
 - Reworked raw JSON page:
-    - Added action buttons to page header
+    - Added "Copy to clipboard" and "Download as file" buttons to page header
     - Show only first 100KB when JSON is big to avoid browser's freezing
     - Various improvements around performance
 

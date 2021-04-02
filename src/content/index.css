@@ -7,15 +7,46 @@
     right: 0;
     bottom: 0;
 }
+.discovery-root {
+    --discovery-page-padding-right: 12px;
+    --discovery-page-padding-bottom: 12px;
+    --discovery-page-padding-left: 12px;
+}
 
 .view-page-header {
-    top: -17px;
+    top: 0px;
+    margin-bottom: 0;
+    padding-top: 6px;
+}
+.view-page-header__content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+}
+.view-page-header .view-button {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.1;
+    padding: 6px 8px;
+}
+.view-page-header .view-button.collapse-all {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.view-page-header .view-button.expand-all {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.view-page-header .view-button svg {
+    margin: -4px 0;
 }
 
 .view-raw > .content {
     word-wrap: break-word;
     white-space: pre-wrap;
     word-break: break-all;
+    margin: 0;
 }
 .view-raw > .content:not(:only-child)::after {
     content: '...';
