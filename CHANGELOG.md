@@ -1,6 +1,6 @@
 ## next
 
-- Improved data loading and page chages rollback when data is not a JSON or broken JSON
+- Improved data loading and page style changes rollback when data is not a JSON or broken JSON
 - Added progressbar on data loading
 - Added inspect button to navigation bar
 - Rearranged navigation bar buttons to be more compact
