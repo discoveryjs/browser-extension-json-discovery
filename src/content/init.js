@@ -167,7 +167,7 @@ async function checkLoaded(settings) {
                 size: {
                     value: totalSize
                 },
-                json: totalSize <= firstSliceMaxSize ? firstSlice : {
+                json: totalSize <= firstSliceMaxSize ? { value: firstSlice } : {
                     configurable: true,
                     get() {
                         return Object.defineProperty(this, 'json', {
