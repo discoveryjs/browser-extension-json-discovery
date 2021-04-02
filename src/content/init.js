@@ -10,6 +10,9 @@ let preCursor;
 let initialPreDisplay = null;
 let preloader = null;
 let pushChunk = () => {};
+let totalSize = 0;
+let firstSlice = '';
+const firstSliceMaxSize = 100 * 1000;
 const chunkBuffer = [];
 const getChunk = () => {
     if (chunkBuffer.length) {
@@ -25,14 +28,13 @@ const getChunk = () => {
 };
 const data = parseChunked(async function*() {
     const loadStartTime = Date.now();
-    let size = 0;
     const getState = done => ({
         stage: 'receive',
         progress: {
             done,
             elapsed: Date.now() - loadStartTime,
             units: 'bytes',
-            completed: size
+            completed: totalSize
         }
     });
 
@@ -44,7 +46,12 @@ const data = parseChunked(async function*() {
         }
 
         yield chunk;
-        size += chunk.length;
+        totalSize += chunk.length;
+
+        if (firstSlice.length < firstSliceMaxSize) {
+            const left = firstSliceMaxSize - firstSlice.length;
+            firstSlice += left > chunk.length ? chunk : chunk.slice(0, left);
+        }
 
         if (preloader !== null) {
             await preloader.progressbar.setState(getState(false));
@@ -78,7 +85,7 @@ const flushData = (settings) => {
                         styles: [{ type: 'link', href: chrome.runtime.getURL('loader.css') }],
                         darkmode: settings.darkmode
                     });
-                    preloader.progressbar.setState({ stage: 'request' });            
+                    preloader.progressbar.setState({ stage: 'request' });
                 } else {
                     // not a JSON
                     const error = new Error('Rollback');
@@ -153,10 +160,22 @@ async function checkLoaded(settings) {
 
         await initDiscovery({
             node: document.body,
-            getRaw: (() => {
-                let memo;
-                return () => memo || (memo = pre.textContent);
-            })(),
+            raw: Object.defineProperties({}, {
+                firstSlice: {
+                    value: totalSize < firstSliceMaxSize * 2 ? null : firstSlice
+                },
+                size: {
+                    value: totalSize
+                },
+                json: totalSize <= firstSliceMaxSize ? firstSlice : {
+                    configurable: true,
+                    get() {
+                        return Object.defineProperty(this, 'json', {
+                            value: pre.textContent
+                        }).json;
+                    }
+                }
+            }),
             settings,
             styles: [chrome.runtime.getURL('index.css')],
             progressbar: preloader.progressbar

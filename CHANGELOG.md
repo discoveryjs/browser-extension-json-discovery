@@ -2,8 +2,12 @@
 
 - Improved data loading and page chages rollback when data is not a JSON or broken JSON
 - Added progressbar on data loading
-- Added inspect button to navbar
-- Rearranged navbar to be more compact
+- Added inspect button to navigation bar
+- Rearranged navigation bar buttons to be more compact
+- Reworked raw JSON page:
+    - Added action buttons to page header
+    - Show only first 100KB when JSON is big to avoid browser's freezing
+    - Various improvements around performance
 
 ## 1.10.3 (01-04-2021)
 
