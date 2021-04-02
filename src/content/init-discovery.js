@@ -31,7 +31,8 @@ export function initDiscovery(options, data) {
             const el = fragment.firstChild;
 
             discovery.flashMessagesContainer.append(el);
-            setTimeout(() => el.remove(), 750);
+            setTimeout(() => el.classList.add('ready-to-remove'), 1250);
+            setTimeout(() => el.remove(), 1500);
         });
     };
 
