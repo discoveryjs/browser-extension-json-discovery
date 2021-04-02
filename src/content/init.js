@@ -153,7 +153,10 @@ async function checkLoaded(settings) {
 
         await initDiscovery({
             node: document.body,
-            getRaw: () => pre.textContent,
+            getRaw: (() => {
+                let memo;
+                return () => memo || (memo = pre.textContent);
+            })(),
             settings,
             styles: [chrome.runtime.getURL('index.css')],
             progressbar: preloader.progressbar
