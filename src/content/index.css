@@ -1,26 +1,83 @@
 @import '@discoveryjs/discovery/dist/discovery.css';
 
-table, caption, th, td, tr {
-    color: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    font-style: inherit;
-    font-variant: inherit;
+:host {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.discovery-root {
+    --discovery-page-padding-right: 12px;
+    --discovery-page-padding-bottom: 12px;
+    --discovery-page-padding-left: 12px;
 }
 
-.no-user-select {
-    user-select: none;
+.view-page-header {
+    top: 0px;
+    margin-bottom: 0;
+    padding-top: 6px;
+}
+.view-page-header__content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+}
+.view-page-header .view-button {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.1;
+    padding: 6px 8px;
+}
+.view-page-header .view-button.collapse-all {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.view-page-header .view-button.expand-all {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.view-page-header .view-button svg {
+    margin: -4px 0;
 }
 
-.user-select {
-    user-select: text;
-}
-
-.view-raw {
+.view-raw > .content {
     word-wrap: break-word;
     white-space: pre-wrap;
     word-break: break-all;
-    user-select: text;
+    margin: 0;
+}
+.view-raw > .content:not(:only-child)::after {
+    content: '...';
+}
+.view-raw .too-big-json {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-width: 1px 0 0;
+    border-color: #ffd452;
+    background-color: #ffe2855c;
+    border-radius: 0;
+    padding: 8px 25px;
+}
+.view-raw .too-big-json::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: -2px;
+    background-color: var(--discovery-background-color);
+    opacity: .85;
+    border-radius: 5px;
+}
+.view-raw .too-big-json .view-button {
+    padding: 4px 8px;
+    font-size: 90%;
 }
 
 .view-fieldset {
@@ -44,8 +101,36 @@ table, caption, th, td, tr {
 
 .flash-messages-container {
     position: fixed;
+    z-index: 1000;
+    pointer-events: none;
     bottom: 20px;
     right: 20px;
+}
+.flash-messages-container .view-alert {
+    position: relative;
+}
+.flash-messages-container .view-alert.ready-to-remove {
+    transition: opacity .25s ease-out;
+    opacity: 0;
+}
+.flash-messages-container .view-alert::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: -2px;
+    background-color: var(--discovery-background-color);
+    opacity: .9;
+    border-radius: 5px;
+}
+@supports (backdrop-filter: blur(3px)) {
+    .flash-messages-container .view-alert::before {
+        backdrop-filter: blur(3px);
+        opacity: .65;
+    }
 }
 
 /* Safari quirk mode fix */

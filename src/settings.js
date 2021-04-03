@@ -69,6 +69,7 @@ export default discovery => {
             htmlType: 'number',
             htmlMin: 0,
             name: 'expandLevel',
+            value: '#.expandLevel+""', // input doesn't allow non-string values, and #.expandLevel is a number
             label: 'Expand Level'
         }
     ].map(content => ({ view: 'fieldset', content }));
@@ -77,7 +78,7 @@ export default discovery => {
         const { settings } = context;
 
         discovery.view.render(el, [
-            'h1:"Settings"',
+            'h1:"JsonDiscovery settings"',
             {
                 view: 'context',
                 modifiers,
