@@ -1,7 +1,7 @@
 import { rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles';
 import { preloader as createPreloader } from '@discoveryjs/discovery/src/preloader.js';
 import { parseChunked } from '@discoveryjs/json-ext';
-import { initDiscovery } from './init-discovery';
+import { initDiscovery } from '../discovery';
 
 let loaded = document.readyState === 'complete';
 let loadedTimer;
@@ -82,7 +82,7 @@ const flushData = (settings) => {
                     // probably JSON
                     preloader = createPreloader({
                         container: document.body,
-                        styles: [{ type: 'link', href: chrome.runtime.getURL('loader.css') }],
+                        styles: [{ type: 'link', href: chrome.runtime.getURL('preloader.css') }],
                         darkmode: settings.darkmode
                     });
                     preloader.progressbar.setState({ stage: 'request' });

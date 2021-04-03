@@ -20,7 +20,7 @@
         "matches": ["<all_urls>"]
     }],
     "web_accessible_resources": [
-        "index.css",
+        "discovery.css",
         "loader.css",
         "icons/*"
     ],

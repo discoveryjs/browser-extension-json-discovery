@@ -29,8 +29,8 @@ async function build(browser) {
     // build bundle
     await bundleJs({
         entryPoints: [
-            path.join(indir, 'content/index.css'),
-            path.join(indir, 'content/loader.css'),
+            path.join(indir, 'content/discovery.css'),
+            path.join(indir, 'content/preloader.css'),
             path.join(indir, 'content/init.js')
         ],
         bundle: true,
@@ -43,7 +43,7 @@ async function build(browser) {
     });
 
     // CSS post-process
-    const css = fs.readFileSync(path.join(outdir, 'index.css'), 'utf8');
+    const css = fs.readFileSync(path.join(outdir, 'discovery.css'), 'utf8');
     const ast = csstree.parse(css);
 
     csstree.walk(ast, {
@@ -77,7 +77,11 @@ const buildAll = async function() {
 
         try {
             await build(browser);
-        } catch {
+        } catch (e) {
+            if (!/esbuild/.test(e.stack)) {
+                console.error(e); // eslint-disable-line no-console
+            }
+
             return;
         }
     }
