@@ -1,0 +1,26 @@
+.discovery-root[data-page="settings"] {
+    --discovery-page-padding-left: 40px;
+}
+
+.discovery-root[data-page="settings"] .view-h1 {
+    margin-top: 0;
+}
+
+.view-fieldset {
+    width: 400px;
+    display: flex;
+    margin: 8px 0;
+    align-items: center;
+}
+
+.view-fieldset > * + * {
+    margin-left: 6px;
+}
+
+.view-fieldset .view-input {
+    flex: 1;
+}
+
+.view-label {
+    line-height: 34px;
+}

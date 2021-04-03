@@ -1,0 +1,37 @@
+.view-raw > .content {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 0;
+}
+.view-raw > .content:not(:only-child)::after {
+    content: '...';
+}
+.view-raw .too-big-json {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-width: 1px 0 0;
+    border-color: #ffd452;
+    background-color: #ffe2855c;
+    border-radius: 0;
+    padding: 8px 25px;
+}
+.view-raw .too-big-json::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: -2px;
+    background-color: var(--discovery-background-color);
+    opacity: .85;
+    border-radius: 5px;
+}
+.view-raw .too-big-json .view-button {
+    padding: 4px 8px;
+    font-size: 90%;
+}

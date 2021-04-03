@@ -3,7 +3,7 @@ const path = require('path');
 const csstree = require('css-tree');
 const mime = require('mime');
 const crypto = require('crypto');
-const bundleJs = require('esbuild').build;
+const esbuild = require('esbuild');
 const manifest = require('../src/manifest.js');
 
 const { NODE_ENV } = process.env;
@@ -17,34 +17,11 @@ const browsers = [
     'safari'
 ];
 
-async function build(browser) {
-    const outdir = path.join(__dirname, `/../build-${browser}`);
-
-    fs.rmdirSync(outdir, { recursive: true });
-    fs.mkdirSync(outdir, { recursive: true });
-    fs.writeFileSync(outdir + '/manifest.json', manifest(browser));
-
-    copyFiles(path.join(indir, 'icons'), outdir);
-
-    // build bundle
-    await bundleJs({
-        entryPoints: [
-            path.join(indir, 'content/index.css'),
-            path.join(indir, 'content/loader.css'),
-            path.join(indir, 'content/init.js')
-        ],
-        bundle: true,
-        minify: true,
-        format: 'esm',
-        outdir,
-        define: {
-            global: 'window'
-        }
-    });
-
+function processCss(css, outdir, resdir) {
     // CSS post-process
-    const css = fs.readFileSync(path.join(outdir, 'index.css'), 'utf8');
     const ast = csstree.parse(css);
+
+    fs.mkdirSync(path.join(outdir, resdir), { recursive: true });
 
     csstree.walk(ast, {
         enter(node) {
@@ -56,17 +33,56 @@ async function build(browser) {
                     .update(content)
                     .digest('hex') + '.' + mime.getExtension(mimeType);
 
-                fs.writeFileSync(path.join(outdir, 'icons', filename), Buffer.from(content, 'base64'));
+                fs.writeFileSync(path.join(outdir, resdir, filename), Buffer.from(content, 'base64'));
 
                 node.value = {
                     type: 'Raw',
-                    value: `icons/${filename}`
+                    value: `${resdir}/${filename}`
                 };
             }
         }
     });
 
-    fs.writeFileSync(path.join(outdir, 'index.css'), csstree.generate(ast));
+    return csstree.generate(ast);
+}
+
+async function build(browser) {
+    const outdir = path.join(__dirname, `/../build-${browser}`);
+
+    fs.rmdirSync(outdir, { recursive: true });
+    fs.mkdirSync(outdir, { recursive: true });
+    fs.writeFileSync(outdir + '/manifest.json', manifest(browser));
+
+    copyFiles(path.join(indir, 'icons'), outdir);
+
+    // build bundle
+    const result = await esbuild.build({
+        entryPoints: [
+            path.join(indir, 'content/discovery.css'),
+            path.join(indir, 'content/preloader.css'),
+            path.join(indir, 'content/init.js')
+        ],
+        format: 'esm',
+        bundle: true,
+        minify: true,
+        write: false,
+        outdir,
+        define: {
+            global: 'window'
+        },
+        loader: {
+            '.png': 'dataurl',
+            '.svg': 'dataurl'
+        }
+    });
+
+    for (const file of result.outputFiles) {
+        const content = path.extname(file.path) === '.css'
+            ? processCss(file.text, outdir, 'assets')
+            : file.contents;
+
+        fs.writeFileSync(file.path, content);
+    }
 }
 
 const buildAll = async function() {
@@ -77,7 +93,11 @@ const buildAll = async function() {
 
         try {
             await build(browser);
-        } catch {
+        } catch (e) {
+            if (!/esbuild/.test(e.stack)) {
+                console.error(e); // eslint-disable-line no-console
+            }
+
             return;
         }
     }
