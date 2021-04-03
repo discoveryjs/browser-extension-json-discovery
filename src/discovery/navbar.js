@@ -1,8 +1,8 @@
 import { navButtons } from '@discoveryjs/discovery';
-import { copyToClipboard } from '../copy-to-clipboard';
-import { downloadAsFile } from '../download-as-file';
+import { copyToClipboard } from './copy-to-clipboard';
+import { downloadAsFile } from './download-as-file';
 
-export default function(host) {
+export default host => {
     host.nav.append({
         when: () => host.pageId !== 'default',
         content: 'text:"Default view"',
@@ -37,4 +37,4 @@ export default function(host) {
         content: 'text:"Settings"',
         onClick: (_, { hide }) => hide() & host.setPage('settings')
     });
-}
+};

@@ -277,7 +277,7 @@ module.exports = {
         'one-var-declaration-per-line': [2, 'always'],
         'one-var': [2, 'never'],
         'operator-assignment': 0,
-        'operator-linebreak': [2, 'after', { overrides: { '&&': 'ignore', '||': 'ignore' } }],
+        'operator-linebreak': [2, 'after', { overrides: { '?': 'before', ':': 'before' } }],
         'padded-blocks': [2, 'never'],
         'padding-line-between-statements': [
             1,

@@ -1,5 +1,6 @@
 import { Widget, router } from '@discoveryjs/discovery';
 import flashMessages from './flash-messages';
+import navbar from './navbar';
 import * as pages from './pages';
 
 /**
@@ -15,12 +16,13 @@ export function initDiscovery(options, data) {
         inspector: true,
         darkmode,
         darkmodePersistent: false,
-        styles: [{ type: 'link', href: chrome.runtime.getURL('index.css') }]
+        styles: [{ type: 'link', href: chrome.runtime.getURL('discovery.css') }]
     });
 
     discovery.raw = raw; // TODO: move to context?
     discovery.apply(router);
     discovery.apply(flashMessages);
+    discovery.apply(navbar);
     discovery.apply(pages);
 
     discovery.setPrepare((_, { addQueryHelpers }) => {

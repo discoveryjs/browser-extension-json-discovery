@@ -21,8 +21,9 @@
     }],
     "web_accessible_resources": [
         "discovery.css",
-        "loader.css",
-        "icons/*"
+        "preloader.css",
+        "icons/*",
+        "assets/*"
     ],
     "offline_enabled": true
 }
