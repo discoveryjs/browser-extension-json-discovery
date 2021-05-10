@@ -1,3 +1,7 @@
+## 1.11.1 (10-05-2021)
+
+* Fixed copying JSON to clipboard on http hosts
+
 ## 1.11.0 (03-04-2021)
 
 * Improved data loading and page style changes rollback when data is not a JSON or broken JSON

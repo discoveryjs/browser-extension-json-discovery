@@ -4,7 +4,13 @@ export async function copyToClipboard(text) {
     try {
         await navigator.clipboard.writeText(text);
     } catch (err) {
-        console.error(err); // eslint-disable-line no-console
+        // clipboard textarea fallback
+        const textarea = document.createElement('textarea');
+        textarea.innerText = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
     }
 
     flashMessage('JSON copied to clipboard', 'success');
