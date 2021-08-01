@@ -6,6 +6,7 @@ export default host => {
         view: 'context',
         modifiers: {
             view: 'page-header',
+            data: () => host.raw,
             content: [
                 copyToClipboardButton,
                 downloadAsFileButton,

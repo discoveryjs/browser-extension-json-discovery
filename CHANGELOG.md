@@ -1,3 +1,7 @@
+## 1.11.2 (01-08-2021)
+
+* Fixed "Download as file" button on default page
+
 ## 1.11.1 (10-05-2021)
 
 * Fixed copying JSON to clipboard on http hosts
