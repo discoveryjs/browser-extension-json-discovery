@@ -1,0 +1,64 @@
+@import '@discoveryjs/discovery/src/lib.css';
+@import './pages/raw.css';
+@import './pages/settings.css';
+@import './flash-messages.css';
+
+:host {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.discovery-root {
+    --discovery-page-padding-right: 12px;
+    --discovery-page-padding-bottom: 12px;
+    --discovery-page-padding-left: 12px;
+}
+
+.view-page-header {
+    top: 0px;
+    margin-bottom: 0;
+    padding-top: 6px;
+}
+.view-page-header__content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+}
+.view-page-header .view-button {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.1;
+    padding: 6px 8px;
+}
+.view-page-header .view-button.collapse-all {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.view-page-header .view-button.expand-all {
+    margin-left: -1px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.view-page-header .view-button svg {
+    margin: -4px 0;
+}
+
+/* Safari quirk mode fix */
+.view-expand > .header > .trigger {
+    position: relative;
+}
+.view-expand > .header > .trigger::before {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    transform: rotate(-90deg) translate(-50%, -50%);
+}
+.view-expand.expanded > .header > .trigger::before {
+    transform: rotate(0deg) translate(-50%, -50%);
+}
+/* Safari quirk mode fix */

@@ -20,9 +20,10 @@
         "matches": ["<all_urls>"]
     }],
     "web_accessible_resources": [
-        "index.css",
-        "loader.css",
-        "icons/*"
+        "discovery.css",
+        "preloader.css",
+        "icons/*",
+        "assets/*"
     ],
     "offline_enabled": true
 }

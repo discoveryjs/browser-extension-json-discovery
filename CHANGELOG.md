@@ -1,13 +1,38 @@
-## 1.10.2 (18-02-2020)
+## 1.11.2 (01-08-2021)
+
+* Fixed "Download as file" button on default page
+
+## 1.11.1 (10-05-2021)
+
+* Fixed copying JSON to clipboard on http hosts
+
+## 1.11.0 (03-04-2021)
+
+* Improved data loading and page style changes rollback when data is not a JSON or broken JSON
+* Added progressbar on data loading
+* Added inspect button to navigation bar
+* Rearranged navigation bar buttons to be more compact
+* Added "Copy to clipboard" and "Download as file" buttons to default page header
+* Added "Collapse all" and "Expand all" buttons to default page header
+* Reworked raw JSON page:
+    * Added "Copy to clipboard" and "Download as file" buttons to page header
+    * Show only first 100KB when JSON is big to avoid browser's freezing
+    * Various improvements around performance
+
+## 1.10.3 (01-04-2021)
+
+* Fixed bug, when extension could overlap part of content on pages with plain/text
+
+## 1.10.2 (18-02-2021)
 
 * Fixed manifest to get icons accessible
 
-## 1.10.1 (18-02-2020)
+## 1.10.1 (18-02-2021)
 
 * Fixed bug where an extension might not load on some pages with strict CSP rules
 * Updated `discovery` to `1.0.0-beta.55`
 
-## 1.10.0 (09-02-2020)
+## 1.10.0 (09-02-2021)
 
 * Build system reworked using `esbuild`
 * Fixed bug with darkmode styles applied to the part of the page in Chrome

@@ -1,13 +1,13 @@
 import { utils } from '@discoveryjs/discovery';
 
-export default discovery => {
-    discovery.view.define('label', function(el, config = {}) {
+export default host => {
+    host.view.define('label', function(el, config = {}) {
         const { text } = config;
 
         el.appendChild(document.createTextNode(String(text)));
     }, { tag: 'label' });
 
-    discovery.view.define('fieldset', function(el, config, data, context) {
+    host.view.define('fieldset', function(el, config, data, context) {
         const { onChange, onInit } = config;
         let { content } = config;
         const { label } = content;
@@ -21,7 +21,7 @@ export default discovery => {
             view.onChange = onChange;
         });
 
-        discovery.view.render(el, content, data, context);
+        host.view.render(el, content, data, context);
     });
 
     let detachToggleDarkMode = () => {};
@@ -36,8 +36,8 @@ export default discovery => {
                 let selfValue;
 
                 detachToggleDarkMode();
-                detachToggleDarkMode = discovery.darkmode.subscribe((value, mode) => {
-                    utils.applyContainerStyles(discovery.dom.wrapper.parentNode, { darkmode: value });
+                detachToggleDarkMode = host.darkmode.subscribe((value, mode) => {
+                    utils.applyContainerStyles(host.dom.wrapper.parentNode, { darkmode: value });
 
                     const newValue = mode === 'auto' ? 'auto' : value;
 
@@ -47,11 +47,11 @@ export default discovery => {
 
                     el.innerHTML = '';
                     selfValue = newValue;
-                    discovery.view.render(el, {
+                    host.view.render(el, {
                         view: 'toggle-group',
                         onChange: value => {
                             selfValue = value;
-                            discovery.darkmode.set(value);
+                            host.darkmode.set(value);
                             saveSettings(Object.assign(context, { darkmode: value }));
                         },
                         value: newValue,
@@ -60,7 +60,7 @@ export default discovery => {
                             { value: true, text: 'Dark' },
                             { value: 'auto', text: 'Auto' }
                         ]
-                    }, null, { widget: discovery });
+                    }, null, { widget: host });
                 }, true);
             }
         },
@@ -69,15 +69,16 @@ export default discovery => {
             htmlType: 'number',
             htmlMin: 0,
             name: 'expandLevel',
+            value: '#.expandLevel+""', // input doesn't allow non-string values, and #.expandLevel is a number
             label: 'Expand Level'
         }
     ].map(content => ({ view: 'fieldset', content }));
 
-    discovery.page.define('settings', function(el, data, context) {
+    host.page.define('settings', function(el, data, context) {
         const { settings } = context;
 
-        discovery.view.render(el, [
-            'h1:"Settings"',
+        host.view.render(el, [
+            'h1:"JsonDiscovery settings"',
             {
                 view: 'context',
                 modifiers,
@@ -108,10 +109,10 @@ export default discovery => {
                 safari.extension.dispatchMessage('setSettings', settings);
             }
 
-            discovery.context.settings = settings;
-            discovery.flashMessage('Options saved.', 'success');
+            host.context.settings = settings;
+            host.flashMessage('Options saved.', 'success');
         } else {
-            discovery.flashMessage(errors.join(' '), 'danger');
+            host.flashMessage(errors.join(' '), 'danger');
         }
     }
 

@@ -63,7 +63,7 @@ module.exports = {
         'no-compare-neg-zero': 2,
         'no-cond-assign': 2,
         'no-console': 2,
-        'no-constant-condition': 2,
+        'no-constant-condition': 0,
         'no-control-regex': 2,
         'no-debugger': 2,
         'no-dupe-args': 2,
@@ -277,7 +277,7 @@ module.exports = {
         'one-var-declaration-per-line': [2, 'always'],
         'one-var': [2, 'never'],
         'operator-assignment': 0,
-        'operator-linebreak': [2, 'after', { overrides: { '&&': 'ignore', '||': 'ignore' } }],
+        'operator-linebreak': [2, 'after', { overrides: { '?': 'before', ':': 'before' } }],
         'padded-blocks': [2, 'never'],
         'padding-line-between-statements': [
             1,
