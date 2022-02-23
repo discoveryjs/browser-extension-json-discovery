@@ -48,9 +48,11 @@ function processCss(css, outdir, resdir) {
 
 async function build(browser) {
     const outdir = path.join(__dirname, `/../build-${browser}`);
-
-    fs.rmdirSync(outdir, { recursive: true });
+    if(fs.existsSync(outdir)){
+        fs.rmSync(outdir, { recursive: true });
+    }
     fs.mkdirSync(outdir, { recursive: true });
+
     fs.writeFileSync(outdir + '/manifest.json', manifest(browser));
 
     copyFiles(path.join(indir, 'icons'), outdir);
