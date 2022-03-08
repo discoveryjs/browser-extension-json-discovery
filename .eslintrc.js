@@ -1,5 +1,4 @@
 module.exports = {
-    parser: 'babel-eslint',
     env: {
         es6: true,
         browser: true,
@@ -10,16 +9,11 @@ module.exports = {
     globals: {
         safari: true
     },
+    parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module'
+    },
     rules: {
-        // Possible errors
-        quotes: [2, 'single', { allowTemplateLiterals: true }],
-
-        // Best Practics
-        'no-case-declarations': 2,
-
-        // Stylistic Issues
-        'template-tag-spacing': 2,
-
         // ECMAScript 6
         'arrow-body-style': 0,
         'arrow-parens': 0,
@@ -49,11 +43,6 @@ module.exports = {
         'require-yield': 0,
         'rest-spread-spacing': 0,
         'sort-imports': 0,
-        'space-before-function-paren': [2, {
-            anonymous: 'never',
-            named: 'never',
-            asyncArrow: 'always'
-        }],
         'symbol-description': 0,
         'template-curly-spacing': 0,
         'yield-star-spacing': 0,
@@ -308,32 +297,5 @@ module.exports = {
         'template-tag-spacing': 0,
         'unicode-bom': 0,
         'wrap-regex': 0
-    },
-    parserOptions: {
-        ecmaFeatures: {
-            arrowFunctions: true,
-            binaryLiterals: true,
-            blockBindings: true,
-            classes: true,
-            defaultParams: true,
-            destructuring: true,
-            forOf: true,
-            generators: true,
-            modules: true,
-            objectLiteralComputedProperties: true,
-            objectLiteralDuplicateProperties: true,
-            objectLiteralShorthandMethods: true,
-            objectLiteralShorthandProperties: true,
-            octalLiterals: true,
-            regexUFlag: true,
-            regexYFlag: true,
-            restParams: true,
-            spread: true,
-            superInFunctions: true,
-            templateStrings: true,
-            unicodeCodePointEscapes: true,
-            globalReturn: true,
-            experimentalObjectRestSpread: true
-        }
     }
 };

@@ -13,7 +13,6 @@
   "devDependencies": {
     "@discoveryjs/discovery": "1.0.0-beta.61",
     "@discoveryjs/json-ext": "^0.5.2",
-    "babel-eslint": "^10.1.0",
     "css-tree": "^1.1.2",
     "esbuild": "^0.11.2",
     "eslint": "^7.0.0",
