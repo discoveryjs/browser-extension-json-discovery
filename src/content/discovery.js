@@ -1,0 +1,1 @@
+export { initDiscovery } from '../discovery';

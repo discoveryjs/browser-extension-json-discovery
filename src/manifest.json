@@ -2,7 +2,7 @@
     "version": null,
     "name": "JsonDiscovery",
     "short_name": "JsonDiscovery",
-    "description": "Browser extension that changes the way you\\'re viewing JSON",
+    "description": "Browser extension that changes the way you're viewing JSON",
     "author": "exdis",
     "manifest_version": 2,
     "icons": {
@@ -21,6 +21,7 @@
     }],
     "web_accessible_resources": [
         "discovery.css",
+        "discovery.js",
         "preloader.css",
         "icons/*",
         "assets/*"

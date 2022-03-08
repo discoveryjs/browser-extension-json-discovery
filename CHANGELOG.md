@@ -1,6 +1,7 @@
 ## next
 
-* Bumped `discovery` to `1.0.0-beta.64`
+* Updated `discovery` to `1.0.0-beta.64`
+* Reduced initialization time (up to 7 times) for the regular pages (not a JSON data) by lazy loading of main source code only if JSON is successfully loaded and parsed
 
 ## 1.11.2 (01-08-2021)
 

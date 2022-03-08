@@ -1,7 +1,6 @@
 import { rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles';
 import { preloader as createPreloader } from '@discoveryjs/discovery/src/preloader.js';
 import { parseChunked } from '@discoveryjs/json-ext';
-import { initDiscovery } from '../discovery';
 
 let loaded = document.readyState === 'complete';
 let loadedTimer;
@@ -151,13 +150,13 @@ async function checkLoaded(settings) {
 
         const json = await data;
 
-        preloader.progressbar.setState({ stage: 'done' });
         pre.remove();
 
         document.body.style.margin = 0;
         document.body.style.padding = 0;
         document.body.style.border = 'none';
 
+        const { initDiscovery } = await import(chrome.runtime.getURL('discovery.js'));
         await initDiscovery({
             node: document.body,
             raw: Object.defineProperties({}, {
