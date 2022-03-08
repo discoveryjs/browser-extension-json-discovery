@@ -24,22 +24,17 @@ function processCss(css, outdir, resdir) {
     fs.mkdirSync(path.join(outdir, resdir), { recursive: true });
 
     csstree.walk(ast, {
+        visit: 'Url',
         enter(node) {
-            if (node.type === 'Url') {
-                const value = getValueFromStringOrRaw(node.value);
-                const [, mimeType, content] = value.match(/^data:(.*);base64,(.*)$/);
-                const filename = crypto
-                    .createHash('sha1')
-                    .update(content)
-                    .digest('hex') + '.' + mime.getExtension(mimeType);
+            const [, mimeType, content] = node.value.match(/^data:(.*?);base64,(.*)$/);
+            const filename = crypto
+                .createHash('sha1')
+                .update(content)
+                .digest('hex') + '.' + mime.getExtension(mimeType);
 
-                fs.writeFileSync(path.join(outdir, resdir, filename), Buffer.from(content, 'base64'));
+            fs.writeFileSync(path.join(outdir, resdir, filename), Buffer.from(content, 'base64'));
 
-                node.value = {
-                    type: 'Raw',
-                    value: `${resdir}/${filename}`
-                };
-            }
+            node.value = `${resdir}/${filename}`;
         }
     });
 
@@ -49,7 +44,7 @@ function processCss(css, outdir, resdir) {
 async function build(browser) {
     const outdir = path.join(__dirname, `/../build-${browser}`);
 
-    fs.rmdirSync(outdir, { recursive: true });
+    fs.rmSync(outdir, { recursive: true, force: true }); // rm -rf
     fs.mkdirSync(outdir, { recursive: true });
     fs.writeFileSync(outdir + '/manifest.json', manifest(browser));
 
@@ -133,16 +128,4 @@ function copyFiles(src, dest) {
     } else {
         fs.copyFileSync(src, path.join(dest, path.basename(src)));
     }
-}
-
-function getValueFromStringOrRaw(node) {
-    switch (node.type) {
-        case 'String':
-            return node.value.substring(1, node.value.length - 1);
-
-        case 'Raw':
-            return node.value;
-    }
-
-    return null;
 }
