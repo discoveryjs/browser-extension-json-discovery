@@ -1,10 +1,10 @@
 {
   "name": "jsondiscovery",
   "version": "1.11.2",
-  "description": "DiscoveryJson",
+  "description": "Browser (Chrome, Firefox) extension for JSON discovery",
   "author": "exsdis@gmail.com",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "scripts": {
     "lint": "eslint --ext .js src scripts",
     "dev": "node ./scripts/build.js",
