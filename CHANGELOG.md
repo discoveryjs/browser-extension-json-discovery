@@ -1,3 +1,7 @@
+## next
+
+* Bumped `discovery` to `1.0.0-beta.64`
+
 ## 1.11.2 (01-08-2021)
 
 * Fixed "Download as file" button on default page
