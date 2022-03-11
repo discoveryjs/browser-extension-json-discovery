@@ -1,6 +1,6 @@
 import { rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles';
 import { preloader as createPreloader } from '@discoveryjs/discovery/src/preloader.js';
-import { parseChunked } from '@discoveryjs/json-ext';
+import parseChunked from '@discoveryjs/json-ext/src/parse-chunked';
 
 let loaded = document.readyState === 'complete';
 let loadedTimer;
@@ -136,13 +136,13 @@ function rollbackPageChanges(error) {
 
 async function checkLoaded(settings) {
     if (
-        initialPreDisplay === null &&
+        pre === null &&
         document.body &&
         document.body.firstElementChild &&
         document.body.firstElementChild.tagName === 'PRE'
     ) {
         pre = document.body.firstElementChild;
-        initialPreDisplay = window.getComputedStyle(pre).display;
+        initialPreDisplay = pre.style.display;
         pre.style.display = 'none';
     }
 
