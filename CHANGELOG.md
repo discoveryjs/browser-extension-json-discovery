@@ -1,4 +1,4 @@
-## next
+## 1.12.1 (11-03-2022)
 
 * Fixed false positive initialization when first `<pre>` in a document is empty or contains a HTML markup (#77)
 

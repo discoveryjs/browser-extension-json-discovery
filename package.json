@@ -1,6 +1,6 @@
 {
   "name": "jsondiscovery",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "Browser (Chrome, Firefox) extension for JSON discovery",
   "author": "exsdis@gmail.com",
   "license": "MIT",
