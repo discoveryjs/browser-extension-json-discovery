@@ -62,6 +62,10 @@ const data = parseChunked(async function*() {
     }
 });
 
+function raiseBailout() {
+    return Object.assign(new Error('Rollback'), { rollback: true });
+}
+
 const flushData = (settings) => {
     if (pre === null) {
         return;
@@ -72,13 +76,18 @@ const flushData = (settings) => {
         const chunkNode = isFirstChunk ? pre.firstChild : preCursor.nextSibling;
 
         if (!chunkNode) {
+            if (isFirstChunk && (loaded || pre.nextSibling)) {
+                // bailout: first <pre> is empty
+                throw raiseBailout();
+            }
+
             break;
         }
 
         if (chunkNode.nodeType === Node.TEXT_NODE) {
             if (isFirstChunk) {
                 if (/^\s*[{[]/.test(chunkNode.nodeValue)) {
-                    // probably JSON
+                    // probably JSON, accept an object or an array only to reduce false positive
                     preloader = createPreloader({
                         container: document.body,
                         styles: [{ type: 'link', href: chrome.runtime.getURL('preloader.css') }],
@@ -86,14 +95,15 @@ const flushData = (settings) => {
                     });
                     preloader.progressbar.setState({ stage: 'request' });
                 } else {
-                    // not a JSON
-                    const error = new Error('Rollback');
-                    error.rollback = true;
-                    throw error;
+                    // bailout: not a JSON or a non-object / non-array value
+                    throw raiseBailout();
                 }
             }
 
             pushChunk(chunkNode.nodeValue);
+        } else {
+            // bailout: not a text node -> a complex markup is not a JSON
+            throw raiseBailout();
         }
 
         preCursor = chunkNode;
