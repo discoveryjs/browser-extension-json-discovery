@@ -1,3 +1,7 @@
+## next
+
+* Updated `discovery` to `1.0.0-beta.65`
+
 ## 1.12.1 (11-03-2022)
 
 * Fixed false positive initialization when first `<pre>` in a document is empty or contains a HTML markup (#77)
