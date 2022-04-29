@@ -1,4 +1,4 @@
-## next
+## 1.12.2 (29-04-2022)
 
 * Updated `discovery` to `1.0.0-beta.65`
 
