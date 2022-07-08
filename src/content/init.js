@@ -158,9 +158,11 @@ async function checkLoaded(settings) {
         flushData(settings);
         pushChunk(null); // end of input
 
-        const json = await data;
+        const [{ initDiscovery }, json] = await Promise.all([
+            import(chrome.runtime.getURL('discovery.js')),
+            data
+        ]);
 
-        const { initDiscovery } = await import(chrome.runtime.getURL('discovery.js'));
         await initDiscovery({
             node: document.body,
             raw: Object.defineProperties({}, {
