@@ -160,12 +160,6 @@ async function checkLoaded(settings) {
 
         const json = await data;
 
-        pre.remove();
-
-        document.body.style.margin = 0;
-        document.body.style.padding = 0;
-        document.body.style.border = 'none';
-
         const { initDiscovery } = await import(chrome.runtime.getURL('discovery.js'));
         await initDiscovery({
             node: document.body,
