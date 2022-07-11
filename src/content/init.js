@@ -187,10 +187,14 @@ async function checkLoaded(settings) {
             }, json
         ];
 
-        const initDiscovery = await import(chrome.runtime.getURL('discovery.js'));
+        const { initDiscovery } = await import(chrome.runtime.getURL('discovery-esm.js'));
 
         if (typeof initDiscovery !== 'function') {
             await chrome.runtime.sendMessage({ type: 'initDiscovery' });
+        } else {
+            await initDiscovery(...window.__discoveryOptions);
+
+            preloader.el.remove();
         }
     }
 }

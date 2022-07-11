@@ -57,6 +57,7 @@ async function build(browser) {
             path.join(indir, 'content/discovery.css'),
             path.join(indir, 'content/preloader.css'),
             path.join(indir, 'content/discovery.js'),
+            path.join(indir, 'content/discovery-esm.js'),
             path.join(indir, 'content/init.js')
         ],
         format: 'esm',
