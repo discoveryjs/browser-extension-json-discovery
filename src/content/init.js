@@ -158,7 +158,10 @@ async function checkLoaded(settings) {
         flushData(settings);
         pushChunk(null); // end of input
 
-        const json = await data;
+        const [{ initDiscovery }, json] = await Promise.all([
+            import(chrome.runtime.getURL('discovery-esm.js')),
+            data
+        ]);
 
         const discoveryOptions = [
             {
@@ -185,11 +188,11 @@ async function checkLoaded(settings) {
             }, json
         ];
 
-        const { initDiscovery } = await import(chrome.runtime.getURL('discovery-esm.js'));
-
+        // In case of sandboxed CSP pages await import will fail
+        // so here we send message to bg which executes discovery initiation via chrome API
         if (typeof initDiscovery !== 'function') {
             window.__discoveryPreloader = preloader; // eslint-disable-line no-underscore-dangle
-            window.__discoveryOptions = discoveryOptions // eslint-disable-line no-underscore-dangle
+            window.__discoveryOptions = discoveryOptions; // eslint-disable-line no-underscore-dangle
 
             await chrome.runtime.sendMessage({ type: 'initDiscovery' });
         } else {
