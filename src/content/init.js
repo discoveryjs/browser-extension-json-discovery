@@ -160,9 +160,9 @@ async function checkLoaded(settings) {
 
         const json = await data;
 
-        window.__discoveryPreloader = preloader;
+        window.__discoveryPreloader = preloader; // eslint-disable-line no-underscore-dangle
 
-        window.__discoveryOptions = [
+        window.__discoveryOptions = [ // eslint-disable-line no-underscore-dangle
             {
                 node: document.body,
                 raw: Object.defineProperties({}, {
@@ -183,9 +183,9 @@ async function checkLoaded(settings) {
                 }),
                 settings,
                 styles: [chrome.runtime.getURL('index.css')],
-                progressbar: window.__discoveryPreloader.progressbar
+                progressbar: window.__discoveryPreloader.progressbar // eslint-disable-line no-underscore-dangle
             }, json
-        ]
+        ];
 
         const initDiscovery = await import(chrome.runtime.getURL('discovery.js'));
 
