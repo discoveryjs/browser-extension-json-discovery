@@ -146,47 +146,52 @@ async function checkLoaded(settings) {
         pre.style.display = 'none';
     }
 
-    if (!loaded) {
-        flushData(settings);
-        loadedTimer = requestAnimationFrame(() =>
-            checkLoaded(settings).catch(rollbackPageChanges)
-        );
-        return;
-    }
-
     if (pre !== null) {
+        if (!loaded) {
+            flushData(settings);
+            loadedTimer = requestAnimationFrame(() =>
+                checkLoaded(settings).catch(rollbackPageChanges)
+            );
+            return;
+        }
+
         flushData(settings);
         pushChunk(null); // end of input
 
-        const [{ initDiscovery }, json] = await Promise.all([
-            import(chrome.runtime.getURL('discovery.js')),
-            data
-        ]);
+        const json = await data;
 
-        await initDiscovery({
-            node: document.body,
-            raw: Object.defineProperties({}, {
-                firstSlice: {
-                    value: totalSize < firstSliceMaxSize * 2 ? null : firstSlice
-                },
-                size: {
-                    value: totalSize
-                },
-                json: totalSize <= firstSliceMaxSize ? { value: firstSlice } : {
-                    configurable: true,
-                    get() {
-                        return Object.defineProperty(this, 'json', {
-                            value: pre.textContent
-                        }).json;
+        window.__discoveryPreloader = preloader;
+
+        window.__discoveryOptions = [
+            {
+                node: document.body,
+                raw: Object.defineProperties({}, {
+                    firstSlice: {
+                        value: totalSize < firstSliceMaxSize * 2 ? null : firstSlice
+                    },
+                    size: {
+                        value: totalSize
+                    },
+                    json: totalSize <= firstSliceMaxSize ? { value: firstSlice } : {
+                        configurable: true,
+                        get() {
+                            return Object.defineProperty(this, 'json', {
+                                value: pre.textContent
+                            }).json;
+                        }
                     }
-                }
-            }),
-            settings,
-            styles: [chrome.runtime.getURL('index.css')],
-            progressbar: preloader.progressbar
-        }, json);
+                }),
+                settings,
+                styles: [chrome.runtime.getURL('index.css')],
+                progressbar: window.__discoveryPreloader.progressbar
+            }, json
+        ]
 
-        preloader.el.remove();
+        const initDiscovery = await import(chrome.runtime.getURL('discovery.js'));
+
+        if (typeof initDiscovery !== 'function') {
+            await chrome.runtime.sendMessage({ type: 'initDiscovery' });
+        }
     }
 }
 

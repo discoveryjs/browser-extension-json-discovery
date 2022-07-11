@@ -1,3 +1,9 @@
+## 1.13.0 (11-07-2022)
+
+* Fixed bug when CSP broke JSON display on the page
+* Fixed work of extension for raw.github* pages
+* Updated `esbuild` to `0.14.49`
+
 ## 1.12.2 (29-04-2022)
 
 * Updated `discovery` to `1.0.0-beta.65`

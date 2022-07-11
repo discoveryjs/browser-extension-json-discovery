@@ -53,6 +53,7 @@ async function build(browser) {
     // build bundle
     const result = await esbuild.build({
         entryPoints: [
+            path.join(indir, 'background.js'),
             path.join(indir, 'content/discovery.css'),
             path.join(indir, 'content/preloader.css'),
             path.join(indir, 'content/discovery.js'),
@@ -77,7 +78,9 @@ async function build(browser) {
             ? processCss(file.text, outdir, 'assets')
             : file.contents;
 
-        fs.writeFileSync(file.path, content);
+        const filePath = path.join(outdir, path.basename(file.path));
+
+        fs.writeFileSync(filePath, content);
     }
 }
 
