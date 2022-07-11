@@ -146,15 +146,15 @@ async function checkLoaded(settings) {
         pre.style.display = 'none';
     }
 
-    if (pre !== null) {
-        if (!loaded) {
-            flushData(settings);
-            loadedTimer = requestAnimationFrame(() =>
-                checkLoaded(settings).catch(rollbackPageChanges)
-            );
-            return;
-        }
+    if (!loaded) {
+        flushData(settings);
+        loadedTimer = requestAnimationFrame(() =>
+            checkLoaded(settings).catch(rollbackPageChanges)
+        );
+        return;
+    }
 
+    if (pre !== null) {
         flushData(settings);
         pushChunk(null); // end of input
 
