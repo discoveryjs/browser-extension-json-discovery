@@ -160,9 +160,7 @@ async function checkLoaded(settings) {
 
         const json = await data;
 
-        window.__discoveryPreloader = preloader; // eslint-disable-line no-underscore-dangle
-
-        window.__discoveryOptions = [ // eslint-disable-line no-underscore-dangle
+        const discoveryOptions = [
             {
                 node: document.body,
                 raw: Object.defineProperties({}, {
@@ -183,16 +181,19 @@ async function checkLoaded(settings) {
                 }),
                 settings,
                 styles: [chrome.runtime.getURL('index.css')],
-                progressbar: window.__discoveryPreloader.progressbar // eslint-disable-line no-underscore-dangle
+                progressbar: preloader.progressbar
             }, json
         ];
 
         const { initDiscovery } = await import(chrome.runtime.getURL('discovery-esm.js'));
 
         if (typeof initDiscovery !== 'function') {
+            window.__discoveryPreloader = preloader; // eslint-disable-line no-underscore-dangle
+            window.__discoveryOptions = discoveryOptions // eslint-disable-line no-underscore-dangle
+
             await chrome.runtime.sendMessage({ type: 'initDiscovery' });
         } else {
-            await initDiscovery(...window.__discoveryOptions);
+            await initDiscovery(...discoveryOptions);
 
             preloader.el.remove();
         }
