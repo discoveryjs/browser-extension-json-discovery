@@ -159,34 +159,47 @@ async function checkLoaded(settings) {
         pushChunk(null); // end of input
 
         const [{ initDiscovery }, json] = await Promise.all([
-            import(chrome.runtime.getURL('discovery.js')),
+            import(chrome.runtime.getURL('discovery-esm.js')),
             data
         ]);
 
-        await initDiscovery({
-            node: document.body,
-            raw: Object.defineProperties({}, {
-                firstSlice: {
-                    value: totalSize < firstSliceMaxSize * 2 ? null : firstSlice
-                },
-                size: {
-                    value: totalSize
-                },
-                json: totalSize <= firstSliceMaxSize ? { value: firstSlice } : {
-                    configurable: true,
-                    get() {
-                        return Object.defineProperty(this, 'json', {
-                            value: pre.textContent
-                        }).json;
+        const discoveryOptions = [
+            {
+                node: document.body,
+                raw: Object.defineProperties({}, {
+                    firstSlice: {
+                        value: totalSize < firstSliceMaxSize * 2 ? null : firstSlice
+                    },
+                    size: {
+                        value: totalSize
+                    },
+                    json: totalSize <= firstSliceMaxSize ? { value: firstSlice } : {
+                        configurable: true,
+                        get() {
+                            return Object.defineProperty(this, 'json', {
+                                value: pre.textContent
+                            }).json;
+                        }
                     }
-                }
-            }),
-            settings,
-            styles: [chrome.runtime.getURL('index.css')],
-            progressbar: preloader.progressbar
-        }, json);
+                }),
+                settings,
+                styles: [chrome.runtime.getURL('index.css')],
+                progressbar: preloader.progressbar
+            }, json
+        ];
 
-        preloader.el.remove();
+        // In case of sandboxed CSP pages await import will fail
+        // so here we send message to bg which executes discovery initiation via chrome API
+        if (typeof initDiscovery !== 'function') {
+            window.__discoveryPreloader = preloader; // eslint-disable-line no-underscore-dangle
+            window.__discoveryOptions = discoveryOptions; // eslint-disable-line no-underscore-dangle
+
+            await chrome.runtime.sendMessage({ type: 'initDiscovery' });
+        } else {
+            await initDiscovery(...discoveryOptions);
+
+            preloader.el.remove();
+        }
     }
 }
 

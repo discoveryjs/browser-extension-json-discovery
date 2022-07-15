@@ -12,16 +12,21 @@
     },
     "permissions": [
         "<all_urls>",
-        "storage"
+        "storage",
+        "tabs"
     ],
     "content_scripts": [{
         "js": ["init.js"],
         "run_at": "document_start",
         "matches": ["<all_urls>"]
     }],
+    "background": {
+        "scripts": ["background.js"]
+    },
     "web_accessible_resources": [
         "discovery.css",
         "discovery.js",
+        "discovery-esm.js",
         "preloader.css",
         "icons/*",
         "assets/*"
