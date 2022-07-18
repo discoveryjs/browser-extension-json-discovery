@@ -1,3 +1,7 @@
+## 1.13.1 (18-07-2022)
+
+* Fixed manifest permissions
+
 ## 1.13.0 (15-07-2022)
 
 * Fixed bug when CSP broke JSON display on the page

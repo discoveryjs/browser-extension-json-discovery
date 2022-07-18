@@ -12,8 +12,7 @@
     },
     "permissions": [
         "<all_urls>",
-        "storage",
-        "tabs"
+        "storage"
     ],
     "content_scripts": [{
         "js": ["init.js"],
