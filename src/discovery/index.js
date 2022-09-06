@@ -12,7 +12,9 @@ import * as pages from './pages';
 export function initDiscovery(options, data) {
     const { settings, progressbar, raw } = options;
     const { darkmode = 'auto' } = settings;
-    const discovery = new Widget(options.node, null, {
+    const discovery = new Widget({
+        defaultPage: null,
+        container: options.node,
         inspector: true,
         darkmode,
         darkmodePersistent: false,

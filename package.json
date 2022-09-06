@@ -1,6 +1,6 @@
 {
   "name": "jsondiscovery",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "description": "Browser (Chrome, Firefox) extension for JSON discovery",
   "author": "exsdis@gmail.com",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "build": "NODE_ENV=production node ./scripts/build.js && node ./scripts/zip.js"
   },
   "devDependencies": {
-    "@discoveryjs/discovery": "1.0.0-beta.66",
+    "@discoveryjs/discovery": "1.0.0-beta.68",
     "@discoveryjs/json-ext": "^0.5.7",
     "css-tree": "^2.1.0",
     "esbuild": "^0.14.49",
