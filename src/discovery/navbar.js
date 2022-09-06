@@ -1,6 +1,7 @@
 import { navButtons } from '@discoveryjs/discovery';
-import { copyToClipboard } from './copy-to-clipboard';
+import copyText from '@discoveryjs/discovery/src/core/utils/copy-text';
 import { downloadAsFile } from './download-as-file';
+import { flashMessage } from './flash-messages';
 
 export default host => {
     host.nav.append({
@@ -31,7 +32,9 @@ export default host => {
     });
     host.nav.menu.append({
         content: 'text:"Copy JSON to clipboard"',
-        onClick: (_, { hide }) => hide() & copyToClipboard(host.raw.json)
+        onClick: (_, { hide }) => hide() &
+            copyText(host.raw.json) &
+            flashMessage('JSON copied to clipboard', 'success')
     });
     host.nav.menu.append({
         content: 'text:"Settings"',

@@ -1,3 +1,8 @@
+## 1.13.2 (06-09-2022)
+
+* Fixed copy to clipboard in FireFox
+* Updated `discovery` to `1.0.0-beta.68`
+
 ## 1.13.1 (18-07-2022)
 
 * Fixed manifest permissions
