@@ -1,4 +1,4 @@
-## next
+## 1.13.3 (08-09-2022)
 
 * Fixed JSON parsing error issue when data loading from a slow responding server (#82)
 
