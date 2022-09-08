@@ -1,3 +1,7 @@
+## next
+
+* Fixed JSON parsing error issue when data loading from a slow responding server (#82)
+
 ## 1.13.2 (06-09-2022)
 
 * Fixed copy to clipboard in FireFox

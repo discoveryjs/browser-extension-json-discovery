@@ -6,6 +6,7 @@ let loaded = document.readyState === 'complete';
 let loadedTimer;
 let pre = null;
 let preCursor;
+let prevCursorValue = '';
 let initialPreDisplay = null;
 let preloader = null;
 let pushChunk = () => {};
@@ -73,7 +74,14 @@ const flushData = (settings) => {
 
     while (true) {
         const isFirstChunk = preCursor === undefined;
-        const chunkNode = isFirstChunk ? pre.firstChild : preCursor.nextSibling;
+        const chunkNode = isFirstChunk
+            ? pre.firstChild
+            // In some cases a browser appends new content to an existing text node
+            // instead of creating new one. In this case, we are using the same text node
+            // as on previous iteration and slice appended content as a chunk content.
+            : preCursor.nodeValue !== prevCursorValue
+                ? preCursor
+                : preCursor.nextSibling;
 
         if (!chunkNode) {
             if (isFirstChunk && (loaded || pre.nextSibling)) {
@@ -100,13 +108,20 @@ const flushData = (settings) => {
                 }
             }
 
-            pushChunk(chunkNode.nodeValue);
+            pushChunk(
+                chunkNode === preCursor
+                    // slice a new content from a chunk node in case a content
+                    // was appended to an existing text node
+                    ? chunkNode.nodeValue.slice(prevCursorValue.length)
+                    : chunkNode.nodeValue
+            );
         } else {
             // bailout: not a text node -> a complex markup is not a JSON
             throw raiseBailout();
         }
 
         preCursor = chunkNode;
+        prevCursorValue = preCursor.nodeValue;
     }
 };
 
