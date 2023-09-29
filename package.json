@@ -13,10 +13,10 @@
   "devDependencies": {
     "@discoveryjs/discovery": "1.0.0-beta.68",
     "@discoveryjs/json-ext": "^0.5.7",
-    "css-tree": "^2.1.0",
-    "esbuild": "^0.14.49",
-    "eslint": "^8.10.0",
-    "jszip": "^3.7.1",
+    "css-tree": "^2.3.1",
+    "esbuild": "^0.19.4",
+    "eslint": "^8.50.0",
+    "jszip": "^3.10.1",
     "mime": "^3.0.0"
   }
 }

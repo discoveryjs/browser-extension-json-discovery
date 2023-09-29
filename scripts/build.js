@@ -26,13 +26,16 @@ function processCss(css, outdir, resdir) {
     csstree.walk(ast, {
         visit: 'Url',
         enter(node) {
-            const [, mimeType, content] = node.value.match(/^data:(.*?);base64,(.*)$/);
+            const [, mimeType, b64, content] = node.value.match(/^data:(.*?)(;base64)?,(.*)$/);
+            const decodedContent = b64
+                ? Buffer.from(content, 'base64')
+                : decodeURIComponent(content);
             const filename = crypto
                 .createHash('sha1')
-                .update(content)
+                .update(decodedContent)
                 .digest('hex') + '.' + mime.getExtension(mimeType);
 
-            fs.writeFileSync(path.join(outdir, resdir, filename), Buffer.from(content, 'base64'));
+            fs.writeFileSync(path.join(outdir, resdir, filename), decodedContent);
 
             node.value = `${resdir}/${filename}`;
         }
