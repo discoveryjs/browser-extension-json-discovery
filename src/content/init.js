@@ -2,12 +2,12 @@ import { rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/c
 import { preloader as createPreloader } from '@discoveryjs/discovery/src/preloader.js';
 import parseChunked from '@discoveryjs/json-ext/src/parse-chunked';
 
+let disabledElements = null;
 let loaded = document.readyState === 'complete';
 let loadedTimer;
 let pre = null;
 let preCursor;
 let prevCursorValue = '';
-let initialPreDisplay = null;
 let preloader = null;
 let pushChunk = () => {};
 let totalSize = 0;
@@ -138,9 +138,9 @@ function rollbackPageChanges(error) {
     // it might to take a lot of time to render large text,
     // so make it visible in next frame to allow styles rollback
     requestAnimationFrame(() => {
-        if (pre !== null) {
-            pre.style.display = initialPreDisplay;
-            pre = null;
+        if (disabledElements !== null) {
+            disabledElements.forEach(({ element, display }) => element.style.display = display);
+            disabledElements = null;
         }
     });
 
@@ -149,16 +149,36 @@ function rollbackPageChanges(error) {
     }
 }
 
+function isPre(element) {
+    return element?.tagName === 'PRE' ? element : null;
+}
+
+function disableElement(element) {
+    disabledElements.push({
+        element,
+        display: element.style.display
+    });
+    element.style.display = 'none';
+}
+
 async function checkLoaded(settings) {
-    if (
-        pre === null &&
-        document.body &&
-        document.body.firstElementChild &&
-        document.body.firstElementChild.tagName === 'PRE'
-    ) {
-        pre = document.body.firstElementChild;
-        initialPreDisplay = pre.style.display;
-        pre.style.display = 'none';
+    if (pre === null) {
+        const firstElement = document.body?.firstElementChild;
+
+        pre = isPre(firstElement) || isPre(firstElement?.nextElementSibling);
+
+        if (pre) {
+            disabledElements = [];
+            disableElement(pre);
+
+            if (firstElement !== pre) {
+                disableElement(firstElement);
+            }
+        }
+    }
+
+    if (!settings) {
+        return;
     }
 
     if (!loaded) {
@@ -219,6 +239,7 @@ async function checkLoaded(settings) {
 }
 
 window.addEventListener('DOMContentLoaded', () => loaded = true, false);
+checkLoaded();
 getSettings()
     .then(checkLoaded)
     .catch(rollbackPageChanges);
