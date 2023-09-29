@@ -1,3 +1,8 @@
+## 1.13.4 (29-09-2023)
+
+* Fixed JSON detection in Chrome browser
+* Fixed JSON detection in Edge browser
+
 ## 1.13.3 (08-09-2022)
 
 * Fixed JSON parsing error issue when data loading from a slow responding server (#82)
