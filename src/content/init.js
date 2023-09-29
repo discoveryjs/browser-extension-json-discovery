@@ -2,9 +2,9 @@ import { rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/c
 import { preloader as createPreloader } from '@discoveryjs/discovery/src/preloader.js';
 import parseChunked from '@discoveryjs/json-ext/src/parse-chunked';
 
-let disabledElements = null;
 let loaded = document.readyState === 'complete';
 let loadedTimer;
+let disabledElements = [];
 let pre = null;
 let preCursor;
 let prevCursorValue = '';
@@ -101,6 +101,7 @@ const flushData = (settings) => {
                         styles: [{ type: 'link', href: chrome.runtime.getURL('preloader.css') }],
                         darkmode: settings.darkmode
                     });
+                    preloader.el.classList.add('discovery');
                     preloader.progressbar.setState({ stage: 'request' });
                 } else {
                     // bailout: not a JSON or a non-object / non-array value
@@ -139,7 +140,9 @@ function rollbackPageChanges(error) {
     // so make it visible in next frame to allow styles rollback
     requestAnimationFrame(() => {
         if (disabledElements !== null) {
-            disabledElements.forEach(({ element, display }) => element.style.display = display);
+            disabledElements.forEach(({ element, hidden, remove }) =>
+                remove ? element.remove() : (element.hidden = hidden)
+            );
             disabledElements = null;
         }
     });
@@ -150,15 +153,40 @@ function rollbackPageChanges(error) {
 }
 
 function isPre(element) {
+    // This branch is used to override Edge's default JSON viewer
+    if (element?.hasAttribute('hidden') && document.body?.dataset?.codeMirror) {
+        // Creating a <style> element to hide all the elements in the body;
+        // The [hidden] attribute is not effective for CodeMirror because "display: flex"
+        // is assigned with !important. Utilizing a layer ensures that all previous rules are overridden.
+        const styleEl = document.createElement('style');
+        styleEl.append('@layer super-top-layer{body>:not(.discovery){display:none!important}}');
+
+        // Inserting a <div> element as the first child of the body prevents JSON
+        // parsing by Edge's default JSON viewer, especially for large JSON files (above 1MB).
+        // Since we're replacing the functionality of the default viewer,
+        // this approach is efficient in terms of performance and resource utilization.
+        const fakeJsonEl = document.createElement('div');
+        fakeJsonEl.hidden = true;
+        fakeJsonEl.append('{}');
+
+        // Add to DOM
+        disableElement(fakeJsonEl, true);
+        disableElement(styleEl, true);
+        element.before(fakeJsonEl, styleEl);
+
+        return element;
+    }
+
     return element?.tagName === 'PRE' ? element : null;
 }
 
-function disableElement(element) {
+function disableElement(element, remove = false) {
     disabledElements.push({
         element,
-        display: element.style.display
+        hidden: element.hidden,
+        remove
     });
-    element.style.display = 'none';
+    element.hidden = true;
 }
 
 async function checkLoaded(settings) {
@@ -168,7 +196,6 @@ async function checkLoaded(settings) {
         pre = isPre(firstElement) || isPre(firstElement?.nextElementSibling);
 
         if (pre) {
-            disabledElements = [];
             disableElement(pre);
 
             if (firstElement !== pre) {
