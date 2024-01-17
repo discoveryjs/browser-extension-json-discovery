@@ -1,3 +1,7 @@
+## next
+
+* Updated `discovery` to `1.0.0-beta.79`
+
 ## 1.13.4 (29-09-2023)
 
 * Fixed JSON detection in Chrome browser

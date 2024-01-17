@@ -245,6 +245,7 @@ async function checkLoaded(settings) {
                     }
                 }),
                 settings,
+                version: chrome.runtime.getManifest().version,
                 styles: [chrome.runtime.getURL('index.css')],
                 progressbar: preloader.progressbar
             }, json
@@ -279,7 +280,8 @@ function getSettings() {
     return new Promise(resolve => {
         chrome.storage.sync.get({
             expandLevel: 3,
-            darkmode: 'auto'
+            darkmode: 'auto',
+            whatsnew: {}
         }, settings => {
             resolve(settings);
         });

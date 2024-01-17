@@ -10,7 +10,7 @@ import * as pages from './pages';
  * @returns {Discovery}
  */
 export function initDiscovery(options, data) {
-    const { settings, progressbar, raw } = options;
+    const { settings, version, progressbar, raw } = options;
     const { darkmode = 'auto' } = settings;
     const discovery = new Widget({
         defaultPage: null,
@@ -47,6 +47,7 @@ export function initDiscovery(options, data) {
         {
             name: options.title,
             settings,
+            version,
             createdAt: new Date().toISOString() // TODO fix in discovery
         },
         progressbar
