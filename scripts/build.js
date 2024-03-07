@@ -73,7 +73,8 @@ async function build(browser) {
         },
         loader: {
             '.png': 'dataurl',
-            '.svg': 'dataurl'
+            '.svg': 'dataurl',
+            '.md': 'text'
         }
     });
 
@@ -114,8 +115,12 @@ const buildAll = async function() {
     if (watch) {
         const lastChange = new Map();
 
-        fs.watch(indir, { recursive: true }, function(_, fn) {
-            const mtime = Number(fs.statSync(path.join(indir, fn)).mtime);
+        fs.watch(indir, { recursive: true }, function(event, fn) {
+            const filename = path.join(indir, fn);
+            if (event === 'rename' && !fs.existsSync(filename)) {
+                return;
+            }
+            const mtime = Number(fs.statSync(filename).mtime);
 
             // avoid build when file doesn't changed but event is received
             if (lastChange.get(fn) !== mtime) {
