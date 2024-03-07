@@ -1,0 +1,4 @@
+.discovery-root[data-page="whatsnew"] {
+    --discovery-page-padding-left: 40px;
+    --discovery-page-padding-right: 40px;
+}

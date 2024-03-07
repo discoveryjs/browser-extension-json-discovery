@@ -2,8 +2,17 @@ import { navButtons } from '@discoveryjs/discovery';
 import copyText from '@discoveryjs/discovery/src/core/utils/copy-text';
 import { downloadAsFile } from './download-as-file';
 import { flashMessage } from './flash-messages';
+import { showWhatsNew, setWhatsnewViewed } from './pages/whatsnew';
 
 export default host => {
+    host.nav.append({
+        when: () => showWhatsNew(host.context) && host.pageId !== 'whatsnew',
+        content: 'text:"What\'s new"',
+        onClick: () => {
+            host.setPage('whatsnew');
+            setWhatsnewViewed(host.context);
+        }
+    });
     host.nav.append({
         when: () => host.pageId !== 'default',
         content: 'text:"Default view"',
@@ -39,5 +48,9 @@ export default host => {
     host.nav.menu.append({
         content: 'text:"Settings"',
         onClick: (_, { hide }) => hide() & host.setPage('settings')
+    });
+    host.nav.menu.append({
+        content: 'text:"What\'s new"',
+        onClick: (_, { hide }) => hide() & host.setPage('whatsnew') & setWhatsnewViewed(host.context)
     });
 };
