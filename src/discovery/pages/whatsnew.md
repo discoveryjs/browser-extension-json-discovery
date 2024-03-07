@@ -1,4 +1,6 @@
-## Interface & Views
+## 1.13.5
+
+### Interface & Views
 
 - Reworked the report page to include a query graph and an enhanced query editor.
 - Added a "Copy report as page hash" button.
@@ -8,7 +10,7 @@
 
 See details in [Discovery.js release notes](https://github.com/discoveryjs/discovery/releases).
 
-## Jora Query Language
+### Jora Query Language
 
 - **New Methods**:
    - **String and array processing**: Added `indexOf()`, `lastIndexOf()`, `replace()`, `toLowerCase()`, `toUpperCase()`, and `trim()` methods.

@@ -1,6 +1,7 @@
 ## next
 
-* Updated `discovery` to `1.0.0-beta.79`
+* Updated `discovery` to `1.0.0-beta.81`
+* Added "What's new" page
 
 ## 1.13.4 (29-09-2023)
 

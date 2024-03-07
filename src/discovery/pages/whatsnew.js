@@ -20,9 +20,12 @@ export const showWhatsNew = context => {
 export default host => {
     host.page.define('whatsnew', {
         view: 'block',
-        content: {
+        content: [{
+            view: 'page-header',
+            content: 'h1:"What\'s new"'
+        }, {
             view: 'markdown',
             source: whatsnew
-        }
+        }]
     });
 };
