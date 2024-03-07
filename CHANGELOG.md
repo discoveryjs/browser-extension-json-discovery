@@ -1,4 +1,4 @@
-## next
+## 1.13.5
 
 * Updated `discovery` to `1.0.0-beta.81`
 * Added "What's new" page
