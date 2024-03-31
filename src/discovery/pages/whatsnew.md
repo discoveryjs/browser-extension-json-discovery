@@ -1,3 +1,14 @@
+## 1.14.0
+
+### Discover
+
+- Report page renamed to "Discover"
+
+### Misc
+
+- Added "Copy URL" button
+- Updated `discovery.js` to the latest version
+
 ## 1.13.5
 
 ### Interface & Views
