@@ -1,3 +1,9 @@
+## 1.14.0
+
+* Updated `discovery` to `1.0.0-beta.82`
+* Renamed `report` page to `discovery`
+* Added "Copy URL" button
+
 ## 1.13.5
 
 * Updated `discovery` to `1.0.0-beta.81`

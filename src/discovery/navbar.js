@@ -14,6 +14,12 @@ export default host => {
         }
     });
     host.nav.append({
+        content: 'text:"Copy URL"',
+        onClick: () =>
+            copyText(window.location.toString()) &
+            flashMessage('URL copied to clipboard', 'success')
+    });
+    host.nav.append({
         when: () => host.pageId !== 'default',
         content: 'text:"Default view"',
         onClick: () => {
@@ -22,9 +28,9 @@ export default host => {
         }
     });
     host.nav.append({
-        when: () => host.pageId !== 'report',
-        content: 'text:"Make report"',
-        onClick: () => host.setPage('report')
+        when: () => host.pageId !== 'discovery',
+        content: 'text:"Discover"',
+        onClick: () => host.setPage('discovery')
     });
     host.nav.append({
         when: () => host.pageId !== 'raw',
