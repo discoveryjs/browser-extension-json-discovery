@@ -7,7 +7,7 @@
 ### Misc
 
 - Added "Copy URL" button
-- Updated `discovery.js` to the latest version
+- Updated `discovery.js` to the `1.0.0-beta.82` version ([release notes](https://github.com/discoveryjs/discovery/releases/tag/v1.0.0-beta.82))
 
 ## 1.13.5
 
