@@ -17,21 +17,20 @@
         "*://*/*"
     ],
     "content_scripts": [{
-        "js": ["init.js"],
+        "js": ["iframe.js"],
         "run_at": "document_start",
         "matches": ["<all_urls>"]
     }],
-    "background": {
-        "service_worker": "background.js",
-        "type": "module"
+    "sandbox": {
+        "pages": [
+            "sandbox.html"
+        ]
     },
     "web_accessible_resources": [
         {
             "resources": [
-                "discovery.css",
+                "sandbox.html",
                 "discovery.js",
-                "discovery-esm.js",
-                "preloader.css",
                 "icons/*",
                 "assets/*"
             ],

@@ -53,15 +53,30 @@ async function build(browser) {
 
     copyFiles(path.join(indir, 'icons'), outdir);
 
+    const { outputFiles: [{ text: css }] } = await esbuild.build({
+        entryPoints: [
+            path.join(indir, 'content/discovery.css')
+        ],
+        bundle: true,
+        write: false,
+        minify: true,
+        loader: {
+            '.png': 'dataurl',
+            '.svg': 'dataurl'
+        }
+    });
+
     // build bundle
     const result = await esbuild.build({
         entryPoints: [
-            path.join(indir, 'background.js'),
-            path.join(indir, 'content/discovery.css'),
-            path.join(indir, 'content/preloader.css'),
-            path.join(indir, 'content/discovery.js'),
-            path.join(indir, 'content/discovery-esm.js'),
-            path.join(indir, 'content/init.js')
+            path.join(indir, 'iframe.js'),
+            // path.join(indir, 'iframe.css'),
+            // path.join(indir, 'background.js'),
+            // path.join(indir, 'content/discovery.css'),
+            // path.join(indir, 'content/preloader.css'),
+            path.join(indir, 'content/discovery.js')
+            // path.join(indir, 'content/discovery-esm.js'),
+            // path.join(indir, 'content/init.js')
         ],
         format: 'esm',
         bundle: true,
@@ -74,9 +89,23 @@ async function build(browser) {
         loader: {
             '.png': 'dataurl',
             '.svg': 'dataurl',
+            '.css': 'text',
             '.md': 'text'
-        }
+        },
+        plugins: [{
+            name: 'inlineCss',
+            setup({ onLoad }) {
+                onLoad({ namespace: 'file', filter: /discovery\.css$/ }, () => {
+                    return {
+                        loader: 'text',
+                        contents: css
+                    };
+                });
+            }
+        }]
     });
+
+    let discoveryJs;
 
     for (const file of result.outputFiles) {
         const content = path.extname(file.path) === '.css'
@@ -85,8 +114,22 @@ async function build(browser) {
 
         const filePath = path.join(outdir, path.basename(file.path));
 
+        if (path.basename(file.path) === 'discovery.js') {
+            discoveryJs = file.text;
+            continue;
+        }
+
         fs.writeFileSync(filePath, content);
     }
+    fs.writeFileSync(
+        path.join(outdir, 'sandbox.html'),
+        `
+        <html>
+            <body>
+                <script>${discoveryJs}</script>
+            </body>
+        </html>`
+    );
 }
 
 const buildAll = async function() {

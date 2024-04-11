@@ -10,7 +10,7 @@ import * as pages from './pages';
  * @returns {Discovery}
  */
 export function initDiscovery(options, data) {
-    const { settings, version, progressbar, raw } = options;
+    const { styles, settings, version, progressbar, raw } = options;
     const { darkmode = 'auto' } = settings;
     const discovery = new Widget({
         defaultPage: null,
@@ -18,7 +18,7 @@ export function initDiscovery(options, data) {
         inspector: true,
         darkmode,
         darkmodePersistent: false,
-        styles: [{ type: 'link', href: chrome.runtime.getURL('discovery.css') }]
+        styles
     });
 
     discovery.raw = raw; // TODO: move to context?
