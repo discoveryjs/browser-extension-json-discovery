@@ -1,6 +1,0 @@
-@import '@discoveryjs/discovery/src/preloader.css';
-:host {
-    top: 0;
-    left: 0;
-    z-index: 1;
-}

@@ -17,7 +17,7 @@
         "*://*/*"
     ],
     "content_scripts": [{
-        "js": ["iframe.js"],
+        "js": ["init.js"],
         "run_at": "document_start",
         "matches": ["<all_urls>"]
     }],
@@ -30,7 +30,7 @@
         {
             "resources": [
                 "sandbox.html",
-                "discovery.js",
+                "sandbox.js",
                 "icons/*",
                 "assets/*"
             ],

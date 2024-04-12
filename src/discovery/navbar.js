@@ -1,4 +1,3 @@
-import { navButtons } from '@discoveryjs/discovery';
 import copyText from '@discoveryjs/discovery/src/core/utils/copy-text';
 import { downloadAsFile } from './download-as-file';
 import { flashMessage } from './flash-messages';
@@ -6,7 +5,7 @@ import { showWhatsNew, setWhatsnewViewed } from './pages/whatsnew';
 
 export default host => {
     host.nav.append({
-        when: () => showWhatsNew(host.context) && host.pageId !== 'whatsnew',
+        when: () => showWhatsNew(host.version) && host.pageId !== 'whatsnew',
         content: 'text:"What\'s new"',
         onClick: () => {
             host.setPage('whatsnew');
@@ -28,11 +27,6 @@ export default host => {
         }
     });
     host.nav.append({
-        when: () => host.pageId !== 'discovery',
-        content: 'text:"Discover"',
-        onClick: () => host.setPage('discovery')
-    });
-    host.nav.append({
         when: () => host.pageId !== 'raw',
         content: 'text:"JSON"',
         onClick: () => host.setPage('raw'),
@@ -40,7 +34,6 @@ export default host => {
             el.title = 'Show JSON as is';
         }
     });
-    host.apply(navButtons.inspect);
     host.nav.menu.append({
         content: 'text:"Download JSON as file"',
         onClick: (_, { hide }) => hide() & downloadAsFile(host.raw.json)

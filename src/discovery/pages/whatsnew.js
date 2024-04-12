@@ -8,12 +8,9 @@ export const setWhatsnewViewed = ({ version }) => {
     }
 };
 export const showWhatsNew = context => {
-    const { version } = context;
+    const { version } = context || {};
     return !version ? false : !(
-        context &&
-        context.settings &&
-        context.settings.whatsnew &&
-        context.settings.whatsnew[version]
+        context?.settings?.whatsnew?.[version]
     );
 };
 

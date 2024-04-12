@@ -1,4 +1,6 @@
-import { Widget, router } from '@discoveryjs/discovery';
+import './discovery.css';
+import { version } from '../../package.json';
+import { App } from '@discoveryjs/discovery';
 import flashMessages from './flash-messages';
 import navbar from './navbar';
 import * as pages from './pages';
@@ -9,20 +11,17 @@ import * as pages from './pages';
  * @param {Object} data
  * @returns {Discovery}
  */
-export function initDiscovery(options, data) {
-    const { styles, settings, version, progressbar, raw } = options;
-    const { darkmode = 'auto' } = settings;
-    const discovery = new Widget({
-        defaultPage: null,
-        container: options.node,
+export function initDiscovery() {
+    const discovery = new App({
+        styles: [{ type: 'link', href: 'sandbox.css' }],
+        embed: true,
         inspector: true,
-        darkmode,
-        darkmodePersistent: false,
-        styles
+        // darkmode,
+        darkmodePersistent: true
     });
 
-    discovery.raw = raw; // TODO: move to context?
-    discovery.apply(router);
+    discovery.raw = 'todo: raw'; // TODO: move to context?
+    discovery.version = version;
     discovery.apply(flashMessages);
     discovery.apply(navbar);
     discovery.apply(pages);
@@ -41,15 +40,4 @@ export function initDiscovery(options, data) {
             }
         });
     });
-
-    return discovery.setDataProgress(
-        data,
-        {
-            name: options.title,
-            settings,
-            version,
-            createdAt: new Date().toISOString() // TODO fix in discovery
-        },
-        progressbar
-    );
 }
