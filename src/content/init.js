@@ -165,7 +165,18 @@ function getIframe(settings) {
         });
 
         // settings
-        app.setDarkmode(settings.darkmode);
+        let darkmode = 'auto';
+
+        switch (settings.darkmode) {
+            case true:
+                darkmode = 'dark';
+                break;
+            case false:
+                darkmode = 'light';
+                break;
+        }
+
+        app.setDarkmode(darkmode);
         app.defineAction('getSettings', () => settings);
         app.defineAction('setSettings', settings => {
             chrome.storage.sync.set(settings);
