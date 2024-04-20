@@ -167,6 +167,9 @@ function getIframe(settings) {
         // settings
         app.setDarkmode(settings.darkmode);
         app.defineAction('getSettings', () => settings);
+        app.defineAction('setSettings', settings => {
+            chrome.storage.sync.set(settings);
+        });
 
         // upload data
         app.uploadData(new ReadableStream({
