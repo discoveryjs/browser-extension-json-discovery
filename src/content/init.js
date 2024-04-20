@@ -182,6 +182,8 @@ function getIframe(settings) {
             chrome.storage.sync.set(settings);
         });
 
+        app.defineAction('getWindowUrl', () => window.location.toString());
+
         // upload data
         app.uploadData(new ReadableStream({
             start(controller_) {

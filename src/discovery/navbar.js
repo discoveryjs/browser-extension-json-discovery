@@ -14,8 +14,8 @@ export default host => {
     });
     host.nav.append({
         content: 'text:"Copy URL"',
-        onClick: () =>
-            copyText(window.location.toString()) &
+        onClick: async() =>
+            copyText(await host.query('"getWindowUrl".callAction()')) &
             flashMessage('URL copied to clipboard', 'success')
     });
     host.nav.append({
