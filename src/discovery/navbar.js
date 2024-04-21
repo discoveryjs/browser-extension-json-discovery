@@ -15,7 +15,7 @@ export default host => {
     host.nav.append({
         content: 'text:"Copy URL"',
         onClick: async() =>
-            copyText(await host.query('"getWindowUrl".callAction()')) &
+            copyText(await host.query('"permalink".callAction()')) &
             flashMessage('URL copied to clipboard', 'success')
     });
     host.nav.append({

@@ -182,7 +182,7 @@ function getIframe(settings) {
             chrome.storage.sync.set(settings);
         });
 
-        app.defineAction('getWindowUrl', () => window.location.toString());
+        app.defineAction('permalink', () => window.location.toString());
 
         app.on('darkmodeChanged', async event => {
             const settings = await getSettings();
