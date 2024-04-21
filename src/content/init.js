@@ -184,6 +184,22 @@ function getIframe(settings) {
 
         app.defineAction('getWindowUrl', () => window.location.toString());
 
+        app.on('darkmodeChanged', async event => {
+            const settings = await getSettings();
+            let darkmode = 'auto';
+
+            switch (event.value) {
+                case 'light':
+                    darkmode = false;
+                    break;
+                case 'dark':
+                    darkmode = true;
+                    break;
+            }
+
+            chrome.storage.sync.set({ ...settings, darkmode });
+        });
+
         // upload data
         app.uploadData(new ReadableStream({
             start(controller_) {
