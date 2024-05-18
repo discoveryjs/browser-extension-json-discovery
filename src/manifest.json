@@ -35,7 +35,7 @@
                 "assets/*"
             ],
             "matches": [
-                "*://*/*"
+                "<all_urls>"
             ]
         }
     ],
