@@ -1,6 +1,7 @@
 ## 1.14.1 (20-05-2024)
 
 * Fixed issue when "Pretty print" bar is visible during the loading in Chrome
+* Updated `discovery` to `1.0.0-beta.83`
 
 ## 1.14.0 (02-04-2024)
 
