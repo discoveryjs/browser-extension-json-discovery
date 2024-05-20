@@ -198,8 +198,16 @@ async function checkLoaded(settings) {
         if (pre) {
             disableElement(pre);
 
+            // Chrome placed formatter container before <pre> in mid 2023
+            // https://issues.chromium.org/issues/40282442
             if (firstElement !== pre) {
                 disableElement(firstElement);
+            }
+
+            // Chrome moved formatter container after <pre>
+            // https://github.com/chromium/chromium/commit/1ca95a7aedd55cafb40f11e839a02bf8cc7ef99d
+            if (pre.nextElementSibling?.classList?.contains('json-formatter-container')) {
+                disableElement(pre.nextElementSibling);
             }
         }
     }

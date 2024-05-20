@@ -1,10 +1,14 @@
-## 1.14.0
+## 1.14.1 (20-05-2024)
+
+* Fixed issue when "Pretty print" bar is visible during the loading in Chrome
+
+## 1.14.0 (02-04-2024)
 
 * Updated `discovery` to `1.0.0-beta.82`
 * Renamed `report` page to `discovery`
 * Added "Copy URL" button
 
-## 1.13.5
+## 1.13.5 (07-03-2024)
 
 * Updated `discovery` to `1.0.0-beta.81`
 * Added "What's new" page
