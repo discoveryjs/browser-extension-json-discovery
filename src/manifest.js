@@ -8,7 +8,7 @@ module.exports = function(browser = 'chrome') {
     manifest.version = packageJson.version;
 
     if (browser === 'firefox') {
-        manifest.applications = {
+        manifest.browser_specific_settings = { // eslint-disable-line camelcase
             gecko: {
                 id: 'jsondiscovery@exdis.me',
                 strict_min_version: '57.0' // eslint-disable-line camelcase

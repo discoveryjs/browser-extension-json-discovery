@@ -147,7 +147,7 @@ function getIframe(settings) {
 
     iframe = document.createElement('iframe');
     iframe.className = 'discovery';
-    // iframe.setAttribute('sandbox', 'allow-scripts');
+    iframe.setAttribute('sandbox', 'allow-scripts');
     iframe.src = chrome.runtime.getURL('sandbox.html');
     iframe.style.cssText = 'position: fixed; inset: 0; border: 0; width: 100%; height: 100%; opacity: 0.001';
 
@@ -284,13 +284,9 @@ getSettings()
  * @returns {Promise}
  */
 function getSettings() {
-    return new Promise(resolve => {
-        chrome.storage.sync.get({
-            expandLevel: 3,
-            darkmode: 'auto',
-            whatsnew: {}
-        }, settings => {
-            resolve(settings);
-        });
+    return chrome.storage.sync.get({
+        expandLevel: 3,
+        darkmode: 'auto',
+        whatsnew: {}
     });
 }
