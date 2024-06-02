@@ -1,5 +1,6 @@
 import { applyContainerStyles, rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles';
 import { connectToEmbedApp } from '@discoveryjs/discovery/dist/discovery-embed-host.js';
+import { downloadAsFile } from '../discovery/download-as-file';
 
 let loaded = document.readyState === 'complete';
 let loadedTimer;
@@ -180,6 +181,10 @@ function getIframe(settings) {
         app.defineAction('getSettings', () => settings);
         app.defineAction('setSettings', settings => {
             chrome.storage.sync.set(settings);
+        });
+
+        app.defineAction('downloadAsFile', json => {
+            downloadAsFile(json);
         });
 
         app.defineAction('permalink', () => window.location.toString());

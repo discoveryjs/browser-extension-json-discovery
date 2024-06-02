@@ -1,5 +1,4 @@
 import copyText from '@discoveryjs/discovery/src/core/utils/copy-text';
-import { downloadAsFile } from './download-as-file';
 import { flashMessage } from './flash-messages';
 import { showWhatsNew, setWhatsnewViewed } from './pages/whatsnew';
 
@@ -36,7 +35,7 @@ export default host => {
     });
     host.nav.menu.append({
         content: 'text:"Download JSON as file"',
-        onClick: (_, { hide }) => hide() & downloadAsFile(host.raw.json)
+        onClick: (_, { hide }) => hide() & host.query('"downloadAsFile".callAction(' + host.raw.json + ')')
     });
     host.nav.menu.append({
         content: 'text:"Copy JSON to clipboard"',
