@@ -13,6 +13,14 @@ let dataStreamController = null;
 let stylesApplied = false;
 const firstSliceMaxSize = 100 * 1000;
 
+let iframeWorks = false;
+
+window.addEventListener('message', e => {
+    if (e.data === 'loaded') {
+        iframeWorks = true;
+    }
+});
+
 function raiseBailout() {
     return Object.assign(new Error('Rollback'), { rollback: true });
 }
@@ -265,7 +273,14 @@ async function checkLoaded(settings) {
         console.log('no loaded:', loaded);
         flushData(settings);
         loadedTimer = requestAnimationFrame(() =>
-            checkLoaded(settings).catch(rollbackPageChanges)
+            checkLoaded(settings)
+                .catch(rollbackPageChanges)
+                .finally(() => {
+                    if (!iframeWorks) {
+                        rollbackPageChanges(raiseBailout());
+                        return;
+                    }
+                })
         );
         return;
     }
