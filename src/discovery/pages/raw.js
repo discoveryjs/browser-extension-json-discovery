@@ -2,11 +2,12 @@ import { copyToClipboardButton } from '../copy-to-clipboard';
 import { downloadAsFileButton } from '../download-as-file';
 
 export default host => {
-    host.view.define('raw', (el, _, raw) => {
+    host.view.define('raw', async el => {
         const contentEl = el.appendChild(document.createElement('pre'));
 
         contentEl.className = 'content';
 
+        const raw = await host.query('"getRaw".callAction()');
         if (raw.firstSlice) {
             contentEl.append(raw.firstSlice);
             host.view.render(el, {

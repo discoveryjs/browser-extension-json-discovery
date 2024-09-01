@@ -11,6 +11,8 @@ let preCursor;
 let prevCursorValue = '';
 let dataStreamController = null;
 let stylesApplied = false;
+let totalSize = 0;
+let firstSlice = '';
 const firstSliceMaxSize = 100 * 1000;
 
 let iframeWorks = false;
@@ -67,13 +69,20 @@ const flushData = (settings) => {
                 }
             }
 
-            dataStreamController.enqueue(
-                chunkNode === preCursor
-                    // slice a new content from a chunk node in case a content
-                    // was appended to an existing text node
-                    ? chunkNode.nodeValue.slice(prevCursorValue.length)
-                    : chunkNode.nodeValue
-            );
+            const chunk = chunkNode === preCursor
+                // slice a new content from a chunk node in case a content
+                // was appended to an existing text node
+                ? chunkNode.nodeValue.slice(prevCursorValue.length)
+                : chunkNode.nodeValue;
+
+            totalSize += chunk.length;
+
+            if (firstSlice.length < firstSliceMaxSize) {
+                const left = firstSliceMaxSize - firstSlice.length;
+                firstSlice += left > chunk.length ? chunk : chunk.slice(0, left);
+            }
+
+            dataStreamController.enqueue(chunk);
         } else {
             // bailout: not a text node -> a complex markup is not a JSON
             throw raiseBailout();
@@ -191,11 +200,17 @@ function getIframe(settings) {
             chrome.storage.sync.set(settings);
         });
 
-        app.defineAction('downloadAsFile', json => {
-            downloadAsFile(json);
+        app.defineAction('downloadAsFile', _ => {
+            downloadAsFile(pre.textContent);
         });
 
         app.defineAction('permalink', () => window.location.toString());
+
+        app.defineAction('getRaw', () => ({
+            firstSlice: totalSize < firstSliceMaxSize * 2 ? null : firstSlice,
+            size: totalSize,
+            json: totalSize <= firstSliceMaxSize ? firstSlice : pre.textContent
+        }));
 
         app.on('darkmodeChanged', async event => {
             const settings = await getSettings();
