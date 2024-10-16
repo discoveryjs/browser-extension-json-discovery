@@ -2,7 +2,7 @@ import { applyContainerStyles, rollbackContainerStyles } from '@discoveryjs/disc
 import { connectToEmbedApp } from '@discoveryjs/discovery/dist/discovery-embed-host.js';
 import { downloadAsFile } from '../discovery/download-as-file';
 
-let loaded = document.readyState === 'complete';
+let documentFullyLoaded = document.readyState === 'complete';
 let loadedTimer;
 let disabledElements = [];
 let pre = null;
@@ -15,16 +15,8 @@ let totalSize = 0;
 let firstSlice = '';
 const firstSliceMaxSize = 100 * 1000;
 
-let iframeWorks = false;
-
-window.addEventListener('message', e => {
-    if (e.data === 'loaded') {
-        iframeWorks = true;
-    }
-});
-
-function raiseBailout() {
-    return Object.assign(new Error('Rollback'), { rollback: true });
+function raiseBailout(reason) {
+    return Object.assign(new Error('Rollback'), { bailout: reason });
 }
 
 const flushData = (settings) => {
@@ -44,9 +36,9 @@ const flushData = (settings) => {
                 : preCursor.nextSibling;
 
         if (!chunkNode) {
-            if (isFirstChunk && (loaded || pre.nextSibling)) {
+            if (isFirstChunk && (documentFullyLoaded || pre.nextSibling)) {
                 // bailout: first <pre> is empty
-                throw raiseBailout();
+                throw raiseBailout('Empty input');
             }
 
             break;
@@ -58,14 +50,14 @@ const flushData = (settings) => {
                     // probably JSON, accept an object or an array only to reduce false positive
                     if (dataStreamController === null) {
                         if (iframe === null) {
-                            console.log('append iframe');
-                            document.body.append(getIframe(settings));
+                            pre.before(getIframe(settings));
                         }
+
                         return;
                     }
                 } else {
                     // bailout: not a JSON or a non-object / non-array value
-                    throw raiseBailout();
+                    throw raiseBailout('Not a JSON or a non-object / non-array value');
                 }
             }
 
@@ -85,7 +77,7 @@ const flushData = (settings) => {
             dataStreamController.enqueue(chunk);
         } else {
             // bailout: not a text node -> a complex markup is not a JSON
-            throw raiseBailout();
+            throw raiseBailout('Input not a text');
         }
 
         preCursor = chunkNode;
@@ -116,8 +108,8 @@ function rollbackPageChanges(error) {
         }
     });
 
-    if (!error.rollback) {
-        console.error('[JsonDiscovery] Failed to parse JSON', error); // eslint-disable-line no-console
+    if (error.bailout) {
+        console.warn('[JsonDiscovery] Bailout reason:', error.bailout); // eslint-disable-line no-console
     }
 }
 
@@ -167,7 +159,28 @@ function getIframe(settings) {
     iframe.className = 'discovery';
     iframe.setAttribute('sandbox', 'allow-scripts');
     iframe.src = chrome.runtime.getURL('sandbox.html');
-    iframe.style.cssText = 'position: fixed; inset: 0; border: 0; width: 100%; height: 100%; opacity: 0.001';
+    iframe.style.cssText = 'position: fixed; inset: 0; border: 0; width: 100%; height: 100%; visibility: hidden';
+
+    // Check if scripts in the sandbox iframe work, otherwise rollback since we can't display anything.
+    // The first script in the sandbox iframe sends message, it should be delivered before onload event fires
+    {
+        let scriptsWorks = false;
+
+        window.addEventListener('message', e => {
+            if (e.data === 'json-discovery-sandbox-scripts-work') {
+                scriptsWorks = true;
+            }
+        }, { once: true });
+
+        iframe.onload = () => {
+            if (!scriptsWorks) {
+                rollbackPageChanges(raiseBailout('Scripts or postMessage() doesn\'t work in sandbox'));
+            } else {
+                // enable visibility on iframe load to avoid flash of white background when in dark mode
+                iframe.style.visibility = 'visible';
+            }
+        };
+    }
 
     connectToEmbedApp(iframe, (app) => {
         // sync location
@@ -200,7 +213,8 @@ function getIframe(settings) {
             chrome.storage.sync.set(settings);
         });
 
-        app.defineAction('downloadAsFile', _ => {
+        app.defineAction('downloadAsFile', () => {
+            // FIXME: bad for large files
             downloadAsFile(pre.textContent);
         });
 
@@ -240,21 +254,18 @@ function getIframe(settings) {
 
         // check load and appearance
         getSettings().then(checkLoaded);
-        setTimeout(() => iframe.style.opacity = '1', 100);
     });
 
     return iframe;
 }
 
 async function checkLoaded(settings) {
-    console.log('checkLoaded');
-    if (pre === null) {
+    if (pre === null && !stylesApplied) {
         const firstElement = document.body?.firstElementChild;
 
         pre = isPre(firstElement) || isPre(firstElement?.nextElementSibling);
 
         if (pre) {
-            console.log('detected pre');
             disableElement(pre);
 
             // Chrome placed formatter container before <pre> in mid 2023
@@ -271,31 +282,19 @@ async function checkLoaded(settings) {
         }
     }
 
-    if (!settings) {
-        console.log('no settings');
-        return;
-    } else if (pre === null) {
+    if (!settings || pre === null) {
         return;
     }
 
     if (!stylesApplied) {
-        console.log('apply styles');
         stylesApplied = true;
         applyContainerStyles(document.body, settings);
     }
 
-    if (!loaded) {
-        console.log('no loaded:', loaded);
+    if (!documentFullyLoaded) {
         flushData(settings);
         loadedTimer = requestAnimationFrame(() =>
-            checkLoaded(settings)
-                .catch(rollbackPageChanges)
-                .finally(() => {
-                    if (!iframeWorks) {
-                        rollbackPageChanges(raiseBailout());
-                        return;
-                    }
-                })
+            checkLoaded(settings).catch(rollbackPageChanges)
         );
         return;
     }
@@ -308,7 +307,10 @@ async function checkLoaded(settings) {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => loaded = true, false);
+window.addEventListener('DOMContentLoaded', () => {
+    documentFullyLoaded = true;
+    checkLoaded();
+}, { once: true });
 checkLoaded();
 getSettings()
     .then(checkLoaded)

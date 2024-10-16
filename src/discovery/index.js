@@ -7,9 +7,6 @@ import * as pages from './pages';
 
 /**
  * Discovery initialization
- * @param {Object} options
- * @param {Object} data
- * @returns {Discovery}
  */
 export function initDiscovery() {
     const discovery = new App({
@@ -20,7 +17,6 @@ export function initDiscovery() {
         darkmodePersistent: true
     });
 
-    discovery.raw = 'todo: raw'; // TODO: move to context?
     discovery.version = version;
     discovery.apply(flashMessages);
     discovery.apply(navbar);
