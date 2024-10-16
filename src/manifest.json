@@ -4,31 +4,40 @@
     "short_name": "JsonDiscovery",
     "description": "Browser extension that changes the way you're viewing JSON",
     "author": "exdis",
-    "manifest_version": 2,
+    "manifest_version": 3,
     "icons": {
         "16": "icons/16.png",
         "48": "icons/48.png",
         "128": "icons/128.png"
     },
     "permissions": [
-        "<all_urls>",
         "storage"
+    ],
+    "host_permissions": [
+        "*://*/*"
     ],
     "content_scripts": [{
         "js": ["init.js"],
         "run_at": "document_start",
         "matches": ["<all_urls>"]
     }],
-    "background": {
-        "scripts": ["background.js"]
+    "sandbox": {
+        "pages": [
+            "sandbox.html"
+        ]
     },
     "web_accessible_resources": [
-        "discovery.css",
-        "discovery.js",
-        "discovery-esm.js",
-        "preloader.css",
-        "icons/*",
-        "assets/*"
+        {
+            "resources": [
+                "sandbox.html",
+                "sandbox.js",
+                "icons/*",
+                "assets/*"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
     ],
     "offline_enabled": true
 }

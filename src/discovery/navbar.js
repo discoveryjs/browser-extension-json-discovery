@@ -1,12 +1,9 @@
-import { navButtons } from '@discoveryjs/discovery';
-import copyText from '@discoveryjs/discovery/src/core/utils/copy-text';
-import { downloadAsFile } from './download-as-file';
-import { flashMessage } from './flash-messages';
+import copyText from '@discoveryjs/discovery/lib/core/utils/copy-text.js';
 import { showWhatsNew, setWhatsnewViewed } from './pages/whatsnew';
 
 export default host => {
     host.nav.append({
-        when: () => showWhatsNew(host.context) && host.pageId !== 'whatsnew',
+        when: () => showWhatsNew(host.version) && host.pageId !== 'whatsnew',
         content: 'text:"What\'s new"',
         onClick: () => {
             host.setPage('whatsnew');
@@ -15,22 +12,18 @@ export default host => {
     });
     host.nav.append({
         content: 'text:"Copy URL"',
-        onClick: () =>
-            copyText(window.location.toString()) &
-            flashMessage('URL copied to clipboard', 'success')
+        async onClick() {
+            copyText(await host.action.call('permalink'));
+            host.action.call('flashMessage', 'URL copied to clipboard', 'success');
+        }
     });
     host.nav.append({
         when: () => host.pageId !== 'default',
         content: 'text:"Default view"',
-        onClick: () => {
+        onClick() {
             host.setPage('default');
-            history.replaceState(null, null, ' ');
+            history.replaceState(null, null, ' '); // ????
         }
-    });
-    host.nav.append({
-        when: () => host.pageId !== 'discovery',
-        content: 'text:"Discover"',
-        onClick: () => host.setPage('discovery')
     });
     host.nav.append({
         when: () => host.pageId !== 'raw',
@@ -40,23 +33,34 @@ export default host => {
             el.title = 'Show JSON as is';
         }
     });
-    host.apply(navButtons.inspect);
     host.nav.menu.append({
         content: 'text:"Download JSON as file"',
-        onClick: (_, { hide }) => hide() & downloadAsFile(host.raw.json)
+        onClick(_, { hide }) {
+            hide();
+            host.action.call('downloadAsFile');
+        }
     });
     host.nav.menu.append({
         content: 'text:"Copy JSON to clipboard"',
-        onClick: (_, { hide }) => hide() &
-            copyText(host.raw.json) &
-            flashMessage('JSON copied to clipboard', 'success')
+        async onClick(_, { hide }) {
+            hide();
+            await host.action.call('copyToClipboard');
+            host.action.call('flashMessage', 'JSON copied to clipboard', 'success');
+        }
     });
     host.nav.menu.append({
         content: 'text:"Settings"',
-        onClick: (_, { hide }) => hide() & host.setPage('settings')
+        onClick(_, { hide }) {
+            hide();
+            host.setPage('settings');
+        }
     });
     host.nav.menu.append({
         content: 'text:"What\'s new"',
-        onClick: (_, { hide }) => hide() & host.setPage('whatsnew') & setWhatsnewViewed(host.context)
+        onClick(_, { hide }) {
+            hide();
+            host.setPage('whatsnew');
+            setWhatsnewViewed(host.context);
+        }
     });
 };

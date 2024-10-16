@@ -49,24 +49,20 @@ async function build(browser) {
 
     fs.rmSync(outdir, { recursive: true, force: true }); // rm -rf
     fs.mkdirSync(outdir, { recursive: true });
-    fs.writeFileSync(outdir + '/manifest.json', manifest(browser));
+    fs.writeFileSync(path.join(outdir, 'manifest.json'), manifest(browser));
 
+    copyFile(path.join(indir, 'sandbox.html'), outdir);
     copyFiles(path.join(indir, 'icons'), outdir);
 
     // build bundle
-    const result = await esbuild.build({
+    await esbuild.build({
         entryPoints: [
-            path.join(indir, 'background.js'),
-            path.join(indir, 'content/discovery.css'),
-            path.join(indir, 'content/preloader.css'),
-            path.join(indir, 'content/discovery.js'),
-            path.join(indir, 'content/discovery-esm.js'),
-            path.join(indir, 'content/init.js')
+            { in: path.join(indir, 'content/init.js'), out: 'init' },
+            path.join(indir, 'sandbox.js')
         ],
         format: 'esm',
         bundle: true,
         minify: true,
-        write: false,
         outdir,
         define: {
             global: 'window'
@@ -77,16 +73,6 @@ async function build(browser) {
             '.md': 'text'
         }
     });
-
-    for (const file of result.outputFiles) {
-        const content = path.extname(file.path) === '.css'
-            ? processCss(file.text, outdir, 'assets')
-            : file.contents;
-
-        const filePath = path.join(outdir, path.basename(file.path));
-
-        fs.writeFileSync(filePath, content);
-    }
 }
 
 const buildAll = async function() {
@@ -131,6 +117,10 @@ const buildAll = async function() {
     }
 })();
 
+function copyFile(filepath, dest) {
+    fs.copyFileSync(filepath, path.join(dest, path.basename(filepath)));
+}
+
 function copyFiles(src, dest) {
     fs.mkdirSync(dest, { recursive: true });
 
@@ -139,6 +129,6 @@ function copyFiles(src, dest) {
             copyFiles(path.join(src, p), path.join(dest, path.basename(src)))
         );
     } else {
-        fs.copyFileSync(src, path.join(dest, path.basename(src)));
+        copyFile(src, dest);
     }
 }

@@ -14,7 +14,7 @@ export function downloadAsFile(text) {
 export const downloadAsFileButton = {
     view: 'button',
     content: 'text:"Download as file"',
-    onClick(_, { json }) {
-        downloadAsFile(json);
+    onClick(_, __, host) {
+        host.actions.downloadAsFile();
     }
 };

@@ -74,8 +74,12 @@ export default host => {
         }
     ].map(content => ({ view: 'fieldset', content }));
 
-    host.page.define('settings', function(el, data, context) {
-        const { settings } = context;
+    host.page.define('settings', async function(el, data) {
+        if (!data) {
+            return;
+        }
+
+        const settings = await host.query('"getSettings".callAction()', data);
 
         host.view.render(el, [
             'h1:"JsonDiscovery settings"',
@@ -103,16 +107,11 @@ export default host => {
         const { valid, errors } = validate(settings);
 
         if (valid) {
-            if (typeof chrome !== 'undefined') {
-                chrome.storage.sync.set(settings);
-            } else if (typeof safari !== 'undefined') {
-                safari.extension.dispatchMessage('setSettings', settings);
-            }
+            host.query(`"setSettings".callAction(${JSON.stringify(settings)})`, host.data);
 
-            host.context.settings = settings;
-            host.flashMessage('Options saved.', 'success');
+            host.action.call('flashMessage', 'Options saved.', 'success');
         } else {
-            host.flashMessage(errors.join(' '), 'danger');
+            host.action.call('flashMessage', errors.join(' '), 'danger');
         }
     }
 

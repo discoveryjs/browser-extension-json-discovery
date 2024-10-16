@@ -1,4 +1,4 @@
-@import '@discoveryjs/discovery/src/lib.css';
+@import '@discoveryjs/discovery/lib/lib.css';
 @import './pages/raw.css';
 @import './pages/settings.css';
 @import './pages/whatsnew.css';
@@ -8,6 +8,7 @@
     position: fixed;
     inset: 0;
     z-index: 1000;
+    transition: none;
 }
 .discovery-root {
     --discovery-page-padding-right: 12px;
@@ -40,8 +41,21 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
-.view-page-header .view-button svg {
+.view-page-header .view-button.collapse-all:empty::before,
+.view-page-header .view-button.expand-all:empty::before {
+    content: '';
+    width: 16px;
+    height: 16px;
     margin: -4px 0;
+    display: inline-block;
+    mask: url('./img/collapse-all.svg');
+    mask-size: 16px;
+    background-color: currentColor;
+    visibility: visible;
+}
+
+.view-page-header .view-button.expand-all::before {
+    mask-image: url('./img/expand-all.svg');
 }
 
 /* Safari quirk mode fix */

@@ -1,55 +1,30 @@
-import { Widget, router } from '@discoveryjs/discovery';
+import './discovery.css';
+import { version } from '../../package.json';
+import { App } from '@discoveryjs/discovery';
+import joraHelpers from './jora-helpers';
 import flashMessages from './flash-messages';
 import navbar from './navbar';
 import * as pages from './pages';
 
 /**
  * Discovery initialization
- * @param {Object} options
- * @param {Object} data
- * @returns {Discovery}
  */
-export function initDiscovery(options, data) {
-    const { settings, version, progressbar, raw } = options;
-    const { darkmode = 'auto' } = settings;
-    const discovery = new Widget({
-        defaultPage: null,
-        container: options.node,
+export function initDiscovery() {
+    const discovery = new App({
+        styles: [{ type: 'link', href: 'sandbox.css' }],
+        embed: true,
         inspector: true,
-        darkmode,
-        darkmodePersistent: false,
-        styles: [{ type: 'link', href: chrome.runtime.getURL('discovery.css') }]
+        darkmodePersistent: true,
+        extensions: [
+            flashMessages,
+            navbar,
+            pages
+        ],
+        setup: ({ addQueryHelpers }) => {
+            addQueryHelpers(joraHelpers);
+        }
     });
 
-    discovery.raw = raw; // TODO: move to context?
-    discovery.apply(router);
-    discovery.apply(flashMessages);
-    discovery.apply(navbar);
-    discovery.apply(pages);
-
-    discovery.setPrepare((_, { addQueryHelpers }) => {
-        addQueryHelpers({
-            weight(current, prec = 1) {
-                const unit = ['bytes', 'kB', 'MB', 'GB'];
-
-                while (current > 1000) {
-                    current = current / 1000;
-                    unit.shift();
-                }
-
-                return current.toFixed(prec).replace(/\.0+$/, '') + unit[0];
-            }
-        });
-    });
-
-    return discovery.setDataProgress(
-        data,
-        {
-            name: options.title,
-            settings,
-            version,
-            createdAt: new Date().toISOString() // TODO fix in discovery
-        },
-        progressbar
-    );
+    discovery.nav.remove('index-page');
+    discovery.version = version;
 }
