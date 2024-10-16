@@ -1,5 +1,6 @@
-import { applyContainerStyles, rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles';
-import { connectToEmbedApp } from '@discoveryjs/discovery/dist/discovery-embed-host.js';
+import { applyContainerStyles, rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles.js';
+import { connectToEmbedApp } from '@discoveryjs/discovery/src/extensions/embed-host.js';
+import copyText from '@discoveryjs/discovery/lib/core/utils/copy-text.js';
 import { downloadAsFile } from '../discovery/download-as-file';
 
 let documentFullyLoaded = document.readyState === 'complete';
@@ -183,18 +184,6 @@ function getIframe(settings) {
     }
 
     connectToEmbedApp(iframe, (app) => {
-        // sync location
-        app.setRouterPreventLocationUpdate(true);
-        app.setPageHash(location.hash);
-        window.addEventListener('hashchange', () => app.setPageHash(location.hash), false);
-        app.on('pageHashChanged', (newPageHash, replace) => {
-            if (replace) {
-                location.replace(newPageHash);
-            } else {
-                location.hash = newPageHash;
-            }
-        });
-
         // settings
         let darkmode = 'auto';
 
@@ -213,6 +202,7 @@ function getIframe(settings) {
             chrome.storage.sync.set(settings);
         });
 
+        app.defineAction('copyToClipboard', () => copyText(pre.textContent));
         app.defineAction('downloadAsFile', () => {
             // FIXME: bad for large files
             downloadAsFile(pre.textContent);
@@ -221,9 +211,12 @@ function getIframe(settings) {
         app.defineAction('permalink', () => window.location.toString());
 
         app.defineAction('getRaw', () => ({
-            firstSlice: totalSize < firstSliceMaxSize * 2 ? null : firstSlice,
-            size: totalSize,
-            json: totalSize <= firstSliceMaxSize ? firstSlice : pre.textContent
+            firstSliceText: firstSlice,
+            firstSliceSize: firstSlice.length,
+            fullSize: totalSize
+        }));
+        app.defineAction('getRawFull', () => ({
+            json: pre.textContent
         }));
 
         app.on('darkmodeChanged', async event => {
@@ -251,6 +244,19 @@ function getIframe(settings) {
                 dataStreamController = null;
             }
         }));
+
+        // sync location
+        // Note: should be last since lead to renders
+        app.setRouterPreventLocationUpdate(true);
+        app.setPageHash(location.hash);
+        addEventListener('hashchange', () => app.setPageHash(location.hash), false);
+        app.on('pageHashChanged', (newPageHash, replace) => {
+            if (replace) {
+                location.replace(newPageHash);
+            } else {
+                location.hash = newPageHash;
+            }
+        });
 
         // check load and appearance
         getSettings().then(checkLoaded);

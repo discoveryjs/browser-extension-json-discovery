@@ -1,5 +1,4 @@
 import { utils } from '@discoveryjs/discovery';
-import { flashMessage } from '../flash-messages';
 
 export default host => {
     host.view.define('label', function(el, config = {}) {
@@ -110,9 +109,9 @@ export default host => {
         if (valid) {
             host.query(`"setSettings".callAction(${JSON.stringify(settings)})`, host.data);
 
-            flashMessage('Options saved.', 'success');
+            host.action.call('flashMessage', 'Options saved.', 'success');
         } else {
-            flashMessage(errors.join(' '), 'danger');
+            host.action.call('flashMessage', errors.join(' '), 'danger');
         }
     }
 

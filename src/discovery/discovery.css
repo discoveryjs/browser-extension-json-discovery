@@ -1,4 +1,4 @@
-@import '@discoveryjs/discovery/src/lib.css';
+@import '@discoveryjs/discovery/lib/lib.css';
 @import './pages/raw.css';
 @import './pages/settings.css';
 @import './pages/whatsnew.css';

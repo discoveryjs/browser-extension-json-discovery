@@ -1,6 +1,7 @@
 import './discovery.css';
 import { version } from '../../package.json';
 import { App } from '@discoveryjs/discovery';
+import joraHelpers from './jora-helpers';
 import flashMessages from './flash-messages';
 import navbar from './navbar';
 import * as pages from './pages';
@@ -13,27 +14,17 @@ export function initDiscovery() {
         styles: [{ type: 'link', href: 'sandbox.css' }],
         embed: true,
         inspector: true,
-        // darkmode,
-        darkmodePersistent: true
+        darkmodePersistent: true,
+        extensions: [
+            flashMessages,
+            navbar,
+            pages
+        ],
+        setup: ({ addQueryHelpers }) => {
+            addQueryHelpers(joraHelpers);
+        }
     });
 
+    discovery.nav.remove('index-page');
     discovery.version = version;
-    discovery.apply(flashMessages);
-    discovery.apply(navbar);
-    discovery.apply(pages);
-
-    discovery.setPrepare((_, { addQueryHelpers }) => {
-        addQueryHelpers({
-            weight(current, prec = 1) {
-                const unit = ['bytes', 'kB', 'MB', 'GB'];
-
-                while (current > 1000) {
-                    current = current / 1000;
-                    unit.shift();
-                }
-
-                return current.toFixed(prec).replace(/\.0+$/, '') + unit[0];
-            }
-        });
-    });
 }
