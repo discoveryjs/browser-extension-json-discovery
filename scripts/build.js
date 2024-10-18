@@ -1,8 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const csstree = require('css-tree');
-const mime = require('mime');
-const crypto = require('crypto');
 const esbuild = require('esbuild');
 const manifest = require('../src/manifest.js');
 
@@ -17,33 +14,6 @@ const browsers = [
     'safari'
 ];
 
-function processCss(css, outdir, resdir) {
-    // CSS post-process
-    const ast = csstree.parse(css);
-
-    fs.mkdirSync(path.join(outdir, resdir), { recursive: true });
-
-    csstree.walk(ast, {
-        visit: 'Url',
-        enter(node) {
-            const [, mimeType, b64, content] = node.value.match(/^data:(.*?)(;base64)?,(.*)$/);
-            const decodedContent = b64
-                ? Buffer.from(content, 'base64')
-                : decodeURIComponent(content);
-            const filename = crypto
-                .createHash('sha1')
-                .update(decodedContent)
-                .digest('hex') + '.' + mime.getExtension(mimeType);
-
-            fs.writeFileSync(path.join(outdir, resdir, filename), decodedContent);
-
-            node.value = `${resdir}/${filename}`;
-        }
-    });
-
-    return csstree.generate(ast);
-}
-
 async function build(browser) {
     const outdir = path.join(__dirname, `/../build-${browser}`);
 
@@ -57,7 +27,7 @@ async function build(browser) {
     // build bundle
     await esbuild.build({
         entryPoints: [
-            { in: path.join(indir, 'content/init.js'), out: 'init' },
+            { in: path.join(indir, 'content-script.js'), out: 'content-script' },
             path.join(indir, 'sandbox.js')
         ],
         format: 'esm',

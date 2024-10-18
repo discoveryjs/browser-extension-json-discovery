@@ -1,7 +1,7 @@
 import { applyContainerStyles, rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles.js';
 import { connectToEmbedApp } from '@discoveryjs/discovery/src/extensions/embed-host.js';
 import copyText from '@discoveryjs/discovery/lib/core/utils/copy-text.js';
-import { downloadAsFile } from '../discovery/download-as-file';
+import { downloadAsFile } from './discovery/download-as-file.js';
 
 let documentFullyLoaded = document.readyState === 'complete';
 let loadedTimer;
